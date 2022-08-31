@@ -3,19 +3,19 @@
 class Sphere
 {
 public:
-    Sphere(Eigen::Vector3d center, float radius, std::tuple<int, int, int> color)
+    Sphere(Eigen::Vector3d center, double radius, std::tuple<int, int, int> color)
     {
         this->center = center;
         this->radius = radius;
         this->color = color;
     };
     ~Sphere(){};
-    float getRadius();
+    double getRadius();
     Eigen::Vector3d getCenter();
     std::tuple<int, int, int> getColor();
 
 private:
     Eigen::Vector3d center;
-    float radius;
+    double radius;
     std::tuple<int, int, int> color;
 };

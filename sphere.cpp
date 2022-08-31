@@ -1,6 +1,6 @@
 #include "sphere.h"
 
-float Sphere::getRadius()
+double Sphere::getRadius()
 {
     return radius;
 }
