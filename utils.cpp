@@ -35,6 +35,6 @@ namespace utils
         {
             return s.getColor();
         }
-        return std::make_tuple(255, 255, 255);
+        return std::make_tuple(100, 100, 100);
     }
 }
