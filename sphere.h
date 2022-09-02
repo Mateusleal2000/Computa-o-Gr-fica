@@ -12,10 +12,10 @@ public:
     ~Sphere(){};
     double getRadius();
     Eigen::Vector3d getCenter();
-    std::tuple<int, int, int> getColor();
+    std::tuple<double, double, double> getColor();
 
 private:
     Eigen::Vector3d center;
     double radius;
-    std::tuple<int, int, int> color;
+    std::tuple<double, double, double> color;
 };
