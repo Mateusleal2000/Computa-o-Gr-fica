@@ -3,7 +3,7 @@
 
 namespace display
 {
-    std::vector<int> scene(displayStructs::Viewport viewport, Eigen::Vector3d O, Eigen::Vector3d I_F, Eigen::Vector3d P_F, Eigen::Vector3d K, Sphere s)
+    std::vector<int> scene(displayStructs::Viewport viewport, Eigen::Vector3d O, displayStructs::LightSource lS, Eigen::Vector3d K, Sphere s)
     {
         double deltaX = viewport.width / viewport.nColumns;
         double deltaY = viewport.height / viewport.nRows;
@@ -20,7 +20,7 @@ namespace display
                 D(0) = x - O(0);
                 D(1) = y - O(1);
                 D(2) = -viewport.dWindow;
-                std::tuple<int, int, int> color = utils::traceRay(O, D, I_F, P_F, K, s);
+                std::tuple<int, int, int> color = utils::traceRay(O, D, lS, K, s);
 
                 pixelVector.push_back(std::get<0>(color));
                 pixelVector.push_back(std::get<1>(color));

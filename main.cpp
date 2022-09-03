@@ -33,8 +33,9 @@ int main(int argc, char **argv)
     Sphere s = Sphere(center, radius, utilsStructs::Color(255, 0, 0));
 
     displayStructs::Viewport viewport(viewPortWidth, viewPortHeight, nRow, nCol, dWindow);
+    displayStructs::LightSource lS(I_F, P_F);
 
-    std::vector<int> pixelVector = display::scene(viewport, O, I_F, P_F, K, s);
+    std::vector<int> pixelVector = display::scene(viewport, O, lS, K, s);
     std::string output = "output.ppm";
 
     display::draw(nRow, nCol, pixelVector, output);

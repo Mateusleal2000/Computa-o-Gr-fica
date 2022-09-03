@@ -29,11 +29,13 @@ namespace utils
         return std::make_tuple(t1, t2);
     }
 
-    std::tuple<double, double, double> traceRay(Eigen::Vector3d O, Eigen::Vector3d D, Eigen::Vector3d I_F, Eigen::Vector3d P_F, Eigen::Vector3d K, Sphere &s)
+    std::tuple<double, double, double> traceRay(Eigen::Vector3d O, Eigen::Vector3d D, displayStructs::LightSource lS, Eigen::Vector3d K, Sphere &s)
     {
         auto [t1, t2] = utils::intersectRaySphere(O, D, s);
         if (t1 != inf)
         {
+            auto I_F = lS.I_F;
+            auto P_F = lS.P_F;
             Eigen::Vector3d P_I(0, 0, 0);
             Eigen::Vector3d I_D(0, 0, 0);
             Eigen::Vector3d I_E(0, 0, 0);

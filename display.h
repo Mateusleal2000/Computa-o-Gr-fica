@@ -12,7 +12,7 @@
 class Sphere;
 namespace display
 {
-    std::vector<int> scene(displayStructs::Viewport viewport, Eigen::Vector3d O, Eigen::Vector3d I_F, Eigen::Vector3d P_F, Eigen::Vector3d K, Sphere s);
+    std::vector<int> scene(displayStructs::Viewport viewport, Eigen::Vector3d O, displayStructs::LightSource lS, Eigen::Vector3d K, Sphere s);
     int draw(double nRow, double nCol, std::vector<int> pixelVector, std::string output);
 }
 
