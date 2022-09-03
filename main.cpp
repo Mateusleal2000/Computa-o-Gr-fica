@@ -1,5 +1,5 @@
-#include <Magick++.h>
 #include <iostream>
+#include <fstream>
 #include <tuple>
 #include <cmath>
 #include <algorithm>
@@ -8,8 +8,6 @@
 #include "utils.h"
 #include "display.h"
 #include <eigen3/Eigen/Dense>
-
-using namespace Magick;
 
 int main(int argc, char **argv)
 {
@@ -34,13 +32,19 @@ int main(int argc, char **argv)
     double nRow = 500;
     double nCol = 500;
 
-    std::vector<unsigned char> pixelVector = display::scene(viewPortWidth, viewPortHeight, nRow, nCol, dWindow, O, D, I_F, P_F, K, s);
+    std::vector<int> pixelVector = display::scene(viewPortWidth, viewPortHeight, nRow, nCol, dWindow, O, D, I_F, P_F, K, s);
 
-    unsigned char *pix = pixelVector.data();
+    std::ofstream fout("output.ppm");
+    if (fout.fail())
+    {
+        return -1;
+    }
+    fout << "P3\n";
+    fout << nCol << " " << nRow << "\n";
+    fout << "255\n";
 
-    InitializeMagick(*argv);
-    Image image;
-    image.read(canvasWidth, canvasHeight, "RGB", CharPixel, pix);
-
-    image.write("result.png");
+    for (auto pixel : pixelVector)
+    {
+        fout << pixel << " ";
+    }
 }

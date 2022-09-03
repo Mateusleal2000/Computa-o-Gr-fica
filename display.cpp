@@ -3,12 +3,12 @@
 
 namespace display
 {
-    std::vector<unsigned char> scene(double viewPortWidth, double viewPortHeight, double nRow, double nCol, double dWindow, Eigen::Vector3d O, Eigen::Vector3d D, Eigen::Vector3d I_F, Eigen::Vector3d P_F, Eigen::Vector3d K, Sphere s)
+    std::vector<int> scene(double viewPortWidth, double viewPortHeight, double nRow, double nCol, double dWindow, Eigen::Vector3d O, Eigen::Vector3d D, Eigen::Vector3d I_F, Eigen::Vector3d P_F, Eigen::Vector3d K, Sphere s)
     {
         double deltaX = viewPortWidth / nCol;
         double deltaY = viewPortHeight / nRow;
         double x, y;
-        std::vector<unsigned char> pixelVector;
+        std::vector<int> pixelVector;
 
         for (int r = 0; r < nRow; r++)
         {
