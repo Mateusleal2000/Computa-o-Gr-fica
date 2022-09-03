@@ -1,5 +1,4 @@
 #include <iostream>
-#include <fstream>
 #include <tuple>
 #include <cmath>
 #include <algorithm>
@@ -16,15 +15,6 @@ int main(int argc, char **argv)
     double x = 0;
     double y = 0;
     double z = -(dWindow + radius);
-
-    Eigen::Vector3d O(0.0, 0.0, 0.0);
-    Eigen::Vector3d D(0, 0, 0);
-    Eigen::Vector3d center(x, y, z);
-    Eigen::Vector3d I_F(0.7, 0.7, 0.7);
-    Eigen::Vector3d P_F(0, 5, 0);
-    Eigen::Vector3d K(1, 1, 1);
-    Sphere s = Sphere(center, radius, std::make_tuple(255, 0, 0));
-
     double canvasWidth = 500;
     double canvasHeight = 500;
     double viewPortWidth = 1;
@@ -32,19 +22,17 @@ int main(int argc, char **argv)
     double nRow = 500;
     double nCol = 500;
 
+    Eigen::Vector3d O(0.0, 0.0, 0.0);
+    Eigen::Vector3d D(0, 0, 0);
+    Eigen::Vector3d center(x, y, z);
+    Eigen::Vector3d I_F(0.7, 0.7, 0.7);
+    Eigen::Vector3d P_F(0, 5, 0);
+    Eigen::Vector3d K(1, 1, 1);
+
+    Sphere s = Sphere(center, radius, std::make_tuple(255, 0, 0));
+
     std::vector<int> pixelVector = display::scene(viewPortWidth, viewPortHeight, nRow, nCol, dWindow, O, D, I_F, P_F, K, s);
+    std::string output = "output.ppm";
 
-    std::ofstream fout("output.ppm");
-    if (fout.fail())
-    {
-        return -1;
-    }
-    fout << "P3\n";
-    fout << nCol << " " << nRow << "\n";
-    fout << "255\n";
-
-    for (auto pixel : pixelVector)
-    {
-        fout << pixel << " ";
-    }
+    display::draw(nRow, nCol, pixelVector, output);
 }

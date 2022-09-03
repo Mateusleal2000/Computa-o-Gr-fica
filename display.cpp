@@ -28,4 +28,22 @@ namespace display
         }
         return pixelVector;
     }
+
+    int draw(double nRow, double nCol, std::vector<int> pixelVector, std::string output)
+    {
+        std::ofstream fout(output);
+        if (fout.fail())
+        {
+            return -1;
+        }
+        fout << "P3\n";
+        fout << nCol << " " << nRow << "\n";
+        fout << "255\n";
+
+        for (auto pixel : pixelVector)
+        {
+            fout << pixel << " ";
+        }
+        return 1;
+    }
 }
