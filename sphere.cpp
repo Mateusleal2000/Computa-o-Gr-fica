@@ -8,7 +8,7 @@ Eigen::Vector3d Sphere::getCenter()
 {
     return center;
 }
-std::tuple<double, double, double> Sphere::getColor()
+utilsStructs::Color Sphere::getColor()
 {
     return color;
 }

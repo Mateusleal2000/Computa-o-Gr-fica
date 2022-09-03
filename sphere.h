@@ -1,9 +1,13 @@
+#ifndef SPHERE_H_
+#define SPHERE_H_
+
 #include <tuple>
 #include <eigen3/Eigen/Dense>
+#include "utilsStructs.h"
 class Sphere
 {
 public:
-    Sphere(Eigen::Vector3d center, double radius, std::tuple<int, int, int> color)
+    Sphere(Eigen::Vector3d center, double radius, utilsStructs::Color color)
     {
         this->center = center;
         this->radius = radius;
@@ -12,10 +16,11 @@ public:
     ~Sphere(){};
     double getRadius();
     Eigen::Vector3d getCenter();
-    std::tuple<double, double, double> getColor();
+    utilsStructs::Color getColor();
 
 private:
     Eigen::Vector3d center;
     double radius;
-    std::tuple<double, double, double> color;
+    utilsStructs::Color color;
 };
+#endif

@@ -61,11 +61,11 @@ namespace utils
             I_E(1) = I_F(1) * K(1) * F_E;
             I_E(2) = I_F(2) * K(2) * F_E;
 
-            std::tuple<double, double, double> color = s.getColor();
+            utilsStructs::Color color = s.getColor();
 
-            double R = std::get<0>(color) * (std::min((I_D(0) + I_E(0)), 1.0));
-            double G = std::get<1>(color) * (std::min((I_D(1) + I_E(1)), 1.0));
-            double B = std::get<2>(color) * (std::min((I_D(2) + I_E(2)), 1.0));
+            double R = color.R * (std::min((I_D(0) + I_E(0)), 1.0));
+            double G = color.G * (std::min((I_D(1) + I_E(1)), 1.0));
+            double B = color.B * (std::min((I_D(2) + I_E(2)), 1.0));
 
             return std::make_tuple(R, G, B);
         }

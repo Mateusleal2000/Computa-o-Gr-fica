@@ -6,6 +6,8 @@
 #include "sphere.h"
 #include "utils.h"
 #include "display.h"
+#include "displayStructs.h"
+#include "utilsStructs.h"
 #include <eigen3/Eigen/Dense>
 
 int main(int argc, char **argv)
@@ -23,15 +25,16 @@ int main(int argc, char **argv)
     double nCol = 500;
 
     Eigen::Vector3d O(0.0, 0.0, 0.0);
-    Eigen::Vector3d D(0, 0, 0);
     Eigen::Vector3d center(x, y, z);
     Eigen::Vector3d I_F(0.7, 0.7, 0.7);
     Eigen::Vector3d P_F(0, 5, 0);
     Eigen::Vector3d K(1, 1, 1);
 
-    Sphere s = Sphere(center, radius, std::make_tuple(255, 0, 0));
+    Sphere s = Sphere(center, radius, utilsStructs::Color(255, 0, 0));
 
-    std::vector<int> pixelVector = display::scene(viewPortWidth, viewPortHeight, nRow, nCol, dWindow, O, D, I_F, P_F, K, s);
+    displayStructs::Viewport viewport(viewPortWidth, viewPortHeight, nRow, nCol, dWindow);
+
+    std::vector<int> pixelVector = display::scene(viewport, O, I_F, P_F, K, s);
     std::string output = "output.ppm";
 
     display::draw(nRow, nCol, pixelVector, output);

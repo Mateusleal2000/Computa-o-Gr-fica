@@ -3,22 +3,23 @@
 
 namespace display
 {
-    std::vector<int> scene(double viewPortWidth, double viewPortHeight, double nRow, double nCol, double dWindow, Eigen::Vector3d O, Eigen::Vector3d D, Eigen::Vector3d I_F, Eigen::Vector3d P_F, Eigen::Vector3d K, Sphere s)
+    std::vector<int> scene(displayStructs::Viewport viewport, Eigen::Vector3d O, Eigen::Vector3d I_F, Eigen::Vector3d P_F, Eigen::Vector3d K, Sphere s)
     {
-        double deltaX = viewPortWidth / nCol;
-        double deltaY = viewPortHeight / nRow;
+        double deltaX = viewport.width / viewport.nColumns;
+        double deltaY = viewport.height / viewport.nRows;
         double x, y;
         std::vector<int> pixelVector;
+        Eigen::Vector3d D(0, 0, 0);
 
-        for (int r = 0; r < nRow; r++)
+        for (int r = 0; r < viewport.nRows; r++)
         {
-            y = (viewPortHeight / 2) - (deltaY / 2) - (r * deltaY);
-            for (int c = 0; c < nCol; c++)
+            y = (viewport.height / 2) - (deltaY / 2) - (r * deltaY);
+            for (int c = 0; c < viewport.nColumns; c++)
             {
-                x = -(viewPortWidth / 2) + (deltaX / 2) + (c * deltaX);
+                x = -(viewport.width / 2) + (deltaX / 2) + (c * deltaX);
                 D(0) = x - O(0);
                 D(1) = y - O(1);
-                D(2) = -dWindow;
+                D(2) = -viewport.dWindow;
                 std::tuple<int, int, int> color = utils::traceRay(O, D, I_F, P_F, K, s);
 
                 pixelVector.push_back(std::get<0>(color));
