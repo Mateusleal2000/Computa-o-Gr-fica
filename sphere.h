@@ -4,23 +4,15 @@
 #include <tuple>
 #include <eigen3/Eigen/Dense>
 #include "utilsStructs.h"
-class Sphere
+#include "object.h"
+
+class Sphere : public Object
 {
 public:
-    Sphere(Eigen::Vector3d center, double radius, utilsStructs::Color color)
-    {
-        this->center = center;
-        this->radius = radius;
-        this->color = color;
-    };
-    ~Sphere(){};
+    Sphere(utilsStructs::Color color, Eigen::Vector3d center, Eigen::Vector3d k, double radius) : Object(color, center, k), radius(radius){};
     double getRadius();
-    Eigen::Vector3d getCenter();
-    utilsStructs::Color getColor();
 
 private:
-    Eigen::Vector3d center;
     double radius;
-    utilsStructs::Color color;
 };
 #endif

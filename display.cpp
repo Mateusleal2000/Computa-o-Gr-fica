@@ -1,9 +1,8 @@
 #include "display.h"
-#include "sphere.h"
 
 namespace display
 {
-    std::vector<int> scene(displayStructs::Viewport viewport, Eigen::Vector3d O, displayStructs::LightSource lS, Eigen::Vector3d K, Sphere s)
+    std::vector<int> scene(displayStructs::Viewport viewport, Eigen::Vector3d O, std::vector<std::shared_ptr<displayStructs::LightSource>> lightSources, std::vector<std::shared_ptr<Sphere>> spheres)
     {
         double deltaX = viewport.width / viewport.nColumns;
         double deltaY = viewport.height / viewport.nRows;
@@ -20,7 +19,7 @@ namespace display
                 D(0) = x - O(0);
                 D(1) = y - O(1);
                 D(2) = -viewport.dWindow;
-                std::tuple<int, int, int> color = utils::traceRay(O, D, lS, K, s);
+                std::tuple<int, int, int> color = utils::traceRay(O, D, lightSources, spheres[0]);
 
                 pixelVector.push_back(std::get<0>(color));
                 pixelVector.push_back(std::get<1>(color));
@@ -30,7 +29,7 @@ namespace display
         return pixelVector;
     }
 
-    int draw(double nRow, double nCol, std::vector<int> pixelVector, std::string output)
+    int draw(double width, double height, std::vector<int> pixelVector, std::string output)
     {
         std::ofstream fout(output);
         if (fout.fail())
@@ -38,7 +37,7 @@ namespace display
             return -1;
         }
         fout << "P3\n";
-        fout << nCol << " " << nRow << "\n";
+        fout << height << " " << width << "\n";
         fout << "255\n";
 
         for (auto pixel : pixelVector)

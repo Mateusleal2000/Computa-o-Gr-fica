@@ -1,9 +1,5 @@
 #include "object.h"
 
-double Object::getDWindow()
-{
-    return dWindow;
-}
 utilsStructs::Color Object::getColor()
 {
     return color;

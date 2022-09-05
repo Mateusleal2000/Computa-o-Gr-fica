@@ -1,7 +1,5 @@
 #include <iostream>
-#include <tuple>
-#include <cmath>
-#include <algorithm>
+#include <memory>
 #include <vector>
 #include "sphere.h"
 #include "utils.h"
@@ -30,13 +28,18 @@ int main(int argc, char **argv)
     Eigen::Vector3d P_F(0, 5, 0);
     Eigen::Vector3d K(1, 1, 1);
 
-    Sphere s = Sphere(center, radius, utilsStructs::Color(255, 0, 0));
-
     displayStructs::Viewport viewport(viewPortWidth, viewPortHeight, nRow, nCol, dWindow);
     displayStructs::LightSource lS(I_F, P_F);
+    Sphere s1(utilsStructs::Color(255, 0, 0), center, K, radius);
 
-    std::vector<int> pixelVector = display::scene(viewport, O, lS, K, s);
+    std::vector<std::shared_ptr<Sphere>> spheres;
+    std::vector<std::shared_ptr<displayStructs::LightSource>> lightSources;
+
+    spheres.push_back(std::make_shared<Sphere>(s1));
+    lightSources.push_back(std::make_shared<displayStructs::LightSource>(lS));
+
+    std::vector<int> pixelVector = display::scene(viewport, O, lightSources, spheres);
     std::string output = "output.ppm";
 
-    display::draw(nRow, nCol, pixelVector, output);
+    display::draw(canvasWidth, canvasHeight, pixelVector, output);
 }
