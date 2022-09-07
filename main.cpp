@@ -32,13 +32,13 @@ int main(int argc, char **argv)
     displayStructs::LightSource lS(I_F, P_F);
     Sphere s1(utilsStructs::Color(255, 0, 0), center, K, radius);
 
-    std::vector<std::shared_ptr<Sphere>> spheres;
     std::vector<std::shared_ptr<displayStructs::LightSource>> lightSources;
+    std::vector<std::shared_ptr<Object>> objects;
 
-    spheres.push_back(std::make_shared<Sphere>(s1));
+    objects.push_back(std::make_shared<Sphere>(Sphere(utilsStructs::Color(255, 0, 0), center, K, radius)));
     lightSources.push_back(std::make_shared<displayStructs::LightSource>(lS));
 
-    std::vector<int> pixelVector = display::scene(viewport, O, lightSources, spheres);
+    std::vector<int> pixelVector = display::scene(viewport, O, lightSources, objects);
     std::string output = "output.ppm";
 
     display::draw(canvasWidth, canvasHeight, pixelVector, output);
