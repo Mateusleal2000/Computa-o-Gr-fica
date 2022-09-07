@@ -49,7 +49,7 @@ int main(int argc, char **argv)
 
     // objetos válidos
     objects.push_back(std::make_shared<Sphere>(Sphere(utilsStructs::Color(255, 0, 0), K, 10, radius, center1)));
-    // objects.push_back(std::make_shared<Plane>(Plane(utilsStructs::Color(100), K, 10, Eigen::Vector3d(0, -radius, 0), Eigen::Vector3d(0, 1, 0))));
+    objects.push_back(std::make_shared<Plane>(Plane(utilsStructs::Color(100), K, 10, Eigen::Vector3d(0, -radius, 0), Eigen::Vector3d(0, 1, 0))));
 
     lightSources.push_back(std::make_shared<displayStructs::LightSource>(lS));
 
