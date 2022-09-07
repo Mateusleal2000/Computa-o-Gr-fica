@@ -29,11 +29,21 @@ int main(int argc, char **argv)
     Eigen::Vector3d I_F(0.7, 0.7, 0.7);
     Eigen::Vector3d P_F(0, 60, -30);
 
-    Eigen::Vector3d Ke(0.7, 0.2, 0.2);
-    Eigen::Vector3d Ka(0.7, 0.2, 0.2);
-    Eigen::Vector3d Kd(0.7, 0.2, 0.2);
+    Eigen::Vector3d Ke_1(0.7, 0.2, 0.2);
+    Eigen::Vector3d Ka_1(0.7, 0.2, 0.2);
+    Eigen::Vector3d Kd_1(0.7, 0.2, 0.2);
 
-    utilsStructs::materialK K(Ke, Ka, Kd);
+    Eigen::Vector3d Ke_2(0.0, 0.0, 0.0);
+    Eigen::Vector3d Ka_2(0.7, 0.2, 0.2);
+    Eigen::Vector3d Kd_2(0.7, 0.2, 0.2);
+
+    Eigen::Vector3d Ke_3(0.0, 0.0, 0.0);
+    Eigen::Vector3d Ka_3(0.3, 0.3, 0.7);
+    Eigen::Vector3d Kd_3(0.3, 0.3, 0.7);
+
+    utilsStructs::materialK K_1(Ke_1, Ka_1, Kd_1);
+    utilsStructs::materialK K_2(Ke_2, Ka_2, Kd_2);
+    utilsStructs::materialK K_3(Ke_3, Ka_3, Kd_3);
 
     displayStructs::Viewport viewport(viewPortWidth, viewPortHeight, nRow, nCol, dWindow);
     displayStructs::LightSource lS(I_F, P_F);
@@ -47,9 +57,14 @@ int main(int argc, char **argv)
     Eigen::Vector3d center2(0.6, -0.4, z);
     Eigen::Vector3d center3(-0.6, -0.4, z);
 
+    double m_1 = 1;
+    double m_2 = 10;
+    double m_3 = 10;
+
     // objetos válidos
-    objects.push_back(std::make_shared<Sphere>(Sphere(utilsStructs::Color(255, 0, 0), K, 10, radius, center1)));
-    objects.push_back(std::make_shared<Plane>(Plane(utilsStructs::Color(100), K, 10, Eigen::Vector3d(0, -radius, 0), Eigen::Vector3d(0, 1, 0))));
+    objects.push_back(std::make_shared<Sphere>(Sphere(utilsStructs::Color(255, 0, 0), K_1, m_1, radius, center1)));
+    objects.push_back(std::make_shared<Plane>(Plane(utilsStructs::Color(100), K_2, m_2, Eigen::Vector3d(0, -radius, 0), Eigen::Vector3d(0, 1, 0))));
+    objects.push_back(std::make_shared<Plane>(Plane(utilsStructs::Color(0, 0, 255), K_3, m_3, Eigen::Vector3d(0, 0, -200), Eigen::Vector3d(0, 0, 1))));
 
     lightSources.push_back(std::make_shared<displayStructs::LightSource>(lS));
 

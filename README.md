@@ -1,9 +1,13 @@
 # Computação-Gráfica
 Repositório da disciplina de Computação Gráfica-2022.2
 
-## Libraries
+Equipe: 
+- Gabriel Marques Maranhão
+- Mateus Leal Gonçalves
+
+## Bibliotecas
  - Eigen 3 (Operações de Álg. Linear)
 
 ## Como rodar
-- Use o comando: ```make``` dentro do diretório raiz do projeto.
+- Use o comando: ```g++ *.cpp -o output && ./output``` dentro do diretório raiz do projeto.
 - Visualize a imagem ```output.ppm```.
