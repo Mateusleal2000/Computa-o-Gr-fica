@@ -4,6 +4,7 @@
 #include <memory>
 #include <tuple>
 #include <limits>
+#include <vector>
 #include <eigen3/Eigen/Dense>
 #include "utilsStructs.h"
 #include "displayStructs.h"
@@ -13,7 +14,6 @@
 class Sphere;
 namespace utils
 {
-    std::tuple<double, double> intersectRaySphere(Eigen::Vector3d, Eigen::Vector3d, std::shared_ptr<Sphere>);
     utilsStructs::Color traceRay(displayStructs::Camera camera, Eigen::Vector3d, std::vector<std::shared_ptr<displayStructs::LightSource>>, std::vector<std::shared_ptr<Object>>);
 }
 

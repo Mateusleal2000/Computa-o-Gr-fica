@@ -10,19 +10,18 @@
 class Object
 {
 public:
-    //~Object(){};
     virtual std::tuple<double, double> intersectRay(Eigen::Vector3d, Eigen::Vector3d) = 0;
     virtual std::tuple<double, double> calculateLighting(std::shared_ptr<displayStructs::LightSource>, displayStructs::Camera, Eigen::Vector3d, double) = 0;
     utilsStructs::Color getColor();
-    Eigen::Vector3d getCenter();
-    Eigen::Vector3d getK();
+    utilsStructs::materialK getK();
+    double getM();
 
 protected:
-    Object(utilsStructs::Color color, Eigen::Vector3d center, Eigen::Vector3d k) : color(color), center(center), K(k){};
+    Object(utilsStructs::Color color, utilsStructs::materialK k, double m) : color(color), K(k), m(m){};
 
     utilsStructs::Color color;
-    Eigen::Vector3d center;
-    Eigen::Vector3d K;
+    utilsStructs::materialK K;
+    double m;
 };
 
 #endif

@@ -1,4 +1,6 @@
 #include "sphere.h"
+#include <iostream>
+#include <eigen3/Eigen/Dense>
 
 std::tuple<double, double> Sphere::intersectRay(Eigen::Vector3d O, Eigen::Vector3d D)
 {
@@ -6,10 +8,11 @@ std::tuple<double, double> Sphere::intersectRay(Eigen::Vector3d O, Eigen::Vector
     double delta;
     double r = this->radius;
     double inf = std::numeric_limits<double>::infinity();
+    Eigen::Vector3d w = O - this->getCenter();
 
     a = D.dot(D);
-    b = 2 * (this->getCenter().dot(D));
-    c = this->getCenter().dot(this->getCenter()) - (r * r);
+    b = 2 * (w.dot(D));
+    c = w.dot(w) - (r * r);
 
     delta = (b * b) - (4 * a * c);
 
@@ -41,11 +44,16 @@ std::tuple<double, double> Sphere::calculateLighting(std::shared_ptr<displayStru
     v = -D / D.norm();
 
     double F_D = std::max(n.dot(l), 0.0);
-    double F_E = std::max(r.dot(v), 0.0);
+    double F_E = std::max(std::pow(r.dot(v), this->getM()), 0.0);
     return std::make_tuple(F_D, F_E);
 }
 
 double Sphere::getRadius()
 {
     return radius;
+}
+
+Eigen::Vector3d Sphere::getCenter()
+{
+    return center;
 }

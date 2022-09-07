@@ -2,6 +2,7 @@
 #include <memory>
 #include <vector>
 #include "sphere.h"
+#include "plane.h"
 #include "utils.h"
 #include "display.h"
 #include "displayStructs.h"
@@ -10,15 +11,15 @@
 
 int main(int argc, char **argv)
 {
-    double radius = 0.4;
-    double dWindow = 1;
+    double radius = 40;
+    double dWindow = 30;
     double x = 0;
     double y = 0;
     double z = -(dWindow + radius);
     double canvasWidth = 500;
     double canvasHeight = 500;
-    double viewPortWidth = 3;
-    double viewPortHeight = 3;
+    double viewPortWidth = 60;
+    double viewPortHeight = 60;
     double nRow = 500;
     double nCol = 500;
 
@@ -26,8 +27,13 @@ int main(int argc, char **argv)
     Eigen::Vector3d center(x, y, z);
     Eigen::Vector3d I_A(0.3, 0.3, 0.3);
     Eigen::Vector3d I_F(0.7, 0.7, 0.7);
-    Eigen::Vector3d P_F(0, 5, 0);
-    Eigen::Vector3d K(1, 1, 1);
+    Eigen::Vector3d P_F(0, 60, -30);
+
+    Eigen::Vector3d Ke(0.7, 0.2, 0.2);
+    Eigen::Vector3d Ka(0.7, 0.2, 0.2);
+    Eigen::Vector3d Kd(0.7, 0.2, 0.2);
+
+    utilsStructs::materialK K(Ke, Ka, Kd);
 
     displayStructs::Viewport viewport(viewPortWidth, viewPortHeight, nRow, nCol, dWindow);
     displayStructs::LightSource lS(I_F, P_F);
@@ -36,13 +42,15 @@ int main(int argc, char **argv)
     std::vector<std::shared_ptr<displayStructs::LightSource>> lightSources;
     std::vector<std::shared_ptr<Object>> objects;
 
-    Eigen::Vector3d center1(0, 0.5, z);
+    // Eigen::Vector3d center1(0, 0.5, z);
+    Eigen::Vector3d center1(0, 0, -100);
     Eigen::Vector3d center2(0.6, -0.4, z);
     Eigen::Vector3d center3(-0.6, -0.4, z);
 
-    objects.push_back(std::make_shared<Sphere>(Sphere(utilsStructs::Color(255, 0, 0), center1, K, radius)));
-    objects.push_back(std::make_shared<Sphere>(Sphere(utilsStructs::Color(0, 255, 0), center2, K, radius)));
-    objects.push_back(std::make_shared<Sphere>(Sphere(utilsStructs::Color(0, 0, 255), center3, K, radius)));
+    // objetos válidos
+    objects.push_back(std::make_shared<Sphere>(Sphere(utilsStructs::Color(255, 0, 0), K, 10, radius, center1)));
+    // objects.push_back(std::make_shared<Plane>(Plane(utilsStructs::Color(100), K, 10, Eigen::Vector3d(0, -radius, 0), Eigen::Vector3d(0, 1, 0))));
+
     lightSources.push_back(std::make_shared<displayStructs::LightSource>(lS));
 
     std::vector<int> pixelVector = display::scene(viewport, camera, lightSources, objects);

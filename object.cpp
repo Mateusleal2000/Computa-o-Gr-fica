@@ -4,11 +4,13 @@ utilsStructs::Color Object::getColor()
 {
     return color;
 }
-Eigen::Vector3d Object::getCenter()
-{
-    return center;
-}
-Eigen::Vector3d Object::getK()
+
+utilsStructs::materialK Object::getK()
 {
     return K;
+}
+
+double Object::getM()
+{
+    return m;
 }

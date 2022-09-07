@@ -22,7 +22,7 @@ namespace display
                 D(1) = y - camera.O(1);
                 D(2) = -viewport.dWindow;
 
-                displayStructs::Camera cameraTest(Eigen::Vector3d(x, y, 0), camera.I_A);
+                // displayStructs::Camera cameraTest(Eigen::Vector3d(x, y, 0), camera.I_A);
                 utilsStructs::Color color = utils::traceRay(camera, D, lightSources, objects);
 
                 pixelVector.push_back(color.R);
