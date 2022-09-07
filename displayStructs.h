@@ -27,7 +27,8 @@ namespace displayStructs
     struct Camera
     {
         Eigen::Vector3d O;
-        Camera(Eigen::Vector3d O) : O(O) {}
+        Eigen::Vector3d I_A;
+        Camera(Eigen::Vector3d O, Eigen::Vector3d I_A) : O(O), I_A(I_A) {}
     };
 
     struct LightSource

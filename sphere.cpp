@@ -24,7 +24,7 @@ std::tuple<double, double> Sphere::intersectRay(Eigen::Vector3d O, Eigen::Vector
     return std::make_tuple(t1, t2);
 }
 
-std::tuple<double, double> Sphere::calculateLighting(std::shared_ptr<displayStructs::LightSource> lS, Eigen::Vector3d O, Eigen::Vector3d D, double t)
+std::tuple<double, double> Sphere::calculateLighting(std::shared_ptr<displayStructs::LightSource> lS, displayStructs::Camera camera, Eigen::Vector3d D, double t)
 {
 
     Eigen::Vector3d P_I(0, 0, 0);
@@ -34,7 +34,7 @@ std::tuple<double, double> Sphere::calculateLighting(std::shared_ptr<displayStru
     Eigen::Vector3d v(0, 0, 0);
     Eigen::Vector3d center = this->getCenter();
 
-    P_I = O + (-t) * (D - O);
+    P_I = camera.O + t * (D - camera.O);
     n = (P_I - center) / this->getRadius();
     l = (lS.get()->P_F - P_I) / (lS.get()->P_F - P_I).norm();
     r = 2 * ((l.dot(n)) * n) - l;

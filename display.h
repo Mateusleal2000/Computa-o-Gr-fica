@@ -14,7 +14,7 @@
 class Sphere;
 namespace display
 {
-    std::vector<int> scene(displayStructs::Viewport, Eigen::Vector3d, std::vector<std::shared_ptr<displayStructs::LightSource>>, std::vector<std::shared_ptr<Object>>);
+    std::vector<int> scene(displayStructs::Viewport, displayStructs::Camera, std::vector<std::shared_ptr<displayStructs::LightSource>>, std::vector<std::shared_ptr<Object>>);
     int draw(double, double, std::vector<int>, std::string);
 }
 

@@ -5,13 +5,15 @@ namespace utilsStructs
 {
     struct Color
     {
-        Color(){};
-        Color(double red, double green, double blue) : R(red), G(green), B(blue)
+        Color(int bg) : R(bg), G(bg), B(bg){
+
+                                      };
+        Color(int red, int green, int blue) : R(red), G(green), B(blue)
         {
         }
-        double R;
-        double G;
-        double B;
+        int R;
+        int G;
+        int B;
     };
 
 }
