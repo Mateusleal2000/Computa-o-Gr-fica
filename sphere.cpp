@@ -1,9 +1,9 @@
 #include "sphere.h"
-#include <iostream>
-#include <eigen3/Eigen/Dense>
 
-std::tuple<double, double> Sphere::intersectRay(Eigen::Vector3d O, Eigen::Vector3d D)
-{
+#include <eigen3/Eigen/Dense>
+#include <iostream>
+
+std::tuple<double, double> Sphere::intersectRay(Eigen::Vector3d O, Eigen::Vector3d D) {
     double a, b, c;
     double delta;
     double r = this->radius;
@@ -16,8 +16,7 @@ std::tuple<double, double> Sphere::intersectRay(Eigen::Vector3d O, Eigen::Vector
 
     delta = (b * b) - (4 * a * c);
 
-    if (delta < 0)
-    {
+    if (delta < 0) {
         return std::make_tuple(inf, inf);
     }
 
@@ -27,38 +26,14 @@ std::tuple<double, double> Sphere::intersectRay(Eigen::Vector3d O, Eigen::Vector
     return std::make_tuple(t1, t2);
 }
 
-std::tuple<double, double> Sphere::calculateLighting(std::shared_ptr<displayStructs::LightSource> lS, displayStructs::Camera camera, Eigen::Vector3d D, double t)
-{
-
-    Eigen::Vector3d P_I(0, 0, 0);
-    Eigen::Vector3d n(0, 0, 0);
-    Eigen::Vector3d l(0, 0, 0);
-    Eigen::Vector3d r(0, 0, 0);
-    Eigen::Vector3d v(0, 0, 0);
-    Eigen::Vector3d center = this->getCenter();
-
-    P_I = camera.O + t * (D - camera.O);
-    n = (P_I - center) / this->getRadius();
-    l = (lS.get()->P_F - P_I) / (lS.get()->P_F - P_I).norm();
-    r = 2 * ((l.dot(n)) * n) - l;
-    v = -D / D.norm();
-
-    double F_D = std::max(n.dot(l), 0.0);
-    double F_E = std::max(std::pow(r.dot(v), this->getM()), 0.0);
-    return std::make_tuple(F_D, F_E);
-}
-
-double Sphere::getRadius()
-{
+double Sphere::getRadius() {
     return radius;
 }
 
-Eigen::Vector3d Sphere::getCenter()
-{
+Eigen::Vector3d Sphere::getCenter() {
     return center;
 }
 
-Eigen::Vector3d Sphere::getNormal(Eigen::Vector3d P_I)
-{
+Eigen::Vector3d Sphere::getNormal(Eigen::Vector3d P_I) {
     return ((P_I - this->center) / this->radius);
 }

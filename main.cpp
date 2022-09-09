@@ -1,16 +1,16 @@
+#include <eigen3/Eigen/Dense>
 #include <iostream>
 #include <memory>
 #include <vector>
-#include "sphere.h"
-#include "plane.h"
-#include "utils.h"
+
 #include "display.h"
 #include "displayStructs.h"
+#include "plane.h"
+#include "sphere.h"
+#include "utils.h"
 #include "utilsStructs.h"
-#include <eigen3/Eigen/Dense>
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     double radius = 40;
     double dWindow = 30;
     double x = 0;
@@ -52,7 +52,6 @@ int main(int argc, char **argv)
     std::vector<std::shared_ptr<displayStructs::LightSource>> lightSources;
     std::vector<std::shared_ptr<Object>> objects;
 
-    // Eigen::Vector3d center1(0, 0.5, z);
     Eigen::Vector3d center1(0, 0, -100);
     Eigen::Vector3d center2(0.6, -0.4, z);
     Eigen::Vector3d center3(-0.6, -0.4, z);
