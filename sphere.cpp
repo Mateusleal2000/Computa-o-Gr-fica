@@ -57,3 +57,8 @@ Eigen::Vector3d Sphere::getCenter()
 {
     return center;
 }
+
+Eigen::Vector3d Sphere::getNormal(Eigen::Vector3d P_I)
+{
+    return ((P_I - this->center) / this->radius);
+}

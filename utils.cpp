@@ -6,63 +6,161 @@ namespace utils
     double inf = std::numeric_limits<double>::infinity();
     int BACKGROUND_COLOR = 100;
 
+    std::tuple<double, std::shared_ptr<Object>> closestIntersection(Eigen::Vector3d O, Eigen::Vector3d D, double tMin, double tMax, std::vector<std::shared_ptr<Object>> objects)
+    {
+        double closestT = inf;
+        std::shared_ptr<Object> closestObject;
+
+        for (std::shared_ptr<Object> object : objects)
+        {
+            auto [t1, t2] = (object->intersectRay(O, D));
+            auto tMin = 0;
+            auto tMax = inf;
+
+            if (t1 > tMin && t1 < tMax && t1 < closestT)
+            {
+                closestT = t1;
+                closestObject = object;
+            }
+            if (t2 > tMin && t2 < tMax && t2 < closestT)
+            {
+                closestT = t2;
+                closestObject = object;
+            }
+        }
+        return std::make_tuple(closestT, closestObject);
+    }
+
+    bool isLightBlocked(std::shared_ptr<Object> closestObject, std::vector<std::shared_ptr<Object>> objects, Eigen::Vector3d P_I, std::shared_ptr<displayStructs::LightSource> lS, Eigen::Vector3d l)
+    {
+        for (std::shared_ptr<Object> object : objects)
+        {
+            if (object != closestObject)
+            {
+                auto [t1, t2] = object->intersectRay(P_I, l);
+                double t = -inf;
+                if (t1 > 0 && t2 > 0)
+                {
+                    t = std::min(t1, t2);
+                }
+                else if (t1 > 0 && t2 < 0)
+                {
+                    t = t1;
+                }
+                else if (t1 < 0 && t2 > 0)
+                {
+                    t = t2;
+                }
+
+                Eigen::Vector3d vec = lS->P_F - P_I;
+                if (t >= 0 && t < vec.norm())
+                {
+                    if (std::abs(t - vec.norm()) > 0.000000001)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    std::tuple<int, int, int> calculateLighting(std::shared_ptr<displayStructs::LightSource> lS, displayStructs::Camera camera, Eigen::Vector3d D, double t, std::shared_ptr<Object> closestObject, std::vector<std::shared_ptr<Object>> objects)
+    {
+        auto I_F = lS.get()->I_F;
+        auto P_F = lS.get()->P_F;
+        utilsStructs::materialK K = closestObject->getK();
+
+        Eigen::Vector3d P_I(0, 0, 0);
+        Eigen::Vector3d n(0, 0, 0);
+        Eigen::Vector3d l(0, 0, 0);
+        Eigen::Vector3d r(0, 0, 0);
+        Eigen::Vector3d v(0, 0, 0);
+
+        Eigen::Vector3d I_A(0, 0, 0);
+        Eigen::Vector3d I_D(0, 0, 0);
+        Eigen::Vector3d I_E(0, 0, 0);
+        // Eigen::Vector3d center = this->getCenter();
+
+        P_I = camera.O + t * (D - camera.O);
+        n = closestObject->getNormal(P_I);
+        // n = (P_I - center) / this->getRadius();
+        l = (lS.get()->P_F - P_I) / (lS.get()->P_F - P_I).norm();
+        r = 2 * ((l.dot(n)) * n) - l;
+        v = -D / D.norm();
+
+        double F_D = std::max(n.dot(l), 0.0);
+        double F_E = std::max(std::pow(r.dot(v), closestObject->getM()), 0.0);
+        bool isBlocked = isLightBlocked(closestObject, objects, P_I, lS, l);
+        if (isBlocked)
+        {
+            I_F(0) = 0;
+            I_F(1) = 0;
+            I_F(2) = 0;
+        }
+        I_D(0) = I_F(0) * K.Kd(0) * F_D;
+        I_D(1) = I_F(1) * K.Kd(1) * F_D;
+        I_D(2) = I_F(2) * K.Kd(2) * F_D;
+
+        I_E(0) = I_F(0) * K.Ke(0) * F_E;
+        I_E(1) = I_F(1) * K.Ke(1) * F_E;
+        I_E(2) = I_F(2) * K.Ke(2) * F_E;
+
+        I_A(0) = camera.I_A(0) * K.Ka(0);
+        I_A(1) = camera.I_A(1) * K.Ka(1);
+        I_A(2) = camera.I_A(2) * K.Ka(2);
+
+        utilsStructs::Color color = closestObject.get()->getColor();
+
+        int R = color.R * (I_A(0) + I_D(0) + I_E(0));
+        int G = color.G * (I_A(1) + I_D(1) + I_E(1));
+        int B = color.B * (I_A(2) + I_D(2) + I_E(2));
+        return std::make_tuple(R, G, B);
+    }
+
     utilsStructs::Color traceRay(displayStructs::Camera camera, Eigen::Vector3d D, std::vector<std::shared_ptr<displayStructs::LightSource>> lightSources, std::vector<std::shared_ptr<Object>> objects)
     {
         auto lS = lightSources[0];
 
-        double closest_t = inf;
-        std::shared_ptr<Object> closest_object;
+        auto [closestT, closestObject] = closestIntersection(camera.O, D, 0, inf, objects);
 
-        for (std::shared_ptr<Object> object : objects)
-        {
-            auto [t1, t2] = (object->intersectRay(camera.O, D));
-            auto tMin = 0;
-            auto tMax = inf;
-
-            if (t1 > tMin && t1 < tMax && t1 < closest_t)
-            {
-                closest_t = t1;
-                closest_object = object;
-            }
-            if (t2 > tMin && t2 < tMax && t2 < closest_t)
-            {
-                closest_t = t2;
-                closest_object = object;
-            }
-        }
-        if (closest_object == nullptr)
+        if (closestObject == nullptr)
         {
             return utilsStructs::Color(BACKGROUND_COLOR);
         }
-        if (closest_t != inf)
+        if (closestT != inf)
         {
-            auto I_F = lS.get()->I_F;
-            auto P_F = lS.get()->P_F;
-            utilsStructs::materialK K = closest_object.get()->getK();
+            // auto I_F = lS.get()->I_F;
+            // auto P_F = lS.get()->P_F;
+            // utilsStructs::materialK K = closestObject.get()->getK();
 
-            Eigen::Vector3d I_A(0, 0, 0);
-            Eigen::Vector3d I_D(0, 0, 0);
-            Eigen::Vector3d I_E(0, 0, 0);
+            // Eigen::Vector3d I_A(0, 0, 0);
+            // Eigen::Vector3d I_D(0, 0, 0);
+            // Eigen::Vector3d I_E(0, 0, 0);
 
-            auto [F_D, F_E] = closest_object.get()->calculateLighting(lS, camera, D, closest_t);
+            // bool isBlocked = isLightBlocked(objects, closestObject, lS, );
 
-            I_D(0) = I_F(0) * K.Kd(0) * F_D;
-            I_D(1) = I_F(1) * K.Kd(1) * F_D;
-            I_D(2) = I_F(2) * K.Kd(2) * F_D;
+            // auto [F_D, F_E] = calculateLighting(lS, camera, D, closestT, closestObject);
+            auto [R, G, B] = calculateLighting(lS, camera, D, closestT, closestObject, objects);
+            // id = if * kd * fd
 
-            I_E(0) = I_F(0) * K.Ke(0) * F_E;
-            I_E(1) = I_F(1) * K.Ke(1) * F_E;
-            I_E(2) = I_F(2) * K.Ke(2) * F_E;
+            // I_D(0) = I_F(0) * K.Kd(0) * F_D;
+            // I_D(1) = I_F(1) * K.Kd(1) * F_D;
+            // I_D(2) = I_F(2) * K.Kd(2) * F_D;
 
-            I_A(0) = camera.I_A(0) * K.Ka(0);
-            I_A(1) = camera.I_A(1) * K.Ka(1);
-            I_A(2) = camera.I_A(2) * K.Ka(2);
+            // I_E(0) = I_F(0) * K.Ke(0) * F_E;
+            // I_E(1) = I_F(1) * K.Ke(1) * F_E;
+            // I_E(2) = I_F(2) * K.Ke(2) * F_E;
 
-            utilsStructs::Color color = closest_object.get()->getColor();
+            // I_A(0) = camera.I_A(0) * K.Ka(0);
+            // I_A(1) = camera.I_A(1) * K.Ka(1);
+            // I_A(2) = camera.I_A(2) * K.Ka(2);
 
-            int R = color.R * (I_A(0) + I_D(0) + I_E(0));
-            int G = color.G * (I_A(1) + I_D(1) + I_E(1));
-            int B = color.B * (I_A(2) + I_D(2) + I_E(2));
+            // utilsStructs::Color color = closestObject.get()->getColor();
+
+            // int R = color.R * (I_A(0) + I_D(0) + I_E(0));
+            // int G = color.G * (I_A(1) + I_D(1) + I_E(1));
+            // int B = color.B * (I_A(2) + I_D(2) + I_E(2));
 
             return utilsStructs::Color(R, G, B);
         }

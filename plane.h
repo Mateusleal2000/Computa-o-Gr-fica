@@ -11,6 +11,7 @@ public:
 
     std::tuple<double, double> intersectRay(Eigen::Vector3d, Eigen::Vector3d);
     std::tuple<double, double> calculateLighting(std::shared_ptr<displayStructs::LightSource>, displayStructs::Camera, Eigen::Vector3d, double);
+    Eigen::Vector3d getNormal(Eigen::Vector3d);
 
 private:
     Eigen::Vector3d pPI;

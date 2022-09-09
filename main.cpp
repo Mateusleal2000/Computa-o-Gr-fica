@@ -57,14 +57,14 @@ int main(int argc, char **argv)
     Eigen::Vector3d center2(0.6, -0.4, z);
     Eigen::Vector3d center3(-0.6, -0.4, z);
 
-    double m_1 = 1;
-    double m_2 = 10;
-    double m_3 = 10;
+    double m_1 = 10;
+    double m_2 = 1;
+    double m_3 = 1;
 
     // objetos válidos
     objects.push_back(std::make_shared<Sphere>(Sphere(utilsStructs::Color(255, 0, 0), K_1, m_1, radius, center1)));
     objects.push_back(std::make_shared<Plane>(Plane(utilsStructs::Color(100), K_2, m_2, Eigen::Vector3d(0, -radius, 0), Eigen::Vector3d(0, 1, 0))));
-    objects.push_back(std::make_shared<Plane>(Plane(utilsStructs::Color(0, 0, 255), K_3, m_3, Eigen::Vector3d(0, 0, -200), Eigen::Vector3d(0, 0, 1))));
+    objects.push_back(std::make_shared<Plane>(Plane(utilsStructs::Color(100), K_3, m_3, Eigen::Vector3d(0, 0, -200), Eigen::Vector3d(0, 0, 1))));
 
     lightSources.push_back(std::make_shared<displayStructs::LightSource>(lS));
 
