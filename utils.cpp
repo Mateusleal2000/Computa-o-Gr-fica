@@ -47,8 +47,8 @@ bool isLightBlocked(std::shared_ptr<Object> closestObject, std::vector<std::shar
 }
 
 std::tuple<int, int, int> calculateLighting(std::shared_ptr<displayStructs::LightSource> lS, displayStructs::Camera camera, Eigen::Vector3d D, double t, std::shared_ptr<Object> closestObject, std::vector<std::shared_ptr<Object>> objects) {
-    auto I_F = lS.get()->I_F;
-    auto P_F = lS.get()->P_F;
+    auto I_F = lS->I_F;
+    auto P_F = lS->P_F;
     utilsStructs::materialK K = closestObject->getK();
 
     Eigen::Vector3d P_I(0, 0, 0);
@@ -63,7 +63,7 @@ std::tuple<int, int, int> calculateLighting(std::shared_ptr<displayStructs::Ligh
 
     P_I = camera.O + t * (D - camera.O);
     n = closestObject->getNormal(P_I);
-    l = (lS.get()->P_F - P_I) / (lS.get()->P_F - P_I).norm();
+    l = (lS->P_F - P_I) / (lS->P_F - P_I).norm();
     r = 2 * ((l.dot(n)) * n) - l;
     v = -D / D.norm();
 
@@ -91,7 +91,7 @@ std::tuple<int, int, int> calculateLighting(std::shared_ptr<displayStructs::Ligh
     I_A(1) = camera.I_A(1) * K.Ka(1);
     I_A(2) = camera.I_A(2) * K.Ka(2);
 
-    utilsStructs::Color color = closestObject.get()->getColor();
+    utilsStructs::Color color = closestObject->getColor();
 
     int R = color.R * (I_A(0) + I_D(0) + I_E(0));
     int G = color.G * (I_A(1) + I_D(1) + I_E(1));
