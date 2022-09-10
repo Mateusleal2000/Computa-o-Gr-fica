@@ -96,6 +96,11 @@ std::tuple<int, int, int> calculateLighting(std::shared_ptr<displayStructs::Ligh
     int R = color.R * (I_A(0) + I_D(0) + I_E(0));
     int G = color.G * (I_A(1) + I_D(1) + I_E(1));
     int B = color.B * (I_A(2) + I_D(2) + I_E(2));
+
+    R = std::min(R, 255);
+    G = std::min(G, 255);
+    B = std::min(B, 255);
+
     return std::make_tuple(R, G, B);
 }
 

@@ -1,7 +1,8 @@
 #ifndef DISPLAY_H_
 #define DISPLAY_H_
 
-#include <eigen3/Eigen/Dense>
+#include <GL/glut.h>
+#include <Eigen/Dense>
 #include <fstream>
 #include <limits>
 #include <memory>
@@ -14,8 +15,7 @@
 
 class Sphere;
 namespace display {
-std::vector<int> scene(displayStructs::Viewport, displayStructs::Camera, std::vector<std::shared_ptr<displayStructs::LightSource>>, std::vector<std::shared_ptr<Object>>);
-int draw(double, double, std::vector<int>, std::string);
+std::vector<unsigned char> scene(displayStructs::Viewport, displayStructs::Camera, std::vector<std::shared_ptr<displayStructs::LightSource>>, std::vector<std::shared_ptr<Object>>);
 }  // namespace display
 
 #endif

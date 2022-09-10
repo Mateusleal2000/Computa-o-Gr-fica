@@ -2,7 +2,7 @@
 #define UTILS_H_
 
 #include <algorithm>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #include <limits>
 #include <memory>
 #include <tuple>

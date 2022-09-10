@@ -1,7 +1,7 @@
 #ifndef DISPLAYSTRUCTS_H_
 #define DISPLAYSTRUCTS_H_
 
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 
 namespace displayStructs {
 struct Viewport {

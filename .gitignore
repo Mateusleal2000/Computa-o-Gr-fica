@@ -1,3 +1,5 @@
-.vscode/
+.vs/
+.Debug/
+.Release/
 output
-output.ppm
+main

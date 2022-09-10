@@ -1,7 +1,7 @@
 #ifndef SPHERE_H_
 #define SPHERE_H_
 
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #include <memory>
 #include <tuple>
 

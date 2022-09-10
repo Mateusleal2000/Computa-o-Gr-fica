@@ -1,6 +1,6 @@
 #ifndef PLANE_H_
 #define PLANE_H_
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #include <tuple>
 
 #include "object.h"

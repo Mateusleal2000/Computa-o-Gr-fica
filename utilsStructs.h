@@ -1,7 +1,7 @@
 #ifndef UTILSSTRUCTS_H_
 #define UTILSSTRUCTS_H_
 
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 
 namespace utilsStructs {
 struct Color {

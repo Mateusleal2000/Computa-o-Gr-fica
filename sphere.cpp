@@ -1,6 +1,6 @@
 #include "sphere.h"
 
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #include <iostream>
 
 std::tuple<double, double> Sphere::intersectRay(Eigen::Vector3d O, Eigen::Vector3d D) {

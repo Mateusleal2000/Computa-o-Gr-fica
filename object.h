@@ -1,7 +1,7 @@
 #ifndef OBJECT_H_
 #define OBJECT_H_
 
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #include <memory>
 #include <tuple>
 
