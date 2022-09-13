@@ -7,6 +7,7 @@ Equipe:
 
 ## Bibliotecas
  - Eigen 3 (Operações de Álg. Linear)
+ - Glut
 
 ## Como rodar
 - Use o comando: ```g++ *.cpp -o output && ./output``` dentro do diretório raiz do projeto.
