@@ -1,10 +1,7 @@
-#include "display.h"
+#include "scene.h"
+#include "utils.h"
 
-namespace display {
-std::vector<unsigned char> scene(
-    displayStructs::Viewport viewport, displayStructs::Camera camera,
-    std::vector<std::shared_ptr<displayStructs::LightSource>> lightSources,
-    std::vector<std::shared_ptr<Object>> objects) {
+std::vector<unsigned char> Scene::display() {
   double deltaX = viewport.width / viewport.nColumns;
   double deltaY = viewport.height / viewport.nRows;
   double x, y;
@@ -33,4 +30,3 @@ std::vector<unsigned char> scene(
   }
   return pixelVector;
 }
-}  // namespace display

@@ -11,6 +11,7 @@
 #include "sphere.h"
 #include "utils.h"
 #include "utilsStructs.h"
+#include "scene.h"
 
 double canvasWidth = 500;
 double canvasHeight = 500;
@@ -82,17 +83,17 @@ int main(int argc, char** argv) {
       Plane(utilsStructs::Color(100), K_2, m_2, Eigen::Vector3d(0, -radius, 0),
             Eigen::Vector3d(0, 1, 0))));
   objects.push_back(std::make_shared<Plane>(
-      Plane(utilsStructs::Color(100), K_3, m_3, Eigen::Vector3d(0, 0, -200),
-            Eigen::Vector3d(0, 0, 1))));
+      Plane(utilsStructs::Color(100), K_3, m_3,
+            Eigen::Vector3d(0, 0, -200), Eigen::Vector3d(0, 0, 1))));
 
   lightSources.push_back(std::make_shared<displayStructs::LightSource>(lS_1));
   lightSources.push_back(std::make_shared<displayStructs::LightSource>(lS_2));
 
-  std::vector<unsigned char> pixelVector =
-      display::scene(viewport, camera, lightSources, objects);
+  Scene scene(viewport, camera, lightSources, objects);
+  std::vector<unsigned char> pixelVector = scene.display();
 
   pixelArray = pixelVector.data();
-  std::string output = "output.ppm";
+
 
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
@@ -101,8 +102,6 @@ int main(int argc, char** argv) {
   glutCreateWindow("Cena");
 
   glOrtho(0.0, 1.0, 0.0, 1.0, -1.0, 1.0);
-
-  glutPostRedisplay();
 
   glutDisplayFunc(draw);
   glutIdleFunc(draw);

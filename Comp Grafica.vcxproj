@@ -151,18 +151,18 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="display.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="object.cpp" />
     <ClCompile Include="plane.cpp" />
+    <ClCompile Include="scene.cpp" />
     <ClCompile Include="sphere.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="display.h" />
     <ClInclude Include="displayStructs.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="plane.h" />
+    <ClInclude Include="scene.h" />
     <ClInclude Include="sphere.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="utilsStructs.h" />
