@@ -14,8 +14,6 @@ std::tuple<double, std::shared_ptr<Object>> closestIntersection(
 
   for (std::shared_ptr<Object> object : objects) {
     auto [t1, t2] = (object->intersectRay(O, D));
-    auto tMin = 0;
-    auto tMax = inf;
 
     if (t1 > tMin && t1 < tMax && t1 < closestT) {
       closestT = t1;

@@ -50,6 +50,9 @@
     <ClCompile Include="scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cylinder.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="object.h">
@@ -72,6 +75,9 @@
     </ClInclude>
     <ClInclude Include="scene.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cylinder.h">
+      <Filter>Header Files\Objects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
