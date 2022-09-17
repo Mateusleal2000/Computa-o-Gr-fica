@@ -65,6 +65,7 @@ int main(int argc, char** argv) {
   Eigen::Vector3d Ka_4(0.2, 0.3, 0.8);
   Eigen::Vector3d Kd_4(0.2, 0.3, 0.8);
   Eigen::Vector3d dCil_1(-1.0 / std::sqrt(3), 1.0 / std::sqrt(3), -1.0 / std::sqrt(3));
+  Eigen::Vector3d dCil_2(1.0*10 / std::sqrt(3), -1.0*10 / std::sqrt(3), 10*1.0 / std::sqrt(3));
   double height_1 = 3 * radius;
 
 
@@ -85,13 +86,14 @@ int main(int argc, char** argv) {
   Eigen::Vector3d center1(0, 0, -100);
   Eigen::Vector3d center2(0.6, -0.4, z);
   Eigen::Vector3d center3(-0.6, -0.4, z);
+  Eigen::Vector3d center4(0,0,-100);
 
   double m_1 = 10;
   double m_2 = 1;
   double m_3 = 1;
 
   objects.push_back(std::make_shared<Sphere>(
-      Sphere(utilsStructs::Color(255, 0, 0), K_1, m_1, radius, center1)));
+      Sphere(utilsStructs::Color(0, 255, 0), K_1, m_1, radius, center1)));
 
   objects.push_back(std::make_shared<Plane>(
       Plane(utilsStructs::Color(100), K_2, m_2, Eigen::Vector3d(0, -radius, 0),
@@ -101,8 +103,11 @@ int main(int argc, char** argv) {
       Plane(utilsStructs::Color(100), K_3, m_3,
             Eigen::Vector3d(0, 0, -200), Eigen::Vector3d(0, 0, 1))));
 
+
   objects.push_back(std::make_shared<Cylinder>(
 	  Cylinder(utilsStructs::Color(255, 0, 0), K_4, m_1, radius/3, center1, height_1, dCil_1)));
+
+  //objects.push_back(std::make_shared<Cylinder>(Cylinder(utilsStructs::Color(255, 0, 0), K_4, m_1, radius / 3, center1, height_1, dCil_1)));
 
   lightSources.push_back(std::make_shared<displayStructs::LightSource>(lS_1));
   //lightSources.push_back(std::make_shared<displayStructs::LightSource>(lS_2));
