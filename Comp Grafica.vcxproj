@@ -151,6 +151,7 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="cone.cpp" />
     <ClCompile Include="cylinder.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="object.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cone.h" />
     <ClInclude Include="cylinder.h" />
     <ClInclude Include="displayStructs.h" />
     <ClInclude Include="object.h" />
