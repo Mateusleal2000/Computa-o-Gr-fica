@@ -7,9 +7,9 @@
 
 class Plane : public Object {
  public:
-  Plane(utilsStructs::Color color, utilsStructs::materialK k, double shininess,
-        Eigen::Vector3d pPI, Eigen::Vector3d nBar)
-      : Object(color, k, shininess), pPI(pPI), nBar(nBar){};
+  Plane(utilsStructs::materialK k, double shininess, Eigen::Vector3d pPI,
+        Eigen::Vector3d nBar)
+      : Object(k, shininess), pPI(pPI), nBar(nBar){};
 
   std::tuple<double, double> intersectRay(Eigen::Vector3d, Eigen::Vector3d);
   Eigen::Vector3d getNormal(Eigen::Vector3d);

@@ -11,9 +11,9 @@
 
 class Sphere : public Object {
  public:
-  Sphere(utilsStructs::Color color, utilsStructs::materialK k, double shininess,
-         double radius, Eigen::Vector3d center)
-      : Object(color, k, shininess), radius(radius), center(center){};
+  Sphere(utilsStructs::materialK k, double shininess, double radius,
+         Eigen::Vector3d center)
+      : Object(k, shininess), radius(radius), center(center){};
   double getRadius();
   Eigen::Vector3d getCenter();
   Eigen::Vector3d getNormal(Eigen::Vector3d P_I);

@@ -50,7 +50,7 @@ bool isLightBlocked(std::shared_ptr<Object> closestObject,
   return false;
 }
 
-std::tuple<int, int, int> calculateLighting(
+std::tuple<double, double, double> calculateLighting(
     std::vector<std::shared_ptr<displayStructs::LightSource>> lightSources,
     displayStructs::Camera camera, Eigen::Vector3d D, double t,
     std::shared_ptr<Object> closestObject,
@@ -100,17 +100,17 @@ std::tuple<int, int, int> calculateLighting(
   I_A(1) = camera.I_A(1) * K.Ka(1);
   I_A(2) = camera.I_A(2) * K.Ka(2);
 
-  utilsStructs::Color color = closestObject->getColor();
+  double I_1 = (I_A(0) + I_D(0) + I_E(0));
+  double I_2 = (I_A(1) + I_D(1) + I_E(1));
+  double I_3 = (I_A(2) + I_D(2) + I_E(2));
 
-  int R = color.R * (I_A(0) + I_D(0) + I_E(0));
-  int G = color.G * (I_A(1) + I_D(1) + I_E(1));
-  int B = color.B * (I_A(2) + I_D(2) + I_E(2));
+  double maxI = std::max({I_1, I_2, I_3});
 
-  R = std::min(R, 255);
-  G = std::min(G, 255);
-  B = std::min(B, 255);
+  if (maxI > 1) {
+    return std::make_tuple(I_1 / maxI, I_2 / maxI, I_3 / maxI);
+  }
 
-  return std::make_tuple(R, G, B);
+  return std::make_tuple(I_1, I_2, I_3);
 }
 
 utilsStructs::Color traceRay(
@@ -126,7 +126,7 @@ utilsStructs::Color traceRay(
   if (closestT != inf) {
     auto [R, G, B] = calculateLighting(lightSources, camera, D, closestT,
                                        closestObject, objects);
-    return utilsStructs::Color(R, G, B);
+    return utilsStructs::Color(R * 255, G * 255, B * 255);
   }
   return utilsStructs::Color(BACKGROUND_COLOR);
 }

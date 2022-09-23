@@ -1,4 +1,5 @@
 #include "scene.h"
+
 #include "utils.h"
 
 std::vector<unsigned char> Scene::display() {

@@ -24,7 +24,7 @@ std::tuple<double, std::shared_ptr<Object>> closestIntersection(
     Eigen::Vector3d, Eigen::Vector3d, double, double,
     std::vector<std::shared_ptr<Object>>);
 
-std::tuple<int, int, int> calculateLighting(
+std::tuple<double, double, double> calculateLighting(
     std::vector<std::shared_ptr<displayStructs::LightSource>> lightSources,
     displayStructs::Camera camera, Eigen::Vector3d D, double t,
     std::shared_ptr<Object> closestObject,
