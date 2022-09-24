@@ -2,12 +2,11 @@
 #ifndef SCENE_H_
 #define SCENE_H_
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 #include "displayStructs.h"
 #include "object.h"
-
 
 class Scene {
  public:
@@ -26,6 +25,5 @@ class Scene {
   displayStructs::Camera camera;
   std::vector<std::shared_ptr<displayStructs::LightSource>> lightSources;
   std::vector<std::shared_ptr<Object>> objects;
-  
 };
 #endif

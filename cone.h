@@ -11,6 +11,8 @@
 #include "utilsStructs.h"
 
 class Cone : public Object {
+  enum INTERSECTION_TYPE { BASE, SURFACE };
+
  public:
   Cone(utilsStructs::materialK k, double shininess, double radius,
        Eigen::Vector3d center, double height, Eigen::Vector3d dCone)
@@ -37,6 +39,7 @@ class Cone : public Object {
   std::tuple<double, double> intersectRay(Eigen::Vector3d, Eigen::Vector3d);
 
  private:
+  INTERSECTION_TYPE intersectionType;
   double radius;
   double height;
   Eigen::Vector3d center;

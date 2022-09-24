@@ -17,8 +17,7 @@ class Object {
   double getM();
 
  protected:
-  Object(utilsStructs::materialK k, double m)
-      : K(k), m(m){};
+  Object(utilsStructs::materialK k, double m) : K(k), m(m){};
 
   utilsStructs::materialK K;
   double m;

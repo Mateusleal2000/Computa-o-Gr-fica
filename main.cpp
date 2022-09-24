@@ -72,12 +72,12 @@ int main(int argc, char** argv) {
 
   Eigen::Vector3d dCil_1(-1.0 / std::sqrt(3), 1.0 / std::sqrt(3),
                          -1.0 / std::sqrt(3));
-  Eigen::Vector3d dCil_2(1.0 / std::sqrt(3), -1.0 / std::sqrt(3),
-                         1.0 / std::sqrt(3));
+  Eigen::Vector3d dCil_2(0, 1, 0.95);
   Eigen::Vector3d dCone_1(-1.0 / std::sqrt(3), 1.0 / std::sqrt(3),
                           -1.0 / std::sqrt(3));
   Eigen::Vector3d dCone_2(1.0 / std::sqrt(3), -1.0 / std::sqrt(3),
                           1.0 / std::sqrt(3));
+  Eigen::Vector3d dCone_3(1.0, 0, 0);
   double height_1 = 3 * radius;
   double height_2 = radius / 3;
 
@@ -105,24 +105,29 @@ int main(int argc, char** argv) {
   double m_2 = 1;
   double m_3 = 1;
 
-  objects.push_back(
-      std::make_shared<Sphere>(Sphere(K_1, m_1, radius, center1)));
+  /*objects.push_back(
+      std::make_shared<Sphere>(Sphere(K_1, m_1, radius, center1)));*/
 
   objects.push_back(std::make_shared<Plane>(Plane(
       K_2, m_2, Eigen::Vector3d(0, -radius, 0), Eigen::Vector3d(0, 1, 0))));
 
   objects.push_back(std::make_shared<Plane>(
-      Plane(K_3, m_3, Eigen::Vector3d(0, 0, -200), Eigen::Vector3d(0, 0, 1))));
+      Plane(K_3, m_3, Eigen::Vector3d(0, 0, -300), Eigen::Vector3d(0, 0, 1))));
 
-  objects.push_back(std::make_shared<Cylinder>(
-      Cylinder(K_4, m_1, radius / 3, center1, height_1, dCil_1)));
+  /*objects.push_back(std::make_shared<Cylinder>(
+      Cylinder(K_4, m_1, radius, center1, height_1-60, dCil_2.normalized())));*/
+
+  /*objects.push_back(std::make_shared<Cone>(
+      Cone(K_5, m_1, radius * 1.5, center1 + (dCil_1 * height_1), height_2,
+     dCone_2)));*/
+
+  objects.push_back(std::make_shared<Cone>(
+      Cone(K_5, m_1, radius * 1.5, center1 + (dCil_1.normalized() * height_1),
+           height_2 + 40, dCone_3.normalized())));
 
   // Test object
   // objects.push_back(std::make_shared<Cylinder>(Cylinder( K_4, m_1, radius /
   // 3, center4, height_1, dCil_2)));
-
-  objects.push_back(std::make_shared<Cone>(
-      Cone(K_5, m_1, radius * 1.5, center1 + (dCil_1 * height_1), height_2, dCone_2)));
 
   lightSources.push_back(std::make_shared<displayStructs::LightSource>(lS_1));
   // lightSources.push_back(std::make_shared<displayStructs::LightSource>(lS_2));
