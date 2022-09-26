@@ -7,7 +7,4 @@ Equipe:
 
 ## Bibliotecas
  - Eigen 3 (Operações de Álg. Linear)
-
-## Como rodar
-- Use o comando: ```g++ *.cpp -o output && ./output``` dentro do diretório raiz do projeto.
-- Visualize a imagem ```output.ppm```.
+ - OpenGL/Glut

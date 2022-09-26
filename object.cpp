@@ -1,13 +1,5 @@
 #include "object.h"
 
-utilsStructs::Color Object::getColor() {
-    return color;
-}
+utilsStructs::materialK Object::getK() { return K; }
 
-utilsStructs::materialK Object::getK() {
-    return K;
-}
-
-double Object::getM() {
-    return m;
-}
+double Object::getM() { return m; }
