@@ -126,7 +126,7 @@ utilsStructs::Color traceRay(
   if (closestT != inf) {
     auto [R, G, B] = calculateLighting(lightSources, camera, D, closestT,
                                        closestObject, objects);
-    return utilsStructs::Color(R * 255, G * 255, B * 255);
+    return utilsStructs::Color(int(R * 255), int(G * 255), int(B * 255));
   }
   return utilsStructs::Color(BACKGROUND_COLOR);
 }

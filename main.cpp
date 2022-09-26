@@ -40,6 +40,7 @@ int main(int argc, char** argv) {
   Eigen::Vector3d I_A(0.3, 0.3, 0.3);
 
   Eigen::Vector3d I_F_1(0.7, 0.7, 0.7);
+  //Eigen::Vector3d P_F_1(0, 200, -150);
   Eigen::Vector3d P_F_1(0, 60, -30);
 
   Eigen::Vector3d I_F_2(1.0, 1.0, 1.0);
@@ -66,9 +67,9 @@ int main(int argc, char** argv) {
   Eigen::Vector3d Kd_4(0.2, 0.3, 0.8);
 
   // cone
-  Eigen::Vector3d Ke_5(0.3, 0.2, 0.8);
-  Eigen::Vector3d Ka_5(0.3, 0.2, 0.8);
-  Eigen::Vector3d Kd_5(0.3, 0.2, 0.8);
+  Eigen::Vector3d Ke_5(0.8, 0.3, 0.2);
+  Eigen::Vector3d Ka_5(0.8, 0.3, 0.2);
+  Eigen::Vector3d Kd_5(0.8, 0.3, 0.2);
 
   Eigen::Vector3d dCil_1(-1.0 / std::sqrt(3), 1.0 / std::sqrt(3),
                          -1.0 / std::sqrt(3));
@@ -77,7 +78,7 @@ int main(int argc, char** argv) {
                           -1.0 / std::sqrt(3));
   Eigen::Vector3d dCone_2(1.0 / std::sqrt(3), -1.0 / std::sqrt(3),
                           1.0 / std::sqrt(3));
-  Eigen::Vector3d dCone_3(1.0, 0, 0);
+  Eigen::Vector3d dCone_3(1.0, 0.0, 0.0);
   double height_1 = 3 * radius;
   double height_2 = radius / 3;
 
@@ -99,14 +100,14 @@ int main(int argc, char** argv) {
   Eigen::Vector3d center1(0, 0, -100);
   Eigen::Vector3d center2(0.6, -0.4, z);
   Eigen::Vector3d center3(-0.6, -0.4, z);
-  Eigen::Vector3d center4(0, 0, 0);
+  Eigen::Vector3d center4(0, 20, -150);
 
   double m_1 = 10;
   double m_2 = 1;
   double m_3 = 1;
 
-  /*objects.push_back(
-      std::make_shared<Sphere>(Sphere(K_1, m_1, radius, center1)));*/
+  objects.push_back(
+      std::make_shared<Sphere>(Sphere(K_1, m_1, radius, center1)));
 
   objects.push_back(std::make_shared<Plane>(Plane(
       K_2, m_2, Eigen::Vector3d(0, -radius, 0), Eigen::Vector3d(0, 1, 0))));
@@ -114,16 +115,17 @@ int main(int argc, char** argv) {
   objects.push_back(std::make_shared<Plane>(
       Plane(K_3, m_3, Eigen::Vector3d(0, 0, -300), Eigen::Vector3d(0, 0, 1))));
 
-  /*objects.push_back(std::make_shared<Cylinder>(
-      Cylinder(K_4, m_1, radius, center1, height_1-60, dCil_2.normalized())));*/
-
-  /*objects.push_back(std::make_shared<Cone>(
-      Cone(K_5, m_1, radius * 1.5, center1 + (dCil_1 * height_1), height_2,
-     dCone_2)));*/
+  objects.push_back(std::make_shared<Cylinder>(
+      Cylinder(K_4, m_1, radius/3, center1, height_1, dCil_1.normalized())));
 
   objects.push_back(std::make_shared<Cone>(
       Cone(K_5, m_1, radius * 1.5, center1 + (dCil_1.normalized() * height_1),
-           height_2 + 40, dCone_3.normalized())));
+           height_2,
+     dCone_2.normalized())));
+
+  /*objects.push_back(std::make_shared<Cone>(Cone(
+      K_5, m_1, radius * 1.5, center1 + (dCil_1.normalized() * height_1),
+           height_2 + 40, dCone_3.normalized())));*/
 
   // Test object
   // objects.push_back(std::make_shared<Cylinder>(Cylinder( K_4, m_1, radius /
