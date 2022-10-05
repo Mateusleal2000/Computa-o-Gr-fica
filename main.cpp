@@ -25,7 +25,7 @@ void draw() {
 }
 
 int main(int argc, char** argv) {
-  double radius = 40;
+  double radius = 5;
   double dWindow = 30;
   double x = 0;
   double y = 0;
@@ -40,16 +40,16 @@ int main(int argc, char** argv) {
   Eigen::Vector3d I_A(0.3, 0.3, 0.3);
 
   Eigen::Vector3d I_F_1(0.7, 0.7, 0.7);
-  //Eigen::Vector3d P_F_1(0, 200, -150);
-  Eigen::Vector3d P_F_1(0, 60, -30);
+  // Eigen::Vector3d P_F_1(0, 200, -150);
+  Eigen::Vector3d P_F_1(-100, 140, -20);
 
   Eigen::Vector3d I_F_2(1.0, 1.0, 1.0);
   Eigen::Vector3d P_F_2(0, 120, -30);
 
   // sphere
-  Eigen::Vector3d Ke_1(0.7, 0.2, 0.2);
-  Eigen::Vector3d Ka_1(0.7, 0.2, 0.2);
-  Eigen::Vector3d Kd_1(0.7, 0.2, 0.2);
+  Eigen::Vector3d Ke_1(0.854, 0.647, 0.125);
+  Eigen::Vector3d Ka_1(0.854, 0.647, 0.125);
+  Eigen::Vector3d Kd_1(0.854, 0.647, 0.125);
 
   // floor plane
   Eigen::Vector3d Ke_2(0.0, 0.0, 0.0);
@@ -57,28 +57,35 @@ int main(int argc, char** argv) {
   Eigen::Vector3d Kd_2(0.7, 0.2, 0.2);
 
   // background plane
-  Eigen::Vector3d Ke_3(0.0, 0.0, 0.0);
-  Eigen::Vector3d Ka_3(0.3, 0.3, 0.7);
-  Eigen::Vector3d Kd_3(0.3, 0.3, 0.7);
+  Eigen::Vector3d Ke_3(0.686, 0.933, 0.933);
+  Eigen::Vector3d Ka_3(0.686, 0.933, 0.933);
+  Eigen::Vector3d Kd_3(0.686, 0.933, 0.933);
 
   // cilinder
-  Eigen::Vector3d Ke_4(0.2, 0.3, 0.8);
-  Eigen::Vector3d Ka_4(0.2, 0.3, 0.8);
-  Eigen::Vector3d Kd_4(0.2, 0.3, 0.8);
+  Eigen::Vector3d Ke_4(0.933, 0.933, 0.933);
+  Eigen::Vector3d Ka_4(0.933, 0.933, 0.933);
+  Eigen::Vector3d Kd_4(0.933, 0.933, 0.933);
 
   // cone
-  Eigen::Vector3d Ke_5(0.8, 0.3, 0.2);
-  Eigen::Vector3d Ka_5(0.8, 0.3, 0.2);
-  Eigen::Vector3d Kd_5(0.8, 0.3, 0.2);
+  Eigen::Vector3d Ke_5(0.824, 0.706, 0.549);
+  Eigen::Vector3d Ka_5(0.824, 0.706, 0.549);
+  Eigen::Vector3d Kd_5(0.824, 0.706, 0.549);
+
+  Eigen::Vector3d Ke_6(0.0, 1.0, 0.498);
+  Eigen::Vector3d Ka_6(0.0, 1.0, 0.498);
+  Eigen::Vector3d Kd_6(0.0, 1.0, 0.498);
 
   Eigen::Vector3d dCil_1(-1.0 / std::sqrt(3), 1.0 / std::sqrt(3),
                          -1.0 / std::sqrt(3));
+
+  Eigen::Vector3d dCil_3(0, 1, 0);
+
   Eigen::Vector3d dCil_2(0, 1, 0.95);
   Eigen::Vector3d dCone_1(-1.0 / std::sqrt(3), 1.0 / std::sqrt(3),
                           -1.0 / std::sqrt(3));
   Eigen::Vector3d dCone_2(1.0 / std::sqrt(3), -1.0 / std::sqrt(3),
                           1.0 / std::sqrt(3));
-  Eigen::Vector3d dCone_3(1.0, 0.0, 0.0);
+  Eigen::Vector3d dCone_3(0.0, 1.0, 0.0);
   double height_1 = 3 * radius;
   double height_2 = radius / 3;
 
@@ -87,6 +94,7 @@ int main(int argc, char** argv) {
   utilsStructs::materialK K_3(Ke_3, Ka_3, Kd_3);
   utilsStructs::materialK K_4(Ke_4, Ka_4, Kd_4);
   utilsStructs::materialK K_5(Ke_5, Ka_5, Kd_5);
+  utilsStructs::materialK K_6(Ke_6, Ka_6, Kd_6);
 
   displayStructs::Viewport viewport(viewPortWidth, viewPortHeight, nRow, nCol,
                                     dWindow);
@@ -97,16 +105,16 @@ int main(int argc, char** argv) {
   std::vector<std::shared_ptr<displayStructs::LightSource>> lightSources;
   std::vector<std::shared_ptr<Object>> objects;
 
-  Eigen::Vector3d center1(0, 0, -100);
-  Eigen::Vector3d center2(0.6, -0.4, z);
-  Eigen::Vector3d center3(-0.6, -0.4, z);
+  Eigen::Vector3d center1(0, 95, -200);
+  Eigen::Vector3d center2(0, -150, -200);
+  Eigen::Vector3d center3(0, -60, -200);
   Eigen::Vector3d center4(0, 20, -150);
 
   double m_1 = 10;
   double m_2 = 1;
   double m_3 = 1;
 
-  objects.push_back(
+  /*objects.push_back(
       std::make_shared<Sphere>(Sphere(K_1, m_1, radius, center1)));
 
   objects.push_back(std::make_shared<Plane>(Plane(
@@ -121,15 +129,47 @@ int main(int argc, char** argv) {
   objects.push_back(std::make_shared<Cone>(
       Cone(K_5, m_1, radius * 1.5, center1 + (dCil_1.normalized() * height_1),
            height_2,
-     dCone_2.normalized())));
+     dCone_2.normalized())));*/
+
+  // bolinha da árvore de natal
+  objects.push_back(
+      std::make_shared<Sphere>(Sphere(K_1, m_1, radius, center1)));
+
+  // chão O K vai ser uma textura de madeira
+  objects.push_back(std::make_shared<Plane>(
+      Plane(K_3, m_2, Eigen::Vector3d(0, -150, 0), Eigen::Vector3d(0, 1, 0))));
+
+  // parede lateral direita
+  objects.push_back(std::make_shared<Plane>(Plane(
+      K_3, m_2, Eigen::Vector3d(200, -150, 0), Eigen::Vector3d(-1, 0, 0))));
+
+  // parede lateral esquerda
+  objects.push_back(std::make_shared<Plane>(Plane(
+      K_3, m_2, Eigen::Vector3d(-200, -150, 0), Eigen::Vector3d(1, 0, 0))));
+
+  // parede frontal
+  objects.push_back(std::make_shared<Plane>(Plane(
+      K_3, m_2, Eigen::Vector3d(200, -150, -400), Eigen::Vector3d(0, 0, 1))));
+
+  // parede teto
+  objects.push_back(std::make_shared<Plane>(
+      Plane(K_4, m_2, Eigen::Vector3d(0, 150, 0), Eigen::Vector3d(0, -1, 0))));
+
+  // tronco da árvore-cilindris
+  objects.push_back(std::make_shared<Cylinder>(
+      Cylinder(K_5, m_1, 5.0, center2, 90.0, dCil_3.normalized())));
+
+  // conífera-cone
+  objects.push_back(std::make_shared<Cone>(
+      Cone(K_6, m_1, 90, center3, 150.0, dCone_3.normalized())));
 
   /*objects.push_back(std::make_shared<Cone>(Cone(
       K_5, m_1, radius * 1.5, center1 + (dCil_1.normalized() * height_1),
            height_2 + 40, dCone_3.normalized())));*/
 
   // Test object
-  // objects.push_back(std::make_shared<Cylinder>(Cylinder( K_4, m_1, radius /
-  // 3, center4, height_1, dCil_2)));
+  // objects.push_back(std::make_shared<Cylinder>(Cylinder( K_4, m_1, radius
+  // / 3, center4, height_1, dCil_2)));
 
   lightSources.push_back(std::make_shared<displayStructs::LightSource>(lS_1));
   // lightSources.push_back(std::make_shared<displayStructs::LightSource>(lS_2));
