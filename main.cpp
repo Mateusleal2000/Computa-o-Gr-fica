@@ -12,6 +12,7 @@
 #include "plane.h"
 #include "scene.h"
 #include "sphere.h"
+#include "mesh.h"
 #include "utils.h"
 #include "utilsStructs.h"
 
@@ -162,6 +163,8 @@ int main(int argc, char** argv) {
   // conífera-cone
   objects.push_back(std::make_shared<Cone>(
       Cone(K_6, m_1, 90, center3, 150.0, dCone_3.normalized())));
+
+  Mesh cube("gift.obj");
 
   /*objects.push_back(std::make_shared<Cone>(Cone(
       K_5, m_1, radius * 1.5, center1 + (dCil_1.normalized() * height_1),
