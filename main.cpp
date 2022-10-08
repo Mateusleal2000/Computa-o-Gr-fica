@@ -9,10 +9,10 @@
 #include "cylinder.h"
 #include "display.h"
 #include "displayStructs.h"
+#include "mesh.h"
 #include "plane.h"
 #include "scene.h"
 #include "sphere.h"
-#include "mesh.h"
 #include "utils.h"
 #include "utilsStructs.h"
 
@@ -27,7 +27,7 @@ void draw() {
 
 int main(int argc, char** argv) {
   double radius = 5;
-  double dWindow = 30;
+  double dWindow = 25;
   double x = 0;
   double y = 0;
   double z = -(dWindow + radius);
@@ -164,7 +164,9 @@ int main(int argc, char** argv) {
   objects.push_back(std::make_shared<Cone>(
       Cone(K_6, m_1, 90, center3, 150.0, dCone_3.normalized())));
 
-  Mesh cube("gift.obj");
+  // presente
+  objects.push_back(
+      std::make_shared<Mesh>(Mesh(K_6, m_1, "gift12.obj")));
 
   /*objects.push_back(std::make_shared<Cone>(Cone(
       K_5, m_1, radius * 1.5, center1 + (dCil_1.normalized() * height_1),
