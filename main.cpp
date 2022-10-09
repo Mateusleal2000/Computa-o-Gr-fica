@@ -76,6 +76,10 @@ int main(int argc, char** argv) {
   Eigen::Vector3d Ka_6(0.0, 1.0, 0.498);
   Eigen::Vector3d Kd_6(0.0, 1.0, 0.498);
 
+  Eigen::Vector3d Ke_7(1.0, 0.078, 0.576);
+  Eigen::Vector3d Ka_7(1.0, 0.078, 0.576);
+  Eigen::Vector3d Kd_7(1.0, 0.078, 0.576);
+
   Eigen::Vector3d dCil_1(-1.0 / std::sqrt(3), 1.0 / std::sqrt(3),
                          -1.0 / std::sqrt(3));
 
@@ -96,6 +100,7 @@ int main(int argc, char** argv) {
   utilsStructs::materialK K_4(Ke_4, Ka_4, Kd_4);
   utilsStructs::materialK K_5(Ke_5, Ka_5, Kd_5);
   utilsStructs::materialK K_6(Ke_6, Ka_6, Kd_6);
+  utilsStructs::materialK K_7(Ke_7, Ka_7, Kd_7);
 
   displayStructs::Viewport viewport(viewPortWidth, viewPortHeight, nRow, nCol,
                                     dWindow);
@@ -165,8 +170,7 @@ int main(int argc, char** argv) {
       Cone(K_6, m_1, 90, center3, 150.0, dCone_3.normalized())));
 
   // presente
-  objects.push_back(
-      std::make_shared<Mesh>(Mesh(K_6, m_1, "gift12.obj")));
+  objects.push_back(std::make_shared<Mesh>(Mesh(K_7, m_1, "gift.obj")));
 
   /*objects.push_back(std::make_shared<Cone>(Cone(
       K_5, m_1, radius * 1.5, center1 + (dCil_1.normalized() * height_1),
