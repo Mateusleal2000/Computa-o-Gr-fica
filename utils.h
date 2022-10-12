@@ -13,13 +13,13 @@
 //#include "sphere.h"
 #include "utilsStructs.h"
 
-//class Sphere;
+// class Sphere;
 namespace utils {
 
 utilsStructs::Color traceRay(
     displayStructs::Camera camera, Eigen::Vector3d,
     std::vector<std::shared_ptr<displayStructs::LightSource>>,
-    std::vector<std::shared_ptr<Object>>);
+    std::vector<std::shared_ptr<Object>>, int x, int y);
 
 std::tuple<double, std::shared_ptr<Object>> closestIntersection(
     Eigen::Vector3d, Eigen::Vector3d, double, double,
@@ -36,7 +36,6 @@ bool isLightBlocked(std::shared_ptr<Object> closestObject,
                     Eigen::Vector3d P_I,
                     std::shared_ptr<displayStructs::LightSource> lS,
                     Eigen::Vector3d l);
-std::vector<double> getTextureRGB(std::string path);
 }  // namespace utils
 
 #endif

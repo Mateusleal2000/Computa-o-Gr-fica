@@ -16,6 +16,8 @@ class Object {
   virtual Eigen::Vector3d getNormal(Eigen::Vector3d) = 0;
   utilsStructs::materialK getK();
   double getM();
+  textureUtils::TEXTURE_MODE getMode();
+  utilsStructs::Texel getPixel(double x, double z);
 
  protected:
   Object(utilsStructs::materialK k, double m, std::string path = "",
@@ -29,7 +31,7 @@ class Object {
 
   utilsStructs::materialK K;
   double m;
-  std::vector<double> imageRGB;
+  std::vector<std::vector<utilsStructs::Texel>> imageRGB;
   textureUtils::TEXTURE_MODE mode;
 };
 

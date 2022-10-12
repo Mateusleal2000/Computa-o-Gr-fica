@@ -80,6 +80,22 @@ std::tuple<double, double, double> calculateLighting(
     double F_D = std::max(n.dot(l), 0.0);
     double F_E = std::max(std::pow(r.dot(v), closestObject->getM()), 0.0);
 
+    if (closestObject->getMode() != textureUtils::TEXTURE_MODE::DEFAULT) {
+      utilsStructs::Texel tex = closestObject->getPixel(P_I(0), P_I(2));
+      //utilsStructs::Color(int(tex.R * 255), int(tex.G * 255), int(tex.B * 255));
+      K.Kd(0) = tex.R;
+      K.Kd(1) = tex.G;
+      K.Kd(2) = tex.B;
+
+      K.Ke(0) = tex.R;
+      K.Ke(1) = tex.G;
+      K.Ke(2) = tex.B;
+
+      K.Ka(0) = tex.R;
+      K.Ka(1) = tex.G;
+      K.Ka(2) = tex.B;
+    }
+
     bool isBlocked = isLightBlocked(closestObject, objects, P_I, lS, l);
     if (isBlocked) {
       I_F(0) = 0;
@@ -116,7 +132,7 @@ std::tuple<double, double, double> calculateLighting(
 utilsStructs::Color traceRay(
     displayStructs::Camera camera, Eigen::Vector3d D,
     std::vector<std::shared_ptr<displayStructs::LightSource>> lightSources,
-    std::vector<std::shared_ptr<Object>> objects) {
+    std::vector<std::shared_ptr<Object>> objects, int x, int y) {
   auto [closestT, closestObject] =
       closestIntersection(camera.O, D, 0, inf, objects);
 
@@ -127,6 +143,15 @@ utilsStructs::Color traceRay(
     auto [R, G, B] = calculateLighting(lightSources, camera, D, closestT,
                                        closestObject, objects);
     return utilsStructs::Color(int(R * 255), int(G * 255), int(B * 255));
+    /*if (closestObject->getMode() != textureUtils::TEXTURE_MODE::DEFAULT) {
+      utilsStructs::Texel tex = closestObject->getPixel(int(x), int(y));
+      return utilsStructs::Color(int(tex.R * 255), int(tex.G * 255),
+                                 int(tex.B * 255));
+    } else {
+      auto [R, G, B] = calculateLighting(lightSources, camera, D, closestT,
+                                         closestObject, objects);
+      return utilsStructs::Color(int(R * 255), int(G * 255), int(B * 255));
+    }*/
   }
   return utilsStructs::Color(BACKGROUND_COLOR);
 }

@@ -12,6 +12,14 @@ struct Color {
   int B;
 };
 
+struct Texel {
+  Texel(double red, double green, double blue) : R(red), G(green), B(blue){};
+  double R;
+  double G;
+  double B;
+  
+};
+
 struct materialK {
   materialK(Eigen::Vector3d ke, Eigen::Vector3d ka, Eigen::Vector3d kd)
       : Ke(ke), Ka(ka), Kd(kd){};

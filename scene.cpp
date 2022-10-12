@@ -1,5 +1,7 @@
 #include "scene.h"
 
+#include <iostream>
+
 #include "utils.h"
 
 std::vector<unsigned char> Scene::display() {
@@ -21,8 +23,9 @@ std::vector<unsigned char> Scene::display() {
 
       // displayStructs::Camera cameraTest(Eigen::Vector3d(x, y, 0),
       // camera.I_A);
+
       utilsStructs::Color color =
-          utils::traceRay(camera, D, lightSources, objects);
+          utils::traceRay(camera, D, lightSources, objects, int(x), int(y));
 
       pixelVector.push_back(color.R);
       pixelVector.push_back(color.G);
