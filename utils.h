@@ -1,6 +1,8 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 
+#include <Magick++.h>
+
 #include <Eigen/Dense>
 #include <algorithm>
 #include <limits>
@@ -35,6 +37,8 @@ bool isLightBlocked(std::shared_ptr<Object> closestObject,
                     Eigen::Vector3d P_I,
                     std::shared_ptr<displayStructs::LightSource> lS,
                     Eigen::Vector3d l);
+std::vector<double> getTextureRGB(std::string path);
+//unsigned char* ReadBMP(std::string filename);
 }  // namespace utils
 
 #endif

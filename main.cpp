@@ -1,4 +1,5 @@
 #include <GL/glut.h>
+#include <Magick++.h>
 
 #include <Eigen/Dense>
 #include <iostream>
@@ -161,7 +162,7 @@ int main(int argc, char** argv) {
   objects.push_back(std::make_shared<Plane>(
       Plane(K_4, m_2, Eigen::Vector3d(0, 150, 0), Eigen::Vector3d(0, -1, 0))));
 
-  // tronco da árvore-cilindris
+  // tronco da árvore-cilindro
   objects.push_back(std::make_shared<Cylinder>(
       Cylinder(K_5, m_1, 5.0, center2, 90.0, dCil_3.normalized())));
 
@@ -185,6 +186,22 @@ int main(int argc, char** argv) {
 
   Scene scene(viewport, camera, lightSources, objects);
   std::vector<unsigned char> pixelVector = scene.display();
+
+  Magick::InitializeMagick(*argv);
+  std::vector<double> data = utils::getTextureRGB("wood1.png");
+
+  // for (int i = 0; i < data.size(); i = i + 3) {
+  //   std::cout << "R"
+  //             << " " << data[i] << "\n";
+  //   std::cout << "G"
+  //             << " " << data[i + 1] << "\n";
+  //   std::cout << "B"
+  //             << " " << data[i + 2] << "\n\n";
+  // }
+
+  //for (int i = 0; i < data.size(); i++) {
+  //  std::cout << data[i] << "\n";
+  //}
 
   pixelArray = pixelVector.data();
 
