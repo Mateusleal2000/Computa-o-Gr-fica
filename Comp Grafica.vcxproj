@@ -163,6 +163,7 @@
     <ClCompile Include="plane.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="sphere.cpp" />
+    <ClCompile Include="textureUtils.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -174,6 +175,7 @@
     <ClInclude Include="plane.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="sphere.h" />
+    <ClInclude Include="textureUtils.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="utilsStructs.h" />
   </ItemGroup>

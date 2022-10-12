@@ -1,8 +1,6 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 
-#include <Magick++.h>
-
 #include <Eigen/Dense>
 #include <algorithm>
 #include <limits>
@@ -12,11 +10,12 @@
 
 #include "displayStructs.h"
 #include "object.h"
-#include "sphere.h"
+//#include "sphere.h"
 #include "utilsStructs.h"
 
-class Sphere;
+//class Sphere;
 namespace utils {
+
 utilsStructs::Color traceRay(
     displayStructs::Camera camera, Eigen::Vector3d,
     std::vector<std::shared_ptr<displayStructs::LightSource>>,
@@ -38,7 +37,6 @@ bool isLightBlocked(std::shared_ptr<Object> closestObject,
                     std::shared_ptr<displayStructs::LightSource> lS,
                     Eigen::Vector3d l);
 std::vector<double> getTextureRGB(std::string path);
-//unsigned char* ReadBMP(std::string filename);
 }  // namespace utils
 
 #endif

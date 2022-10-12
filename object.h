@@ -6,6 +6,7 @@
 #include <tuple>
 
 #include "displayStructs.h"
+#include "textureUtils.h"
 #include "utilsStructs.h"
 
 class Object {
@@ -17,10 +18,19 @@ class Object {
   double getM();
 
  protected:
-  Object(utilsStructs::materialK k, double m) : K(k), m(m){};
+  Object(utilsStructs::materialK k, double m, std::string path = "",
+         textureUtils::TEXTURE_MODE mode = textureUtils::TEXTURE_MODE::DEFAULT)
+      : K(k), m(m), mode(mode) {
+    if (path != "" && mode != textureUtils::TEXTURE_MODE::DEFAULT) {
+      //std::cout << path << " " << mode << "\n";
+      imageRGB = textureUtils::getTextureRGB(path);
+    }
+  };
 
   utilsStructs::materialK K;
   double m;
+  std::vector<double> imageRGB;
+  textureUtils::TEXTURE_MODE mode;
 };
 
 #endif

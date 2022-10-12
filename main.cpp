@@ -14,6 +14,7 @@
 #include "plane.h"
 #include "scene.h"
 #include "sphere.h"
+#include "textureUtils.h"
 #include "utils.h"
 #include "utilsStructs.h"
 
@@ -27,6 +28,7 @@ void draw() {
 }
 
 int main(int argc, char** argv) {
+  Magick::InitializeMagick(*argv);
   double radius = 5;
   double dWindow = 25;
   double x = 0;
@@ -144,7 +146,8 @@ int main(int argc, char** argv) {
 
   // chão O K vai ser uma textura de madeira
   objects.push_back(std::make_shared<Plane>(
-      Plane(K_3, m_2, Eigen::Vector3d(0, -150, 0), Eigen::Vector3d(0, 1, 0))));
+      Plane(K_3, m_2, Eigen::Vector3d(0, -150, 0), Eigen::Vector3d(0, 1, 0),
+            "wood1.png", textureUtils::REPEAT)));
 
   // parede lateral direita
   objects.push_back(std::make_shared<Plane>(Plane(
@@ -187,8 +190,7 @@ int main(int argc, char** argv) {
   Scene scene(viewport, camera, lightSources, objects);
   std::vector<unsigned char> pixelVector = scene.display();
 
-  Magick::InitializeMagick(*argv);
-  std::vector<double> data = utils::getTextureRGB("wood1.png");
+  /*std::vector<double> data = utils::getTextureRGB("wood1.png");*/
 
   // for (int i = 0; i < data.size(); i = i + 3) {
   //   std::cout << "R"
@@ -199,9 +201,9 @@ int main(int argc, char** argv) {
   //             << " " << data[i + 2] << "\n\n";
   // }
 
-  //for (int i = 0; i < data.size(); i++) {
-  //  std::cout << data[i] << "\n";
-  //}
+  // for (int i = 0; i < data.size(); i++) {
+  //   std::cout << data[i] << "\n";
+  // }
 
   pixelArray = pixelVector.data();
 
