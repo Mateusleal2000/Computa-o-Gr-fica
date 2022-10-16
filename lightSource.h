@@ -1,7 +1,9 @@
+//#define _USE_MATH_DEFINES
 #ifndef LIGHTSOURCE_H_
 #define LIGHTSOURCE_H_
 
 #include <Eigen/Dense>
+//#include <cmath>
 
 class LightSource {
  public:
@@ -14,9 +16,12 @@ class LightSource {
     this->type = lightTypes::DIRECTIONAL;
     this->theta = 0.0;
   }
-  LightSource(Eigen::Vector3d I_F, Eigen::Vector4d D_S, double angle)
-      : I_F(I_F), D_S(D_S), P_S(P_S), theta(angle) {
+  LightSource(Eigen::Vector3d I_F, Eigen::Vector4d P_I, Eigen::Vector4d P_S,
+              double angle)
+      : I_F(I_F), P_S(P_S), theta(angle) {
     this->type = lightTypes::SPOTLIGHT;
+    this->D_S = (P_I - P_S).normalized();
+    //this->theta = angle * M_PI / 180;
   }
 
   Eigen::Vector3d getIF();

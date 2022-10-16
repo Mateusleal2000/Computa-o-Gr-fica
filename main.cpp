@@ -1,7 +1,10 @@
+#define _USE_MATH_DEFINES
+
 #include <GL/glut.h>
 #include <Magick++.h>
 
 #include <Eigen/Dense>
+#include <cmath>
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -10,6 +13,7 @@
 #include "cylinder.h"
 #include "display.h"
 #include "displayStructs.h"
+#include "lightSource.h"
 #include "mesh.h"
 #include "plane.h"
 #include "scene.h"
@@ -17,7 +21,6 @@
 #include "textureUtils.h"
 #include "utils.h"
 #include "utilsStructs.h"
-#include "lightSource.h"
 
 double canvasWidth = 500;
 double canvasHeight = 500;
@@ -47,9 +50,15 @@ int main(int argc, char** argv) {
   Eigen::Vector3d I_F_1(0.7, 0.7, 0.7);
   // Eigen::Vector3d P_F_1(0, 200, -150);
   Eigen::Vector3d P_F_1(-100, 140, -20);
+  Eigen::Vector3d P_F_4(0, 0, -90);
 
-  Eigen::Vector3d I_F_2(1.0, 1.0, 1.0);
-  Eigen::Vector3d P_F_2(0, 120, -30);
+  Eigen::Vector3d I_F_2(0.7, 0.7, 0.7);
+  Eigen::Vector4d D_F_2(0, -1, 0, 0);
+
+  Eigen::Vector3d I_F_3(0.7, 0.7, 0.7);
+  Eigen::Vector4d P_I_3(0, 0, -100, 0);
+  Eigen::Vector4d P_S_3(0, 0, -90, 1);
+  //double theta = 30;
 
   // sphere
   Eigen::Vector3d Ke_1(0.854, 0.647, 0.125);
@@ -109,13 +118,15 @@ int main(int argc, char** argv) {
   displayStructs::Viewport viewport(viewPortWidth, viewPortHeight, nRow, nCol,
                                     dWindow);
   LightSource lS_1(I_F_1, P_F_1);
-  LightSource lS_2(I_F_2, P_F_2);
+  LightSource lS_2(I_F_2, D_F_2);
+  LightSource lS_3(I_F_3, P_I_3, P_S_3, M_PI/6.0);
   displayStructs::Camera camera(O, I_A);
 
   std::vector<std::shared_ptr<LightSource>> lightSources;
   std::vector<std::shared_ptr<Object>> objects;
 
-  Eigen::Vector3d center1(0, 95, -200);
+  //Eigen::Vector3d center1(0, 95, -200);
+  Eigen::Vector3d center1(0, 0, -120);
   Eigen::Vector3d center2(0, -150, -200);
   Eigen::Vector3d center3(0, -60, -200);
   Eigen::Vector3d center4(0, 20, -150);
@@ -163,8 +174,8 @@ int main(int argc, char** argv) {
       K_3, m_2, Eigen::Vector3d(200, -150, -400), Eigen::Vector3d(0, 0, 1))));
 
   // parede teto
-  objects.push_back(std::make_shared<Plane>(
-      Plane(K_4, m_2, Eigen::Vector3d(0, 150, 0), Eigen::Vector3d(0, -1, 0))));
+  /*objects.push_back(std::make_shared<Plane>(
+      Plane(K_4, m_2, Eigen::Vector3d(0, 150, 0), Eigen::Vector3d(0, -1, 0))));*/
 
   // tronco da árvore-cilindro
   objects.push_back(std::make_shared<Cylinder>(
@@ -185,8 +196,9 @@ int main(int argc, char** argv) {
   // objects.push_back(std::make_shared<Cylinder>(Cylinder( K_4, m_1, radius
   // / 3, center4, height_1, dCil_2)));
 
-  lightSources.push_back(std::make_shared<LightSource>(lS_1));
-  // lightSources.push_back(std::make_shared<displayStructs::LightSource>(lS_2));
+  lightSources.push_back(std::make_shared<LightSource>(lS_2));
+  //lightSources.push_back(std::make_shared<LightSource>(lS_1));
+  //lightSources.push_back(std::make_shared<LightSource>(lS_3));
 
   Scene scene(viewport, camera, lightSources, objects);
 

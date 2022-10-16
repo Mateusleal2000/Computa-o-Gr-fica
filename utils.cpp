@@ -35,13 +35,17 @@ bool isLightBlocked(std::shared_ptr<Object> closestObject,
     if (object != closestObject) {
       auto [t1, t2] = object->intersectRay(P_I, l);
       double t = -inf;
+      double normalizedV = 0.0;
       t = std::min(t1, t2);
       if (t < 0) {
         t = (t == t2) ? t = t1 : t = t2;
       }
+      Eigen::Vector3d v(0.0, 0.0, 0.0);
+      // Adicionar a Origem
+      v = -P_I;
+      normalizedV = v.norm();
 
-      Eigen::Vector3d v = lS->getPF() - P_I;
-      if (t >= 0 && t < v.norm()) {
+      if (t >= 0 && t < normalizedV) {
         return true;
       }
     }
@@ -59,24 +63,9 @@ std::tuple<double, double, double> calculateLighting(
   Eigen::Vector3d I_A(0, 0, 0);
   Eigen::Vector3d I_D(0, 0, 0);
   Eigen::Vector3d I_E(0, 0, 0);
-  Eigen::Vector3d I_SPOT(0, 0, 0);
-  Eigen::Vector3d I_DIRECTIONAL(0, 0, 0);
 
   for (std::shared_ptr<LightSource> lS : lightSources) {
-    
-    if (lS->getType() == LightSource::lightTypes::DIRECTIONAL) {
-      // faz coisas de Directional
-    }
-    if (lS->getType() == LightSource::lightTypes::SPOTLIGHT) {
-      // faz coisas de Spotlight
-    }
-    if (lS->getType() == LightSource::lightTypes::POINT) {
-      // faz coisas de Point
-      Eigen::Vector3d P_F = lS->getPF();
-    }
     Eigen::Vector3d I_F = lS->getIF();
-    //Eigen::Vector3d P_F = lS->getPF();
-
     Eigen::Vector3d P_I(0, 0, 0);
     Eigen::Vector3d n(0, 0, 0);
     Eigen::Vector3d l(0, 0, 0);
@@ -85,7 +74,38 @@ std::tuple<double, double, double> calculateLighting(
 
     P_I = camera.O + t * (D - camera.O);
     n = closestObject->getNormal(P_I);
-    l = (lS->getPF() - P_I) / (lS->getPF() - P_I).norm();
+
+    if (lS->getType() == LightSource::lightTypes::DIRECTIONAL) {
+      l = lS->getDF().head<3>().normalized() * -1;
+
+      /*if (l.dot(n) >= 0) {
+        I_F = I_F * 0;
+      }*/
+      // std::cout << "I_F:" << I_F(0) << " " << I_F(1) << " " << I_F(2) <<
+      // "\n";
+    }
+    if (lS->getType() == LightSource::lightTypes::SPOTLIGHT) {
+      l = (lS->getPS().head<3>() - P_I).normalized();
+      double clds = l.dot(-(lS->getDS().head<3>()).normalized());
+      if (clds >= std::cos(lS->getTheta())) {
+        I_F = I_F * clds;
+      } else {
+        I_F = I_F * 0.0;
+      }
+    }
+    if (lS->getType() == LightSource::lightTypes::POINT) {
+      Eigen::Vector3d P_F = lS->getPF();
+      l = (P_F - P_I) / (P_F - P_I).norm();
+    }
+    /*Eigen::Vector3d P_I(0, 0, 0);
+    Eigen::Vector3d n(0, 0, 0);
+    Eigen::Vector3d l(0, 0, 0);
+    Eigen::Vector3d r(0, 0, 0);
+    Eigen::Vector3d v(0, 0, 0);
+
+    P_I = camera.O + t * (D - camera.O);*/
+
+    // l = (lS->getPF() - P_I) / (lS->getPF() - P_I).norm();
     r = 2 * ((l.dot(n)) * n) - l;
     v = -D / D.norm();
 
