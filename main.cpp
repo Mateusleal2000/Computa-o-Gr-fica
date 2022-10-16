@@ -17,6 +17,7 @@
 #include "textureUtils.h"
 #include "utils.h"
 #include "utilsStructs.h"
+#include "lightSource.h"
 
 double canvasWidth = 500;
 double canvasHeight = 500;
@@ -107,11 +108,11 @@ int main(int argc, char** argv) {
 
   displayStructs::Viewport viewport(viewPortWidth, viewPortHeight, nRow, nCol,
                                     dWindow);
-  displayStructs::LightSource lS_1(I_F_1, P_F_1);
-  displayStructs::LightSource lS_2(I_F_2, P_F_2);
+  LightSource lS_1(I_F_1, P_F_1);
+  LightSource lS_2(I_F_2, P_F_2);
   displayStructs::Camera camera(O, I_A);
 
-  std::vector<std::shared_ptr<displayStructs::LightSource>> lightSources;
+  std::vector<std::shared_ptr<LightSource>> lightSources;
   std::vector<std::shared_ptr<Object>> objects;
 
   Eigen::Vector3d center1(0, 95, -200);
@@ -184,7 +185,7 @@ int main(int argc, char** argv) {
   // objects.push_back(std::make_shared<Cylinder>(Cylinder( K_4, m_1, radius
   // / 3, center4, height_1, dCil_2)));
 
-  lightSources.push_back(std::make_shared<displayStructs::LightSource>(lS_1));
+  lightSources.push_back(std::make_shared<LightSource>(lS_1));
   // lightSources.push_back(std::make_shared<displayStructs::LightSource>(lS_2));
 
   Scene scene(viewport, camera, lightSources, objects);

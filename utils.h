@@ -12,13 +12,14 @@
 #include "object.h"
 //#include "sphere.h"
 #include "utilsStructs.h"
+#include "lightSource.h"
 
 // class Sphere;
 namespace utils {
 
 utilsStructs::Color traceRay(
     displayStructs::Camera camera, Eigen::Vector3d,
-    std::vector<std::shared_ptr<displayStructs::LightSource>>,
+    std::vector<std::shared_ptr<LightSource>>,
     std::vector<std::shared_ptr<Object>>, int x, int y);
 
 std::tuple<double, std::shared_ptr<Object>> closestIntersection(
@@ -26,7 +27,7 @@ std::tuple<double, std::shared_ptr<Object>> closestIntersection(
     std::vector<std::shared_ptr<Object>>);
 
 std::tuple<double, double, double> calculateLighting(
-    std::vector<std::shared_ptr<displayStructs::LightSource>> lightSources,
+    std::vector<std::shared_ptr<LightSource>> lightSources,
     displayStructs::Camera camera, Eigen::Vector3d D, double t,
     std::shared_ptr<Object> closestObject,
     std::vector<std::shared_ptr<Object>> objects);
@@ -34,7 +35,7 @@ std::tuple<double, double, double> calculateLighting(
 bool isLightBlocked(std::shared_ptr<Object> closestObject,
                     std::vector<std::shared_ptr<Object>> objects,
                     Eigen::Vector3d P_I,
-                    std::shared_ptr<displayStructs::LightSource> lS,
+                    std::shared_ptr<LightSource> lS,
                     Eigen::Vector3d l);
 }  // namespace utils
 

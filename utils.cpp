@@ -29,8 +29,7 @@ std::tuple<double, std::shared_ptr<Object>> closestIntersection(
 
 bool isLightBlocked(std::shared_ptr<Object> closestObject,
                     std::vector<std::shared_ptr<Object>> objects,
-                    Eigen::Vector3d P_I,
-                    std::shared_ptr<displayStructs::LightSource> lS,
+                    Eigen::Vector3d P_I, std::shared_ptr<LightSource> lS,
                     Eigen::Vector3d l) {
   for (std::shared_ptr<Object> object : objects) {
     if (object != closestObject) {
@@ -41,7 +40,7 @@ bool isLightBlocked(std::shared_ptr<Object> closestObject,
         t = (t == t2) ? t = t1 : t = t2;
       }
 
-      Eigen::Vector3d v = lS->P_F - P_I;
+      Eigen::Vector3d v = lS->getPF() - P_I;
       if (t >= 0 && t < v.norm()) {
         return true;
       }
@@ -51,7 +50,7 @@ bool isLightBlocked(std::shared_ptr<Object> closestObject,
 }
 
 std::tuple<double, double, double> calculateLighting(
-    std::vector<std::shared_ptr<displayStructs::LightSource>> lightSources,
+    std::vector<std::shared_ptr<LightSource>> lightSources,
     displayStructs::Camera camera, Eigen::Vector3d D, double t,
     std::shared_ptr<Object> closestObject,
     std::vector<std::shared_ptr<Object>> objects) {
@@ -60,10 +59,23 @@ std::tuple<double, double, double> calculateLighting(
   Eigen::Vector3d I_A(0, 0, 0);
   Eigen::Vector3d I_D(0, 0, 0);
   Eigen::Vector3d I_E(0, 0, 0);
+  Eigen::Vector3d I_SPOT(0, 0, 0);
+  Eigen::Vector3d I_DIRECTIONAL(0, 0, 0);
 
-  for (std::shared_ptr<displayStructs::LightSource> lS : lightSources) {
-    Eigen::Vector3d I_F = lS->I_F;
-    Eigen::Vector3d P_F = lS->P_F;
+  for (std::shared_ptr<LightSource> lS : lightSources) {
+    
+    if (lS->getType() == LightSource::lightTypes::DIRECTIONAL) {
+      // faz coisas de Directional
+    }
+    if (lS->getType() == LightSource::lightTypes::SPOTLIGHT) {
+      // faz coisas de Spotlight
+    }
+    if (lS->getType() == LightSource::lightTypes::POINT) {
+      // faz coisas de Point
+      Eigen::Vector3d P_F = lS->getPF();
+    }
+    Eigen::Vector3d I_F = lS->getIF();
+    //Eigen::Vector3d P_F = lS->getPF();
 
     Eigen::Vector3d P_I(0, 0, 0);
     Eigen::Vector3d n(0, 0, 0);
@@ -73,7 +85,7 @@ std::tuple<double, double, double> calculateLighting(
 
     P_I = camera.O + t * (D - camera.O);
     n = closestObject->getNormal(P_I);
-    l = (lS->P_F - P_I) / (lS->P_F - P_I).norm();
+    l = (lS->getPF() - P_I) / (lS->getPF() - P_I).norm();
     r = 2 * ((l.dot(n)) * n) - l;
     v = -D / D.norm();
 
@@ -82,7 +94,8 @@ std::tuple<double, double, double> calculateLighting(
 
     if (closestObject->getMode() != textureUtils::TEXTURE_MODE::DEFAULT) {
       utilsStructs::Texel tex = closestObject->getPixel(P_I(0), P_I(2));
-      //utilsStructs::Color(int(tex.R * 255), int(tex.G * 255), int(tex.B * 255));
+      // utilsStructs::Color(int(tex.R * 255), int(tex.G * 255), int(tex.B *
+      // 255));
       K.Kd(0) = tex.R;
       K.Kd(1) = tex.G;
       K.Kd(2) = tex.B;
@@ -131,7 +144,7 @@ std::tuple<double, double, double> calculateLighting(
 
 utilsStructs::Color traceRay(
     displayStructs::Camera camera, Eigen::Vector3d D,
-    std::vector<std::shared_ptr<displayStructs::LightSource>> lightSources,
+    std::vector<std::shared_ptr<LightSource>> lightSources,
     std::vector<std::shared_ptr<Object>> objects, int x, int y) {
   auto [closestT, closestObject] =
       closestIntersection(camera.O, D, 0, inf, objects);
@@ -143,15 +156,6 @@ utilsStructs::Color traceRay(
     auto [R, G, B] = calculateLighting(lightSources, camera, D, closestT,
                                        closestObject, objects);
     return utilsStructs::Color(int(R * 255), int(G * 255), int(B * 255));
-    /*if (closestObject->getMode() != textureUtils::TEXTURE_MODE::DEFAULT) {
-      utilsStructs::Texel tex = closestObject->getPixel(int(x), int(y));
-      return utilsStructs::Color(int(tex.R * 255), int(tex.G * 255),
-                                 int(tex.B * 255));
-    } else {
-      auto [R, G, B] = calculateLighting(lightSources, camera, D, closestT,
-                                         closestObject, objects);
-      return utilsStructs::Color(int(R * 255), int(G * 255), int(B * 255));
-    }*/
   }
   return utilsStructs::Color(BACKGROUND_COLOR);
 }

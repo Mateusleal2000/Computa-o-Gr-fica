@@ -7,11 +7,12 @@
 
 #include "displayStructs.h"
 #include "object.h"
+#include "lightSource.h"
 
 class Scene {
  public:
   Scene(displayStructs::Viewport viewport, displayStructs::Camera camera,
-        std::vector<std::shared_ptr<displayStructs::LightSource>> lightSources,
+        std::vector<std::shared_ptr<LightSource>> lightSources,
         std::vector<std::shared_ptr<Object>> objects)
       : viewport(viewport),
         camera(camera),
@@ -23,7 +24,7 @@ class Scene {
  private:
   displayStructs::Viewport viewport;
   displayStructs::Camera camera;
-  std::vector<std::shared_ptr<displayStructs::LightSource>> lightSources;
+  std::vector<std::shared_ptr<LightSource>> lightSources;
   std::vector<std::shared_ptr<Object>> objects;
 };
 #endif
