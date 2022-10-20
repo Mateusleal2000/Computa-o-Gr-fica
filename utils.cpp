@@ -42,7 +42,8 @@ bool isLightBlocked(std::shared_ptr<Object> closestObject,
       }
       Eigen::Vector3d v(0.0, 0.0, 0.0);
       // Adicionar a Origem
-      v = -P_I;
+      //v = -P_I;
+      v = lS->getPF() - P_I;
       normalizedV = v.norm();
 
       if (t >= 0 && t < normalizedV) {
@@ -74,38 +75,11 @@ std::tuple<double, double, double> calculateLighting(
 
     P_I = camera.O + t * (D - camera.O);
     n = closestObject->getNormal(P_I);
+    std::tuple<Eigen::Vector3d, Eigen::Vector3d> L_IF = lS->calculateL(P_I, n);
 
-    if (lS->getType() == LightSource::lightTypes::DIRECTIONAL) {
-      l = lS->getDF().head<3>().normalized() * -1;
+    l = std::get<0>(L_IF);
+    I_F = std::get<1>(L_IF);
 
-      /*if (l.dot(n) >= 0) {
-        I_F = I_F * 0;
-      }*/
-      // std::cout << "I_F:" << I_F(0) << " " << I_F(1) << " " << I_F(2) <<
-      // "\n";
-    }
-    if (lS->getType() == LightSource::lightTypes::SPOTLIGHT) {
-      l = (lS->getPS().head<3>() - P_I).normalized();
-      double clds = l.dot(-(lS->getDS().head<3>()).normalized());
-      if (clds >= std::cos(lS->getTheta())) {
-        I_F = I_F * clds;
-      } else {
-        I_F = I_F * 0.0;
-      }
-    }
-    if (lS->getType() == LightSource::lightTypes::POINT) {
-      Eigen::Vector3d P_F = lS->getPF();
-      l = (P_F - P_I) / (P_F - P_I).norm();
-    }
-    /*Eigen::Vector3d P_I(0, 0, 0);
-    Eigen::Vector3d n(0, 0, 0);
-    Eigen::Vector3d l(0, 0, 0);
-    Eigen::Vector3d r(0, 0, 0);
-    Eigen::Vector3d v(0, 0, 0);
-
-    P_I = camera.O + t * (D - camera.O);*/
-
-    // l = (lS->getPF() - P_I) / (lS->getPF() - P_I).norm();
     r = 2 * ((l.dot(n)) * n) - l;
     v = -D / D.norm();
 
@@ -114,8 +88,6 @@ std::tuple<double, double, double> calculateLighting(
 
     if (closestObject->getMode() != textureUtils::TEXTURE_MODE::DEFAULT) {
       utilsStructs::Texel tex = closestObject->getPixel(P_I(0), P_I(2));
-      // utilsStructs::Color(int(tex.R * 255), int(tex.G * 255), int(tex.B *
-      // 255));
       K.Kd(0) = tex.R;
       K.Kd(1) = tex.G;
       K.Kd(2) = tex.B;
@@ -158,7 +130,6 @@ std::tuple<double, double, double> calculateLighting(
   if (maxI > 1) {
     return std::make_tuple(I_1 / maxI, I_2 / maxI, I_3 / maxI);
   }
-
   return std::make_tuple(I_1, I_2, I_3);
 }
 

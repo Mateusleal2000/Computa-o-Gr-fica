@@ -10,11 +10,9 @@
 
 #include "displayStructs.h"
 #include "object.h"
-//#include "sphere.h"
 #include "utilsStructs.h"
 #include "lightSource.h"
 
-// class Sphere;
 namespace utils {
 
 utilsStructs::Color traceRay(

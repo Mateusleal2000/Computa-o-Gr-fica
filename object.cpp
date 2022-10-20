@@ -17,16 +17,8 @@ utilsStructs::Texel Object::getPixel(double x, double z) {
   double fx = (x - (-200)) / 400;
   double fz = (z - (-400)) / 400;
 
-  /*for (auto lista : imageRGB) {
-    for (auto tex : lista) {
-      std::cout << tex.R << " " << tex.G << " " << tex.B << "\n";
-    }
-  }*/
   int indexX = 0 + fx * (imgW - 1);
   int indexZ = 0 + fz * (imgH - 1);
-
-  // int mapX = x % imgH;
-  // int mapY = y % imgW;
 
   return imageRGB[indexX][indexZ];
 }

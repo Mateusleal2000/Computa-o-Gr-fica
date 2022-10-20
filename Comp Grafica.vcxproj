@@ -171,26 +171,32 @@
   <ItemGroup>
     <ClCompile Include="cone.cpp" />
     <ClCompile Include="cylinder.cpp" />
+    <ClCompile Include="directional.cpp" />
     <ClCompile Include="lightSource.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mesh.cpp" />
     <ClCompile Include="object.cpp" />
     <ClCompile Include="plane.cpp" />
+    <ClCompile Include="point.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="sphere.cpp" />
+    <ClCompile Include="spot.cpp" />
     <ClCompile Include="textureUtils.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cone.h" />
     <ClInclude Include="cylinder.h" />
+    <ClInclude Include="directional.h" />
     <ClInclude Include="displayStructs.h" />
     <ClInclude Include="lightSource.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="plane.h" />
+    <ClInclude Include="point.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="sphere.h" />
+    <ClInclude Include="spot.h" />
     <ClInclude Include="textureUtils.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="utilsStructs.h" />

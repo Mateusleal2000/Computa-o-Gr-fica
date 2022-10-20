@@ -40,8 +40,6 @@ Mesh::Mesh(utilsStructs::materialK k, double shininess, std::string path)
       vn(1) = std::stod(normal_values[3]);
       vn(2) = std::stod(normal_values[2]);
 
-      // std::cout << vn(0) << " " << vn(1) << " " << vn(2) << "\n";
-
       this->normals.push_back(vn);
     } else if (line[0] == 'f') {
       std::vector<std::string> face_values = split(line);
@@ -50,7 +48,6 @@ Mesh::Mesh(utilsStructs::materialK k, double shininess, std::string path)
       double v2 = std::stod(split(face_values[2], "//")[0]);
       double v3 = std::stod(split(face_values[3], "//")[0]);
       double n = std::stod(split(face_values[3], "//")[1]);
-      // std::cout << v1 << " " << v2 <<  " " << v3 << "\n";
 
       Eigen::Vector3d e1(id++, v1, v2);
       Eigen::Vector3d e2(id++, v2, v3);
@@ -82,7 +79,6 @@ std::tuple<double, double> Mesh::intersectRay(Eigen::Vector3d O,
     double vertex_id3 = (this->edges[int(face[2])])[1] - 1;
 
     Eigen::Vector3d n = (this->normals[int(face[3]) - 1]).head<3>();
-    // std::cout << n[0] << " " << n[1] << " " << n[2] << "\n";
     double t_aux =
         -(O - this->vertices[int(vertex_id1)].head<3>()).dot(n) / D.dot(n);
     if (t_aux > 0 && t_aux < t) {
@@ -101,7 +97,6 @@ std::tuple<double, double> Mesh::intersectRay(Eigen::Vector3d O,
       double c3 = 1 - c1 - c2;
       if (c1 >= 0 && c2 >= 0 && c3 >= 0) {
         t = t_aux;
-        // std::cout << n[0] << " " << n[1] << " " << n[2] << "\n";
         this->normal = n;
       }
     }

@@ -33,10 +33,6 @@ std::tuple<double, double> Cylinder::intersectRay(Eigen::Vector3d O,
 
   // Segunda verificação - Raio/Plano da base
 
-  // double tBase = (O - center).dot(-cylinderDir) / (D.dot(-cylinderDir));
-  // double tBase = -(O - center).dot(dCil) / (D.dot(dCil));
-
-  // P_I = O + tBase * D;
   P_I = O + std::get<0>(tBottom) * D;
   double test1 = (P_I - center).norm();
   if (test1 > 0 && test1 <= radius) {
@@ -45,10 +41,7 @@ std::tuple<double, double> Cylinder::intersectRay(Eigen::Vector3d O,
   }
 
   // Terceira verificação - Raio/Plano do topo
-  // Eigen::Vector3d Ct = center + height * dCil;
 
-  // double tTop = -(O-topCenter).dot(cylinderDir) / (D.dot(cylinderDir));
-  // P_I = O + tTop * D;
   P_I = O + std::get<0>(tUpper) * D;
   double test2 = (P_I - topCenter).norm();
   if (test2 > 0 && test2 <= radius) {

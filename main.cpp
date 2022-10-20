@@ -11,13 +11,16 @@
 
 #include "cone.h"
 #include "cylinder.h"
+#include "directional.h"
 #include "display.h"
 #include "displayStructs.h"
 #include "lightSource.h"
 #include "mesh.h"
 #include "plane.h"
+#include "point.h"
 #include "scene.h"
 #include "sphere.h"
+#include "spot.h"
 #include "textureUtils.h"
 #include "utils.h"
 #include "utilsStructs.h"
@@ -50,15 +53,15 @@ int main(int argc, char** argv) {
   Eigen::Vector3d I_F_1(0.7, 0.7, 0.7);
   // Eigen::Vector3d P_F_1(0, 200, -150);
   Eigen::Vector3d P_F_1(-100, 140, -20);
-  Eigen::Vector3d P_F_4(0, 0, -90);
+  Eigen::Vector3d P_F_2(100, 140, -20);
 
   Eigen::Vector3d I_F_2(0.7, 0.7, 0.7);
-  Eigen::Vector4d D_F_2(0, -1, 0, 0);
+  Eigen::Vector4d D_F_2(0, 1, 0, 0);
 
   Eigen::Vector3d I_F_3(0.7, 0.7, 0.7);
   Eigen::Vector4d P_I_3(0, 0, -100, 0);
   Eigen::Vector4d P_S_3(0, 0, -90, 1);
-  //double theta = 30;
+  // double theta = 30;
 
   // sphere
   Eigen::Vector3d Ke_1(0.854, 0.647, 0.125);
@@ -117,15 +120,13 @@ int main(int argc, char** argv) {
 
   displayStructs::Viewport viewport(viewPortWidth, viewPortHeight, nRow, nCol,
                                     dWindow);
-  LightSource lS_1(I_F_1, P_F_1);
-  LightSource lS_2(I_F_2, D_F_2);
-  LightSource lS_3(I_F_3, P_I_3, P_S_3, M_PI/6.0);
+
   displayStructs::Camera camera(O, I_A);
 
   std::vector<std::shared_ptr<LightSource>> lightSources;
   std::vector<std::shared_ptr<Object>> objects;
 
-  //Eigen::Vector3d center1(0, 95, -200);
+  // Eigen::Vector3d center1(0, 95, -200);
   Eigen::Vector3d center1(0, 0, -120);
   Eigen::Vector3d center2(0, -150, -200);
   Eigen::Vector3d center3(0, -60, -200);
@@ -174,8 +175,8 @@ int main(int argc, char** argv) {
       K_3, m_2, Eigen::Vector3d(200, -150, -400), Eigen::Vector3d(0, 0, 1))));
 
   // parede teto
-  /*objects.push_back(std::make_shared<Plane>(
-      Plane(K_4, m_2, Eigen::Vector3d(0, 150, 0), Eigen::Vector3d(0, -1, 0))));*/
+  objects.push_back(std::make_shared<Plane>(
+      Plane(K_4, m_2, Eigen::Vector3d(0, 150, 0), Eigen::Vector3d(0, -1, 0))));
 
   // tronco da árvore-cilindro
   objects.push_back(std::make_shared<Cylinder>(
@@ -188,17 +189,13 @@ int main(int argc, char** argv) {
   // presente
   objects.push_back(std::make_shared<Mesh>(Mesh(K_7, m_1, "gift.obj")));
 
-  /*objects.push_back(std::make_shared<Cone>(Cone(
-      K_5, m_1, radius * 1.5, center1 + (dCil_1.normalized() * height_1),
-           height_2 + 40, dCone_3.normalized())));*/
 
-  // Test object
-  // objects.push_back(std::make_shared<Cylinder>(Cylinder( K_4, m_1, radius
-  // / 3, center4, height_1, dCil_2)));
-
-  lightSources.push_back(std::make_shared<LightSource>(lS_2));
-  //lightSources.push_back(std::make_shared<LightSource>(lS_1));
-  //lightSources.push_back(std::make_shared<LightSource>(lS_3));
+  /*lightSources.push_back(std::make_shared<Point>(Point(I_F_1, P_F_1)));*/
+  /*lightSources.push_back(
+      std::make_shared<Directional>(Directional(I_F_2, D_F_2)));*/
+  lightSources.push_back(
+      std::make_shared<Spot>(Spot(I_F_3, P_I_3, P_S_3, 30.0)));
+  //lightSources.push_back(std::make_shared<Point>(Point(I_F_1, P_F_2)));
 
   Scene scene(viewport, camera, lightSources, objects);
 

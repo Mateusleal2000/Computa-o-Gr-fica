@@ -22,6 +22,12 @@
     <Filter Include="Header Files\Structs">
       <UniqueIdentifier>{4584f2ed-bff7-4e9c-9c98-57d0cf41a24d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Light Sources">
+      <UniqueIdentifier>{f8a7ecd6-5d3d-45bb-afbf-2c37bb8d180e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Light Sources">
+      <UniqueIdentifier>{70fca261-d448-467a-9619-e9022957f554}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore">
@@ -63,7 +69,16 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="lightSource.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Light Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="spot.cpp">
+      <Filter>Source Files\Light Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="point.cpp">
+      <Filter>Source Files\Light Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="directional.cpp">
+      <Filter>Source Files\Light Sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -101,7 +116,16 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="lightSource.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Light Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="spot.h">
+      <Filter>Header Files\Light Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="point.h">
+      <Filter>Header Files\Light Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="directional.h">
+      <Filter>Header Files\Light Sources</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

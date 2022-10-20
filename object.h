@@ -24,7 +24,6 @@ class Object {
          textureUtils::TEXTURE_MODE mode = textureUtils::TEXTURE_MODE::DEFAULT)
       : K(k), m(m), mode(mode) {
     if (path != "" && mode != textureUtils::TEXTURE_MODE::DEFAULT) {
-      //std::cout << path << " " << mode << "\n";
       imageRGB = textureUtils::getTextureRGB(path);
     }
   };
