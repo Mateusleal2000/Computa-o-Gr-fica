@@ -16,6 +16,7 @@ class LightSource {
     return std::make_tuple(Eigen::Vector3d(0.0, 0.0, 0.0),
                            Eigen::Vector3d(0.0, 0.0, 0.0));
   }
+  virtual Eigen::Vector3d getIA() { return Eigen::Vector3d(0.0, 0.0, 0.0); }
 
  private:
   Eigen::Vector3d I_F;

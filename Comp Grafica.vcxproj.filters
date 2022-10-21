@@ -80,6 +80,9 @@
     <ClCompile Include="directional.cpp">
       <Filter>Source Files\Light Sources</Filter>
     </ClCompile>
+    <ClCompile Include="ambient.cpp">
+      <Filter>Source Files\Light Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="object.h">
@@ -125,6 +128,9 @@
       <Filter>Header Files\Light Sources</Filter>
     </ClInclude>
     <ClInclude Include="directional.h">
+      <Filter>Header Files\Light Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="ambient.h">
       <Filter>Header Files\Light Sources</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,6 +2,7 @@
 #define DISPLAYSTRUCTS_H_
 
 #include <Eigen/Dense>
+#include "ambient.h"
 
 namespace displayStructs {
 struct Viewport {
@@ -24,8 +25,7 @@ struct Canvas {
 
 struct Camera {
   Eigen::Vector3d O;
-  Eigen::Vector3d I_A;
-  Camera(Eigen::Vector3d O, Eigen::Vector3d I_A) : O(O), I_A(I_A) {}
+  Camera(Eigen::Vector3d O) : O(O) {}
 };
 
 }  // namespace displayStructs

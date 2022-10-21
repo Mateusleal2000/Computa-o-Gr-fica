@@ -42,7 +42,7 @@ bool isLightBlocked(std::shared_ptr<Object> closestObject,
       }
       Eigen::Vector3d v(0.0, 0.0, 0.0);
       // Adicionar a Origem
-      //v = -P_I;
+      // v = -P_I;
       v = lS->getPF() - P_I;
       normalizedV = v.norm();
 
@@ -67,6 +67,7 @@ std::tuple<double, double, double> calculateLighting(
 
   for (std::shared_ptr<LightSource> lS : lightSources) {
     Eigen::Vector3d I_F = lS->getIF();
+    Eigen::Vector3d currentIA = lS->getIA();
     Eigen::Vector3d P_I(0, 0, 0);
     Eigen::Vector3d n(0, 0, 0);
     Eigen::Vector3d l(0, 0, 0);
@@ -115,11 +116,11 @@ std::tuple<double, double, double> calculateLighting(
     I_E(0) += I_F(0) * K.Ke(0) * F_E;
     I_E(1) += I_F(1) * K.Ke(1) * F_E;
     I_E(2) += I_F(2) * K.Ke(2) * F_E;
-  }
 
-  I_A(0) = camera.I_A(0) * K.Ka(0);
-  I_A(1) = camera.I_A(1) * K.Ka(1);
-  I_A(2) = camera.I_A(2) * K.Ka(2);
+    I_A(0) += currentIA(0) * K.Ka(0);
+    I_A(1) += currentIA(1) * K.Ka(1);
+    I_A(2) += currentIA(2) * K.Ka(2);
+  }
 
   double I_1 = (I_A(0) + I_D(0) + I_E(0));
   double I_2 = (I_A(1) + I_D(1) + I_E(1));

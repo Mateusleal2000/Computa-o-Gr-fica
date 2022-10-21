@@ -9,6 +9,7 @@
 #include <memory>
 #include <vector>
 
+#include "ambient.h"
 #include "cone.h"
 #include "cylinder.h"
 #include "directional.h"
@@ -48,7 +49,7 @@ int main(int argc, char** argv) {
 
   Eigen::Vector3d O(0.0, 0.0, 0.0);
   Eigen::Vector3d center(x, y, z);
-  Eigen::Vector3d I_A(0.3, 0.3, 0.3);
+  double I_A = 0.3;
 
   Eigen::Vector3d I_F_1(0.7, 0.7, 0.7);
   // Eigen::Vector3d P_F_1(0, 200, -150);
@@ -121,7 +122,7 @@ int main(int argc, char** argv) {
   displayStructs::Viewport viewport(viewPortWidth, viewPortHeight, nRow, nCol,
                                     dWindow);
 
-  displayStructs::Camera camera(O, I_A);
+  displayStructs::Camera camera(O);
 
   std::vector<std::shared_ptr<LightSource>> lightSources;
   std::vector<std::shared_ptr<Object>> objects;
@@ -189,15 +190,16 @@ int main(int argc, char** argv) {
   // presente
   objects.push_back(std::make_shared<Mesh>(Mesh(K_7, m_1, "gift.obj")));
 
-
-  /*lightSources.push_back(std::make_shared<Point>(Point(I_F_1, P_F_1)));*/
+  lightSources.push_back(std::make_shared<Point>(Point(I_F_1, P_F_1)));
   /*lightSources.push_back(
       std::make_shared<Directional>(Directional(I_F_2, D_F_2)));*/
-  lightSources.push_back(
-      std::make_shared<Spot>(Spot(I_F_3, P_I_3, P_S_3, 30.0)));
-  //lightSources.push_back(std::make_shared<Point>(Point(I_F_1, P_F_2)));
+   //lightSources.push_back(std::make_shared<Point>(Point(I_F_1, P_F_2)));
+  /*lightSources.push_back(
+      std::make_shared<Spot>(Spot(I_F_3, P_I_3, P_S_3, 30.0)))*/;
+  lightSources.push_back(std::make_shared<Ambient>(Ambient(I_A)));
 
   Scene scene(viewport, camera, lightSources, objects);
+
 
   std::vector<unsigned char> pixelVector = scene.display();
 
