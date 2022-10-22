@@ -16,6 +16,7 @@ class Spot : public LightSource {
   double getTheta();
   std::tuple<Eigen::Vector3d, Eigen::Vector3d> calculateL(Eigen::Vector3d,
                                                           Eigen::Vector3d);
+  double getDistance(Eigen::Vector3d P_I);
 
  private:
   Eigen::Vector4d D_S;

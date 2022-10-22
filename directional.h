@@ -1,6 +1,7 @@
 #ifndef DIRECTIONAL_H_
 #define DIRECTIONAL_H_
 
+#include<iostream>
 #include "lightSource.h"
 class Directional : public LightSource {
  public:
@@ -8,7 +9,8 @@ class Directional : public LightSource {
       : LightSource(I_F), D_F(D_F) {}
   Eigen::Vector4d getDF();
   std::tuple<Eigen::Vector3d, Eigen::Vector3d> calculateL(Eigen::Vector3d,
-                                                          Eigen::Vector3d); 
+                                                          Eigen::Vector3d);
+  double getDistance(Eigen::Vector3d);
 
  private:
   Eigen::Vector4d D_F;

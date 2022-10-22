@@ -9,3 +9,7 @@ std::tuple<Eigen::Vector3d, Eigen::Vector3d> Point::calculateL(
 
   return std::make_tuple(l, this->getIF());
 }
+
+double Point::getDistance(Eigen::Vector3d P_I) {
+  return (this->P_F - P_I).norm();
+}

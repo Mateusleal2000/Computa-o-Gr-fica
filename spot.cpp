@@ -17,3 +17,7 @@ std::tuple<Eigen::Vector3d, Eigen::Vector3d> Spot::calculateL(
   }
   return std::make_tuple(l, I_F);
 }
+
+double Spot::getDistance(Eigen::Vector3d P_I) {
+  return (this->getPF() - P_I).norm();
+}

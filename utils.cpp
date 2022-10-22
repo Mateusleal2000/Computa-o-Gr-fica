@@ -43,8 +43,10 @@ bool isLightBlocked(std::shared_ptr<Object> closestObject,
       Eigen::Vector3d v(0.0, 0.0, 0.0);
       // Adicionar a Origem
       // v = -P_I;
-      v = lS->getPF() - P_I;
-      normalizedV = v.norm();
+      /*v = lS->getDistance(P_I)*/
+      // v = lS->getPF() - P_I;
+      normalizedV = lS->getDistance(P_I);
+      // std::cout << normalizedV << std::endl;
 
       if (t >= 0 && t < normalizedV) {
         return true;

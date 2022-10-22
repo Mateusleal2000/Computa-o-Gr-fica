@@ -9,6 +9,7 @@ class Point : public LightSource {
   Eigen::Vector3d getPF();
   std::tuple<Eigen::Vector3d, Eigen::Vector3d> calculateL(Eigen::Vector3d,
                                                           Eigen::Vector3d);
+  double getDistance(Eigen::Vector3d);
 
  private: Eigen::Vector3d P_F;
 };

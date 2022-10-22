@@ -17,6 +17,7 @@ class LightSource {
                            Eigen::Vector3d(0.0, 0.0, 0.0));
   }
   virtual Eigen::Vector3d getIA() { return Eigen::Vector3d(0.0, 0.0, 0.0); }
+  virtual double getDistance(Eigen::Vector3d) = 0;
 
  private:
   Eigen::Vector3d I_F;

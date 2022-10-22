@@ -4,8 +4,11 @@
 #include "lightSource.h"
 class Ambient : public LightSource {
  public:
-  Ambient(double I_A) : LightSource(Eigen::Vector3d(0.0,0.0,0.0)), I_A(Eigen::Vector3d(I_A,I_A,I_A)) {}
+  Ambient(double I_A)
+      : LightSource(Eigen::Vector3d(0.0, 0.0, 0.0)),
+        I_A(Eigen::Vector3d(I_A, I_A, I_A)) {}
   Eigen::Vector3d getIA();
+  double getDistance(Eigen::Vector3d P_I);
 
  private:
   Eigen::Vector3d I_A;
