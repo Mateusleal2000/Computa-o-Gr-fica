@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
   Eigen::Vector3d P_F_2(100, 140, -20);
 
   Eigen::Vector3d I_F_2(0.7, 0.7, 0.7);
-  Eigen::Vector4d D_F_2(0, 1, 0, 0);
+  Eigen::Vector4d D_F_2(0, -1, 0, 0);
 
   Eigen::Vector3d I_F_3(0.7, 0.7, 0.7);
   Eigen::Vector4d P_I_3(0, 0, -100, 0);
@@ -190,9 +190,9 @@ int main(int argc, char** argv) {
   // presente
   objects.push_back(std::make_shared<Mesh>(Mesh(K_7, m_1, "gift.obj")));
 
-  lightSources.push_back(std::make_shared<Point>(Point(I_F_1, P_F_1)));
-  /*lightSources.push_back(
-      std::make_shared<Directional>(Directional(I_F_2, D_F_2)));*/
+ // lightSources.push_back(std::make_shared<Point>(Point(I_F_1, P_F_1)));
+  lightSources.push_back(
+      std::make_shared<Directional>(Directional(I_F_2, D_F_2)));
    //lightSources.push_back(std::make_shared<Point>(Point(I_F_1, P_F_2)));
   /*lightSources.push_back(
       std::make_shared<Spot>(Spot(I_F_3, P_I_3, P_S_3, 30.0)))*/;
