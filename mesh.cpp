@@ -2,6 +2,8 @@
 
 #include <regex>
 
+#include "matrix.h"
+
 std::vector<std::string> split(std::string s, std::string del = " ") {
   std::vector<std::string> values;
   int start, end = -1 * del.size();
@@ -12,6 +14,17 @@ std::vector<std::string> split(std::string s, std::string del = " ") {
   } while (end != -1);
   return values;
 }
+
+Mesh::Mesh(utilsStructs::materialK k, double shininess,
+           std::vector<Eigen::Vector4d> vertices,
+           std::vector<Eigen::Vector4d> normals,
+           std::vector<Eigen::Vector3d> edges,
+           std::vector<Eigen::Vector4d> faces)
+    : Object(k, shininess),
+      vertices(vertices),
+      normals(normals),
+      edges(edges),
+      faces(faces) {}
 
 Mesh::Mesh(utilsStructs::materialK k, double shininess, std::string path)
     : Object(k, shininess) {
@@ -105,3 +118,57 @@ std::tuple<double, double> Mesh::intersectRay(Eigen::Vector3d O,
 }
 
 Eigen::Vector3d Mesh::getNormal(Eigen::Vector3d P_I) { return this->normal; }
+
+void Mesh::applyMatrixVertices(Eigen::Matrix4d m) {
+  for (Eigen::Vector4d &v : vertices) {
+    v = m * v;
+  }
+  std::cout << "matriz aplicada"
+            << "\n";
+  return;
+}
+
+void Mesh::applyMatrixNormals(Eigen::Matrix4d m) {
+  for (Eigen::Vector4d &n : normals) {
+    n = m * n;
+  }
+  std::cout << "matriz aplicada"
+            << "\n";
+  return;
+}
+
+void Mesh::scale(double x, double y, double z) {
+  Eigen::Matrix4d m = matrix::scale(x, y, z);
+  applyMatrixVertices(m);
+  /*if (x != y || x != z) {
+    applyMatrixNormals((m.transpose()).inverse());
+  }*/
+  return;
+}
+void Mesh::shear(double delta, matrix::SHEAR_AXIS axis) {
+  Eigen::Matrix4d m = matrix::shear(delta, axis);
+  applyMatrixVertices(m);
+  // applyMatrixNormals((m.transpose()).inverse());
+  applyMatrixNormals((m.transpose()).inverse());
+  return;
+}
+void Mesh::translate(double x, double y, double z) {
+  Eigen::Matrix4d m = matrix::translate(x, y, z);
+  applyMatrixVertices(m);
+  return;
+}
+void Mesh::rotate(double theta, matrix::AXIS axis) {
+  Eigen::Matrix4d m = matrix::rotate(theta, axis);
+  applyMatrixVertices(m);
+  applyMatrixNormals(m);
+  return;
+}
+Mesh Mesh::reflection(matrix::REFLECTION_AXIS axis) {
+  Eigen::Matrix4d m = matrix::reflection(axis);
+  Mesh reflectedMesh(this->getK(), this->getM(), this->vertices, this->normals,
+                     this->edges, this->faces);
+
+  reflectedMesh.applyMatrixVertices(m);
+  reflectedMesh.applyMatrixNormals(m);
+  return reflectedMesh;
+}

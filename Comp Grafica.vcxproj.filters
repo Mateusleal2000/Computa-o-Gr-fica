@@ -83,6 +83,9 @@
     <ClCompile Include="ambient.cpp">
       <Filter>Source Files\Light Sources</Filter>
     </ClCompile>
+    <ClCompile Include="matrix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="object.h">
@@ -132,6 +135,9 @@
     </ClInclude>
     <ClInclude Include="ambient.h">
       <Filter>Header Files\Light Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

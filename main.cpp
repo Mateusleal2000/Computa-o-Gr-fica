@@ -16,6 +16,7 @@
 #include "display.h"
 #include "displayStructs.h"
 #include "lightSource.h"
+#include "matrix.h"
 #include "mesh.h"
 #include "plane.h"
 #include "point.h"
@@ -138,6 +139,18 @@ int main(int argc, char** argv) {
   double m_2 = 1;
   double m_3 = 1;
 
+  Mesh cube(K_7, m_1, "magic_cube.obj");
+
+  cube.scale(20.0, 20.0, 20.0);
+
+  // cube.rotate(45.0, matrix::AXIS::Y);
+
+  // cube.shear(40.0, matrix::SHEAR_AXIS::XY);
+
+  cube.translate(-20.0, -130.0, -165.0);
+
+  Mesh reflectedCube = cube.reflection(matrix::REFLECTION_AXIS::XZ);
+
   /*objects.push_back(
       std::make_shared<Sphere>(Sphere(K_1, m_1, radius, center1)));
 
@@ -181,24 +194,27 @@ int main(int argc, char** argv) {
       Plane(K_4, m_2, Eigen::Vector3d(0, 150, 0), Eigen::Vector3d(0, -1, 0))));
 
   // tronco da árvore-cilindro
-  objects.push_back(std::make_shared<Cylinder>(
-      Cylinder(K_5, m_1, 5.0, center2, 90.0, dCil_3.normalized())));
+  /*objects.push_back(std::make_shared<Cylinder>(
+      Cylinder(K_5, m_1, 5.0, center2, 90.0, dCil_3.normalized())));*/
 
   // conífera-cone
-  objects.push_back(std::make_shared<Cone>(
-      Cone(K_6, m_1, 90, center3, 150.0, dCone_3.normalized())));
+  /*objects.push_back(std::make_shared<Cone>(
+      Cone(K_6, m_1, 90, center3, 150.0, dCone_3.normalized())));*/
 
-  // presente
-  objects.push_back(std::make_shared<Mesh>(Mesh(K_7, m_1, "gift.obj")));
+  // Eigen::Matrix4d m = meshMatrix::scale(3.0, 3.0, 3.0);
+  // applyMatrix(m);
+  //  presente
+  objects.push_back(std::make_shared<Mesh>(cube));
+  objects.push_back(std::make_shared<Mesh>(reflectedCube));
 
-  // lightSources.push_back(std::make_shared<Point>(Point(I_F_1, P_F_1)));
+  lightSources.push_back(std::make_shared<Point>(Point(I_F_1, P_F_1)));
   /*lightSources.push_back(
       std::make_shared<Directional>(Directional(I_F_2, D_F_2)));*/
   // lightSources.push_back(std::make_shared<Point>(Point(I_F_1, P_F_2)));
-  lightSources.push_back(
-      std::make_shared<Spot>(Spot(I_F_3, P_I_3, P_S_3, 12.0)));
-  lightSources.push_back(
-      std::make_shared<Spot>(Spot(I_F_3, P_I_3, P_S_4, 12.0)));
+  /*lightSources.push_back(
+      std::make_shared<Spot>(Spot(I_F_3, P_I_3, P_S_3, 12.0)));*/
+  /*lightSources.push_back(
+      std::make_shared<Spot>(Spot(I_F_3, P_I_3, P_S_4, 12.0)));*/
   lightSources.push_back(std::make_shared<Ambient>(Ambient(I_A)));
 
   Scene scene(viewport, camera, lightSources, objects);

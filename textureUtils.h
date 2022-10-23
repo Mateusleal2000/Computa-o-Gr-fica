@@ -1,5 +1,5 @@
-#ifndef TEXTURE_UTILS_H
-#define TEXTURE_UTILS_H
+#ifndef TEXTUREUTILS_H
+#define TEXTUREUTILS_H
 
 #include <Magick++.h>
 

@@ -175,6 +175,7 @@
     <ClCompile Include="directional.cpp" />
     <ClCompile Include="lightSource.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="matrix.cpp" />
     <ClCompile Include="mesh.cpp" />
     <ClCompile Include="object.cpp" />
     <ClCompile Include="plane.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="directional.h" />
     <ClInclude Include="displayStructs.h" />
     <ClInclude Include="lightSource.h" />
+    <ClInclude Include="matrix.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="plane.h" />
