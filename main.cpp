@@ -130,7 +130,8 @@ int main(int argc, char** argv) {
   std::vector<std::shared_ptr<Object>> objects;
 
   // Eigen::Vector3d center1(0, 95, -200);
-  Eigen::Vector3d center1(0, 0, -120);
+  //Eigen::Vector3d center1(0, 0, -120);
+  Eigen::Vector3d center1(0, 0, 0);
   Eigen::Vector3d center2(0, -150, -200);
   Eigen::Vector3d center3(0, -60, -200);
   Eigen::Vector3d center4(0, 20, -150);
@@ -141,15 +142,15 @@ int main(int argc, char** argv) {
 
   Mesh cube(K_7, m_1, "magic_cube.obj");
 
-  cube.scale(20.0, 20.0, 20.0);
+  cube.scale(60.0, 20.0, 20.0);
 
   // cube.rotate(45.0, matrix::AXIS::Y);
 
-  // cube.shear(40.0, matrix::SHEAR_AXIS::XY);
+  cube.shear(40.0, matrix::SHEAR_AXIS::XY);
 
   cube.translate(-20.0, -130.0, -165.0);
 
-  Mesh reflectedCube = cube.reflection(matrix::REFLECTION_AXIS::XZ);
+  //Mesh reflectedCube = cube.reflection(matrix::REFLECTION_AXIS::XZ);
 
   /*objects.push_back(
       std::make_shared<Sphere>(Sphere(K_1, m_1, radius, center1)));
@@ -169,8 +170,14 @@ int main(int argc, char** argv) {
      dCone_2.normalized())));*/
 
   // bolinha da árvore de natal
-  /*objects.push_back(
-      std::make_shared<Sphere>(Sphere(K_1, m_1, radius, center1)));*/
+  //objects.push_back(std::make_shared<Sphere>(Sphere(K_1, m_1, radius, center1)));
+  //0, 0, -120
+  Sphere bolinha1(K_1, m_1, radius, center1);
+  bolinha1.scale(4.0);
+  bolinha1.translate(0, 0, -120);
+  Sphere bolinha2 = bolinha1.reflection(matrix::REFLECTION_AXIS::YZ);
+  objects.push_back(std::make_shared<Sphere>(bolinha1));
+  objects.push_back(std::make_shared<Sphere>(bolinha2));
 
   // chão O K vai ser uma textura de madeira
   objects.push_back(std::make_shared<Plane>(
@@ -204,8 +211,8 @@ int main(int argc, char** argv) {
   // Eigen::Matrix4d m = meshMatrix::scale(3.0, 3.0, 3.0);
   // applyMatrix(m);
   //  presente
-  objects.push_back(std::make_shared<Mesh>(cube));
-  objects.push_back(std::make_shared<Mesh>(reflectedCube));
+  //objects.push_back(std::make_shared<Mesh>(cube));
+  //objects.push_back(std::make_shared<Mesh>(reflectedCube));
 
   lightSources.push_back(std::make_shared<Point>(Point(I_F_1, P_F_1)));
   /*lightSources.push_back(

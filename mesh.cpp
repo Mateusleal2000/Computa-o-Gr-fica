@@ -130,7 +130,7 @@ void Mesh::applyMatrixVertices(Eigen::Matrix4d m) {
 
 void Mesh::applyMatrixNormals(Eigen::Matrix4d m) {
   for (Eigen::Vector4d &n : normals) {
-    n = m * n;
+    n = (m * n).normalized();
   }
   std::cout << "matriz aplicada"
             << "\n";

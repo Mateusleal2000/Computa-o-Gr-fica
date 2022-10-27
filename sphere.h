@@ -6,6 +6,7 @@
 #include <tuple>
 
 #include "displayStructs.h"
+#include "matrix.h"
 #include "object.h"
 #include "utilsStructs.h"
 
@@ -18,6 +19,14 @@ class Sphere : public Object {
   Eigen::Vector3d getCenter();
   Eigen::Vector3d getNormal(Eigen::Vector3d P_I);
   std::tuple<double, double> intersectRay(Eigen::Vector3d, Eigen::Vector3d);
+
+  /*void applyMatrixVertices(Eigen::Matrix4d);
+  void applyMatrixNormals(Eigen::Matrix4d);*/
+  void scale(double s);
+  // void shear(double delta, matrix::SHEAR_AXIS axis);
+  void translate(double x, double y, double z);
+  // void rotate(double theta, matrix::AXIS axis);
+  Sphere reflection(matrix::REFLECTION_AXIS axis);
 
  private:
   Eigen::Vector3d center;
