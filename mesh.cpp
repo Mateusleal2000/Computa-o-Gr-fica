@@ -148,9 +148,8 @@ void Mesh::shear(double delta, matrix::SHEAR_AXIS axis) {
 void Mesh::translate(double x, double y, double z, Eigen::Matrix4d wc) {
   Eigen::Matrix4d m = matrix::translate(x, y, z);
   applyMatrixVertices(m);
-  // applyMatrixNormals((m.transpose()).inverse());
+  applyMatrixNormals((m.transpose()).inverse());
   applyMatrixVertices(wc);
-  //applyMatrixNormals(wc);
   return;
 }
 void Mesh::rotate(double theta, matrix::AXIS axis) {

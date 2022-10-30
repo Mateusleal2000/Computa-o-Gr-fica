@@ -48,9 +48,9 @@ int main(int argc, char** argv) {
   double nRow = 500;
   double nCol = 500;
 
-  double lx = 400.0;
-  double ly = 300.0;
-  double lz = 1700.0;
+  double lx = 100.0;
+  double ly = 1000.0;
+  double lz = 1900.0;
 
   Eigen::Vector4d O(lx, ly, lz, 1.0);
   Eigen::Vector3d at(lx, ly, 1.0);
@@ -63,7 +63,8 @@ int main(int argc, char** argv) {
 
   Eigen::Vector3d I_F_1(0.7, 0.7, 0.7);
   // Eigen::Vector3d P_F_1(0, 200, -150);
-  Eigen::Vector3d P_F_1(-100, 140, -20);
+  Eigen::Vector4d P_F_1(0.0, 1100.0, 1900.0, 1);
+  P_F_1 = wc * P_F_1;
   Eigen::Vector3d P_F_2(100, 200, -20);
 
   Eigen::Vector3d I_F_2(0.7, 0.7, 0.7);
@@ -161,10 +162,41 @@ int main(int argc, char** argv) {
   double m_2 = 1;
   double m_3 = 1;
 
+  // Mesa
   Mesh table_lid(lid_K, m_1, "magic_cube.obj");
   Mesh table_supportL(support_K, m_1, "magic_cube.obj");
   Mesh table_supportR(support_K, m_1, "magic_cube.obj");
 
+  // Galpão frente
+  Mesh beamL(K_4, m_1, "magic_cube.obj");
+  Mesh support_columnL(K_4, m_1, "magic_cube.obj");
+  Mesh beamR(K_4, m_1, "magic_cube.obj");
+  Mesh support_columnR(K_4, m_1, "magic_cube.obj");
+
+  // Galpão trás
+  Mesh back_beamL(K_4, m_1, "magic_cube.obj");
+  Mesh back_support_columnL(K_4, m_1, "magic_cube.obj");
+  Mesh back_beamR(K_4, m_1, "magic_cube.obj");
+  Mesh back_support_columnR(K_4, m_1, "magic_cube.obj");
+
+  // Telhado
+  Mesh roofR(K_6, m_1, "magic_cube.obj");
+  Mesh roofL(K_6, m_1, "magic_cube.obj");
+
+  //Árvore
+  Sphere bolinha1(K_1, m_1, radius, center1);
+  auto woodBase = std::make_shared<Cylinder>(
+      Cylinder(K_4, m_1, 1, center1, 1, dCil_3.normalized()));
+  auto wood = std::make_shared<Cylinder>(
+      Cylinder(K_4, m_1, 1, center1, 1, dCil_3.normalized()));
+  auto tree = std::make_shared<Cone>(
+      Cone(K_5, m_1, 1, center1, 1, dCil_3.normalized()));
+
+  // Chão
+  Eigen::Vector4d floor_pos(0, -150, 0, 1);
+  Plane floor(K_3, m_2, (wc * floor_pos).head<3>(), Eigen::Vector3d(0, 1, 0));
+
+  // Posicionando mesa
   table_supportL.scale(5.0, 95.0, 150.0);
   table_supportL.translate(50.0, -73.0, 1000.0, wc);
 
@@ -174,58 +206,85 @@ int main(int argc, char** argv) {
   table_lid.scale(250.0, 5.0, 150.0);
   table_lid.translate(300.0, 20.0, 1000.0, wc);
 
-  /*Mesh table_supportR =
-   * table_supportL.reflection(matrix::REFLECTION_AXIS::YZ);*/
-
-  // Mesh reflectedCube = cube.reflection(matrix::REFLECTION_AXIS::XZ);
-
-  Sphere bolinha1(K_1, m_1, radius, center1);
+  // Posicionando árvore
   bolinha1.scale(4.5);
   bolinha1.translate(300.0, 220.0, 1000.0, wc);
-  // Sphere bolinha2 = bolinha1.reflection(matrix::REFLECTION_AXIS::YZ);
-  objects.push_back(std::make_shared<Sphere>(bolinha1));
 
-  /*Cylinder wood(K_4, m_1, 1.0, center2, 1.0, dCil_3.normalized());
-  Cylinder woodBase(K_4, m_1, 1.0, center2, 1.0, dCil_3.normalized());*/
-
-  /*wood.scale(6.0, 40.0);
-  woodBase.scale(30.0, 9.0);
-
-  wood.translate(300.0, 28.0, 1000.0, wc);
-  woodBase.translate(300.0, 24.0, 1000.0, wc);*/
-
-  // chão O K vai ser uma textura de madeira
-  /*objects.push_back(std::make_shared<Plane>(
-      Plane(K_3, m_2, Eigen::Vector3d(0, -150, 0), Eigen::Vector3d(0, 1, 0),
-            "wood.png", textureUtils::REPEAT)));*/
-
-  Eigen::Vector4d floor_pos(0, -150, 0, 1);
-
-  Plane floor(K_3, m_2, (wc * floor_pos).head<3>(), Eigen::Vector3d(0, 1, 0));
-  objects.push_back(std::make_shared<Plane>(floor));
-
-  objects.push_back(std::make_shared<Mesh>(table_supportL));
-  objects.push_back(std::make_shared<Mesh>(table_supportR));
-  objects.push_back(std::make_shared<Mesh>(table_lid));
-  auto woodBase = std::make_shared<Cylinder>(
-      Cylinder(K_4, m_1, 1, center1, 1, dCil_3.normalized()));
   woodBase->scale(30.0, 9.0);
   woodBase->translate(300.0, 28.0, 1000.0, wc);
-  objects.push_back(woodBase);
 
-  auto wood = std::make_shared<Cylinder>(
-      Cylinder(K_4, m_1, 1, center1, 1, dCil_3.normalized()));
   wood->scale(6.0, 40.0);
   wood->translate(300.0, 28.0, 1000.0, wc);
-  objects.push_back(wood);
 
-  auto tree = std::make_shared<Cone>(
-      Cone(K_5, m_1, 1, center1, 1, dCil_3.normalized()));
   tree->scale(60.0, 150.0);
   tree->translate(300.0, 68.0, 1000.0, wc);
-  objects.push_back(tree);
 
-  lightSources.push_back(std::make_shared<Point>(Point(I_F_1, P_F_1)));
+  // Posicionando galpão
+
+  beamL.scale(300.0, 50.0, 30.0);
+  beamL.shear(37.0, matrix::SHEAR_AXIS::XY);
+  beamL.translate(0, 500.0, 1000.0, wc);
+
+  beamR.scale(300.0, 50.0, 30.0);
+  beamR.shear(-37.0, matrix::SHEAR_AXIS::XY);
+  beamR.translate(600.0, 500.0, 1000.0, wc);
+
+  support_columnL.scale(50.0, 500.0, 30.0);
+  support_columnL.translate(0.0, 0.0, 1000.0, wc);
+
+  support_columnR.scale(50.0, 500.0, 30.0);
+  support_columnR.translate(600.0, 0.0, 1000.0, wc);
+
+  back_beamL.scale(300.0, 50.0, 30.0);
+  back_beamL.shear(37.0, matrix::SHEAR_AXIS::XY);
+  back_beamL.translate(0.0, 500.0, 0.0, wc);
+
+  back_beamR.scale(300.0, 50.0, 30.0);
+  back_beamR.shear(-37.0, matrix::SHEAR_AXIS::XY);
+  back_beamR.translate(600.0, 500.0, 0.0, wc);
+
+  back_support_columnL.scale(50.0, 500.0, 30.0);
+  back_support_columnL.translate(0.0, 0.0, 0.0, wc);
+
+  back_support_columnR.scale(50.0, 500.0, 30.0);
+  back_support_columnR.translate(600.0, 0.0, 0.0, wc);
+
+  // Posicionando telhados
+  roofL.scale(290.0, 20.0, 520.0);
+  roofL.rotate(39.0, matrix::AXIS::Z);
+  roofL.translate(150.0, 600.0, 500.0, wc);
+
+  roofR.scale(290.0, 20.0, 520.0);
+  // roofR.shear(-37.0, matrix::SHEAR_AXIS::XY);
+  roofR.rotate(-45.0, matrix::AXIS::Y);
+  roofR.translate(450.0, 600.0, 500.0, wc);
+
+  objects.push_back(std::make_shared<Mesh>(support_columnL));
+  objects.push_back(std::make_shared<Mesh>(support_columnR));
+  objects.push_back(std::make_shared<Mesh>(beamL));
+  objects.push_back(std::make_shared<Mesh>(beamR));
+
+  objects.push_back(std::make_shared<Mesh>(back_beamR));
+  objects.push_back(std::make_shared<Mesh>(back_beamL));
+  objects.push_back(std::make_shared<Mesh>(back_support_columnL));
+  objects.push_back(std::make_shared<Mesh>(back_support_columnR));
+
+  // objects.push_back(std::make_shared<Mesh>(roofL));
+  //  objects.push_back(std::make_shared<Mesh>(roofR));
+
+  // objects.push_back(std::make_shared<Sphere>(bolinha1));
+
+  objects.push_back(std::make_shared<Plane>(floor));
+
+  // objects.push_back(std::make_shared<Mesh>(table_supportL));
+  // objects.push_back(std::make_shared<Mesh>(table_supportR));
+  // objects.push_back(std::make_shared<Mesh>(table_lid));
+  // objects.push_back(woodBase);
+  // objects.push_back(wood);
+  // objects.push_back(tree);
+
+  lightSources.push_back(
+      std::make_shared<Point>(Point(I_F_1, P_F_1.head<3>())));
   /*lightSources.push_back(
       std::make_shared<Directional>(Directional(I_F_2, D_F_2)));*/
   // lightSources.push_back(std::make_shared<Point>(Point(I_F_1, P_F_2)));
