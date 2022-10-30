@@ -24,7 +24,7 @@ class Mesh : public Object {
   void applyMatrixNormals(Eigen::Matrix4d);
   void scale(double x, double y, double z);
   void shear(double delta, matrix::SHEAR_AXIS axis);
-  void translate(double x, double y, double z);
+  void translate(double x, double y, double z, Eigen::Matrix4d wc);
   void rotate(double theta, matrix::AXIS axis);
   Mesh reflection(matrix::REFLECTION_AXIS axis);
   /*std::vector<Eigen::Vector4d> getNormals();

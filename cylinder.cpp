@@ -102,3 +102,47 @@ double Cylinder::onSurface(Eigen::Vector3d O, Eigen::Vector3d D, double t1,
   }
   return validPoint;
 }
+
+void Cylinder::scale(double radiusScale, double heightScale) {
+  this->height *= heightScale;
+  this->radius *= radiusScale;
+  return;
+}
+void Cylinder::shear(double delta, matrix::SHEAR_AXIS axis) {
+  Eigen::Matrix4d m = matrix::shear(delta, axis);
+  return;
+}
+void Cylinder::translate(double x, double y, double z, Eigen::Matrix4d wc) {
+  Eigen::Vector4d aux_center(x, y, z, 1);
+  Eigen::Vector4d new_center = wc * aux_center;
+  this->center(0) = new_center(0);
+  this->center(1) = new_center(1);
+  this->center(2) = new_center(2);
+  generateLids();
+  return;
+}
+void Cylinder::rotate(double theta, matrix::AXIS axis) {
+  Eigen::Matrix4d m = matrix::rotate(theta, axis);
+  return;
+}
+Cylinder Cylinder::reflection(matrix::REFLECTION_AXIS axis) {
+  Eigen::Matrix4d m = matrix::reflection(axis);
+  Cylinder reflectedCylinder(this->getK(), this->getM(), this->radius,
+                             this->center, this->height, this->cylinderDir);
+
+  return reflectedCylinder;
+}
+
+void Cylinder::generateLids() {
+  this->M = Eigen::Matrix<double, 3, 3>::Identity() -
+            this->cylinderDir * this->cylinderDir.transpose();
+
+  this->topCenter = this->center + this->height * this->cylinderDir;
+
+  this->baseLid =
+      std::make_unique<Plane>(this->K, this->m, center, -cylinderDir);
+
+  this->topLid =
+      std::make_unique<Plane>(this->K, this->m, topCenter, cylinderDir);
+  return;
+}

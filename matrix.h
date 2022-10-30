@@ -2,6 +2,7 @@
 #define MATRIX_H_
 
 #include <Eigen/Dense>
+#include <algorithm>
 #include <iostream>
 #include <memory>
 #include <tuple>
@@ -20,6 +21,9 @@ Eigen::Matrix4d translate(double x, double y, double z);
 Eigen::Matrix4d rotate(double theta, AXIS axis);
 
 Eigen::Matrix4d reflection(REFLECTION_AXIS axis);
+
+Eigen::Matrix4d lookAt(Eigen::Vector3d eye, Eigen::Vector3d at,
+                       Eigen::Vector3d up);
 }  // namespace matrix
 
 #endif

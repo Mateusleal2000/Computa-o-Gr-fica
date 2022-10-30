@@ -48,19 +48,12 @@ Eigen::Matrix4d rotate(double theta, AXIS axis) {
   if (axis == AXIS::X) {
     m << 1, 0, 0, 0, 0, std::cos(theta), -std::sin(theta), 0, 0,
         std::sin(theta), std::cos(theta), 0, 0, 0, 0, 1;
-
-    std::cout << "Rotate X axis"
-              << "\n";
   } else if (axis == AXIS::Y) {
     m << std::cos(theta), 0, std::sin(theta), 0, 0, 1, 0, 0, -std::sin(theta),
         0, std::cos(theta), 0, 0, 0, 0, 1;
-    std::cout << "Rotate Y axis"
-              << "\n";
   } else if (axis == AXIS::Z) {
     m << std::cos(theta), -std::sin(theta), 0, 0, std::sin(theta),
         std::cos(theta), 0, 0, 0, 0, 1, 0, 0, 0, 0, 1;
-    std::cout << "Rotate Z axis"
-              << "\n";
   }
   return m;
 }
@@ -81,5 +74,31 @@ Eigen::Matrix4d reflection(REFLECTION_AXIS axis) {
       break;
   }
   return m;
+}
+
+Eigen::Matrix4d lookAt(Eigen::Vector3d eye, Eigen::Vector3d at,
+                       Eigen::Vector3d up) {
+  Eigen::Matrix4d wc;
+  Eigen::Matrix4d cw;
+  Eigen::Vector3d ic(0.0, 0.0, 0.0);
+  Eigen::Vector3d jc(0.0, 0.0, 0.0);
+  Eigen::Vector3d kc(0.0, 0.0, 0.0);
+
+  kc = (eye - at).normalized();
+  Eigen::Vector3d vup = up - eye;
+
+  ic = (vup.cross(kc)).normalized();
+
+  jc = kc.cross(ic);
+
+  // Matrix WC
+  wc << ic(0), ic(1), ic(2), -(ic.dot(eye)), jc(0), jc(1), jc(2),
+      -(jc.dot(eye)), kc(0), kc(1), kc(2), -(kc.dot(eye)), 0, 0, 0, 1;
+
+  // Matrix CW
+  /*cw << ic(0), jc(0), kc(0), eye(0), ic(1), jc(1), kc(1), eye(1), ic(2),
+     jc(2), kc(2), eye(2), 0, 0, 0, 1;*/
+
+  return wc;
 }
 }  // namespace matrix

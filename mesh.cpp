@@ -123,8 +123,6 @@ void Mesh::applyMatrixVertices(Eigen::Matrix4d m) {
   for (Eigen::Vector4d &v : vertices) {
     v = m * v;
   }
-  std::cout << "matriz aplicada"
-            << "\n";
   return;
 }
 
@@ -132,29 +130,27 @@ void Mesh::applyMatrixNormals(Eigen::Matrix4d m) {
   for (Eigen::Vector4d &n : normals) {
     n = (m * n).normalized();
   }
-  std::cout << "matriz aplicada"
-            << "\n";
   return;
 }
 
 void Mesh::scale(double x, double y, double z) {
   Eigen::Matrix4d m = matrix::scale(x, y, z);
   applyMatrixVertices(m);
-  /*if (x != y || x != z) {
-    applyMatrixNormals((m.transpose()).inverse());
-  }*/
+  applyMatrixNormals((m.transpose()).inverse());
   return;
 }
 void Mesh::shear(double delta, matrix::SHEAR_AXIS axis) {
   Eigen::Matrix4d m = matrix::shear(delta, axis);
   applyMatrixVertices(m);
-  // applyMatrixNormals((m.transpose()).inverse());
   applyMatrixNormals((m.transpose()).inverse());
   return;
 }
-void Mesh::translate(double x, double y, double z) {
+void Mesh::translate(double x, double y, double z, Eigen::Matrix4d wc) {
   Eigen::Matrix4d m = matrix::translate(x, y, z);
   applyMatrixVertices(m);
+  // applyMatrixNormals((m.transpose()).inverse());
+  applyMatrixVertices(wc);
+  //applyMatrixNormals(wc);
   return;
 }
 void Mesh::rotate(double theta, matrix::AXIS axis) {

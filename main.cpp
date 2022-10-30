@@ -38,7 +38,7 @@ void draw() {
 
 int main(int argc, char** argv) {
   Magick::InitializeMagick(*argv);
-  double radius = 5;
+  double radius = 2.5;
   double dWindow = 25;
   double x = 0;
   double y = 0;
@@ -48,7 +48,16 @@ int main(int argc, char** argv) {
   double nRow = 500;
   double nCol = 500;
 
-  Eigen::Vector3d O(0.0, 0.0, 0.0);
+  double lx = 300.0;
+  double ly = 100.0;
+  double lz = 1700.0;
+
+  Eigen::Vector4d O(lx, ly, lz, 1.0);
+  Eigen::Vector3d at(lx, ly, 1.0);
+  Eigen::Vector3d up(lx, ly + 100.0, lz);
+  Eigen::Matrix4d wc = matrix::lookAt(O.head<3>(), at, up);
+  std::cout << wc << "\n";
+  O = wc * O;
   Eigen::Vector3d center(x, y, z);
   double I_A = 0.3;
 
@@ -81,10 +90,10 @@ int main(int argc, char** argv) {
   Eigen::Vector3d Ka_3(0.686, 0.933, 0.933);
   Eigen::Vector3d Kd_3(0.686, 0.933, 0.933);
 
-  // cilinder
-  Eigen::Vector3d Ke_4(0.933, 0.933, 0.933);
-  Eigen::Vector3d Ka_4(0.933, 0.933, 0.933);
-  Eigen::Vector3d Kd_4(0.933, 0.933, 0.933);
+  // cylinder
+  Eigen::Vector3d Ke_4(0.745, 0.470, 0.058);
+  Eigen::Vector3d Ka_4(0.745, 0.470, 0.058);
+  Eigen::Vector3d Kd_4(0.745, 0.470, 0.058);
 
   // cone
   Eigen::Vector3d Ke_5(0.824, 0.706, 0.549);
@@ -98,6 +107,16 @@ int main(int argc, char** argv) {
   Eigen::Vector3d Ke_7(1.0, 0.078, 0.576);
   Eigen::Vector3d Ka_7(1.0, 0.078, 0.576);
   Eigen::Vector3d Kd_7(1.0, 0.078, 0.576);
+
+  // table lid K
+  Eigen::Vector3d lid_Ke(0.12, 0.51, 0.69);
+  Eigen::Vector3d lid_Ka(0.12, 0.51, 0.69);
+  Eigen::Vector3d lid_Kd(0.12, 0.51, 0.69);
+
+  // table support K
+  Eigen::Vector3d support_Ke(0.88, 0.52, 0.26);
+  Eigen::Vector3d support_Ka(0.88, 0.52, 0.26);
+  Eigen::Vector3d support_Kd(0.88, 0.52, 0.26);
 
   Eigen::Vector3d dCil_1(-1.0 / std::sqrt(3), 1.0 / std::sqrt(3),
                          -1.0 / std::sqrt(3));
@@ -121,18 +140,19 @@ int main(int argc, char** argv) {
   utilsStructs::materialK K_6(Ke_6, Ka_6, Kd_6);
   utilsStructs::materialK K_7(Ke_7, Ka_7, Kd_7);
 
+  utilsStructs::materialK lid_K(lid_Ke, lid_Ka, lid_Kd);
+  utilsStructs::materialK support_K(support_Ke, support_Ka, support_Kd);
+
   displayStructs::Viewport viewport(viewPortWidth, viewPortHeight, nRow, nCol,
                                     dWindow);
 
-  displayStructs::Camera camera(O);
+  displayStructs::Camera camera(O.head<3>());
 
   std::vector<std::shared_ptr<LightSource>> lightSources;
   std::vector<std::shared_ptr<Object>> objects;
 
-  // Eigen::Vector3d center1(0, 95, -200);
-  //Eigen::Vector3d center1(0, 0, -120);
   Eigen::Vector3d center1(0, 0, 0);
-  Eigen::Vector3d center2(0, -150, -200);
+  Eigen::Vector3d center2(0.0, 0.0, 0.0);
   Eigen::Vector3d center3(0, -60, -200);
   Eigen::Vector3d center4(0, 20, -150);
 
@@ -140,79 +160,65 @@ int main(int argc, char** argv) {
   double m_2 = 1;
   double m_3 = 1;
 
-  Mesh cube(K_7, m_1, "magic_cube.obj");
+  Mesh table_lid(lid_K, m_1, "magic_cube.obj");
+  Mesh table_supportL(support_K, m_1, "magic_cube.obj");
+  Mesh table_supportR(support_K, m_1, "magic_cube.obj");
 
-  cube.scale(60.0, 20.0, 20.0);
+  table_supportL.scale(5.0, 95.0, 150.0);
+  table_supportL.translate(50.0, -73.0, 1000.0, wc);
 
-  // cube.rotate(45.0, matrix::AXIS::Y);
+  table_supportR.scale(5.0, 95.0, 150.0);
+  table_supportR.translate(550, -73.0, 1000.0, wc);
 
-  cube.shear(40.0, matrix::SHEAR_AXIS::XY);
+  table_lid.scale(250.0, 5.0, 150.0);
+  table_lid.translate(300.0, 20.0, 1046.0, wc);
 
-  cube.translate(-20.0, -130.0, -165.0);
+  /*Mesh table_supportR =
+   * table_supportL.reflection(matrix::REFLECTION_AXIS::YZ);*/
 
-  //Mesh reflectedCube = cube.reflection(matrix::REFLECTION_AXIS::XZ);
+  // Mesh reflectedCube = cube.reflection(matrix::REFLECTION_AXIS::XZ);
 
-  /*objects.push_back(
-      std::make_shared<Sphere>(Sphere(K_1, m_1, radius, center1)));
-
-  objects.push_back(std::make_shared<Plane>(Plane(
-      K_2, m_2, Eigen::Vector3d(0, -radius, 0), Eigen::Vector3d(0, 1, 0))));
-
-  objects.push_back(std::make_shared<Plane>(
-      Plane(K_3, m_3, Eigen::Vector3d(0, 0, -300), Eigen::Vector3d(0, 0, 1))));
-
-  objects.push_back(std::make_shared<Cylinder>(
-      Cylinder(K_4, m_1, radius/3, center1, height_1, dCil_1.normalized())));
-
-  objects.push_back(std::make_shared<Cone>(
-      Cone(K_5, m_1, radius * 1.5, center1 + (dCil_1.normalized() * height_1),
-           height_2,
-     dCone_2.normalized())));*/
-
-  // bolinha da árvore de natal
-  //objects.push_back(std::make_shared<Sphere>(Sphere(K_1, m_1, radius, center1)));
-  //0, 0, -120
   Sphere bolinha1(K_1, m_1, radius, center1);
-  bolinha1.scale(4.0);
-  bolinha1.translate(0, 0, -120);
-  Sphere bolinha2 = bolinha1.reflection(matrix::REFLECTION_AXIS::YZ);
-  objects.push_back(std::make_shared<Sphere>(bolinha1));
-  objects.push_back(std::make_shared<Sphere>(bolinha2));
+  bolinha1.scale(10.0);
+  bolinha1.translate(300.0, 600.0, 1000.0, wc);
+  // Sphere bolinha2 = bolinha1.reflection(matrix::REFLECTION_AXIS::YZ);
+  // objects.push_back(std::make_shared<Sphere>(bolinha1));
+
+  /*Cylinder wood(K_4, m_1, 1.0, center2, 1.0, dCil_3.normalized());
+  Cylinder woodBase(K_4, m_1, 1.0, center2, 1.0, dCil_3.normalized());*/
+
+  /*wood.scale(6.0, 40.0);
+  woodBase.scale(30.0, 9.0);
+
+  wood.translate(300.0, 28.0, 1000.0, wc);
+  woodBase.translate(300.0, 24.0, 1000.0, wc);*/
 
   // chão O K vai ser uma textura de madeira
-  objects.push_back(std::make_shared<Plane>(
+  /*objects.push_back(std::make_shared<Plane>(
       Plane(K_3, m_2, Eigen::Vector3d(0, -150, 0), Eigen::Vector3d(0, 1, 0),
-            "wood.png", textureUtils::REPEAT)));
+            "wood.png", textureUtils::REPEAT)));*/
 
-  // parede lateral direita
-  objects.push_back(std::make_shared<Plane>(Plane(
-      K_3, m_2, Eigen::Vector3d(200, -150, 0), Eigen::Vector3d(-1, 0, 0))));
+  Eigen::Vector4d floor_pos(0, -150, 0, 1);
 
-  // parede lateral esquerda
-  objects.push_back(std::make_shared<Plane>(Plane(
-      K_3, m_2, Eigen::Vector3d(-200, -150, 0), Eigen::Vector3d(1, 0, 0))));
+  Plane floor(K_3, m_2, (wc * floor_pos).head<3>(), Eigen::Vector3d(0, 1, 0));
+  objects.push_back(std::make_shared<Plane>(floor));
 
-  // parede frontal
-  objects.push_back(std::make_shared<Plane>(Plane(
-      K_3, m_2, Eigen::Vector3d(200, -150, -400), Eigen::Vector3d(0, 0, 1))));
+  objects.push_back(std::make_shared<Mesh>(table_supportL));
+  objects.push_back(std::make_shared<Mesh>(table_supportR));
+  objects.push_back(std::make_shared<Mesh>(table_lid));
+  // objects.push_back(std::make_shared<Cylinder>(wood));
+  // objects.push_back(std::make_shared<Cylinder>(woodBase));
+  auto woodBase = std::make_shared<Cylinder>(
+      Cylinder(K_4, m_1, 1, center1, 1, dCil_3.normalized()));
+  woodBase->scale(30.0, 9.0);
+  woodBase->translate(300.0, 28.0, 1000.0, wc);
+  objects.push_back(woodBase);
 
-  // parede teto
-  objects.push_back(std::make_shared<Plane>(
-      Plane(K_4, m_2, Eigen::Vector3d(0, 150, 0), Eigen::Vector3d(0, -1, 0))));
-
-  // tronco da árvore-cilindro
-  /*objects.push_back(std::make_shared<Cylinder>(
-      Cylinder(K_5, m_1, 5.0, center2, 90.0, dCil_3.normalized())));*/
-
-  // conífera-cone
-  /*objects.push_back(std::make_shared<Cone>(
-      Cone(K_6, m_1, 90, center3, 150.0, dCone_3.normalized())));*/
-
-  // Eigen::Matrix4d m = meshMatrix::scale(3.0, 3.0, 3.0);
-  // applyMatrix(m);
-  //  presente
-  //objects.push_back(std::make_shared<Mesh>(cube));
-  //objects.push_back(std::make_shared<Mesh>(reflectedCube));
+  auto wood = std::make_shared<Cylinder>(
+      Cylinder(K_4, m_1, 1, center1, 1, dCil_3.normalized()));
+  wood->scale(6.0, 40.0);
+  wood->translate(300.0, 28.0, 1000.0, wc);
+  objects.push_back(wood);
 
   lightSources.push_back(std::make_shared<Point>(Point(I_F_1, P_F_1)));
   /*lightSources.push_back(
@@ -240,7 +246,6 @@ int main(int argc, char** argv) {
 
   glutDisplayFunc(draw);
   glutIdleFunc(draw);
-
   glutMainLoop();
   return 0;
 }

@@ -11,7 +11,6 @@ std::tuple<double, std::shared_ptr<Object>> closestIntersection(
     std::vector<std::shared_ptr<Object>> objects) {
   double closestT = inf;
   std::shared_ptr<Object> closestObject;
-
   for (std::shared_ptr<Object> object : objects) {
     auto [t1, t2] = (object->intersectRay(O, D));
 

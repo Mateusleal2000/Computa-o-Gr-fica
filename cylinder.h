@@ -1,17 +1,18 @@
-#ifndef CILINDER_H_
-#define CILINDER_H_
+#ifndef CYLINDER_H_
+#define CYLINDER_H_
 
 #include <Eigen/Dense>
 #include <memory>
 #include <tuple>
 
 #include "displayStructs.h"
+#include "matrix.h"
 #include "object.h"
 #include "plane.h"
 #include "utilsStructs.h"
 
 class Cylinder : public Object {
-  enum INTERSECTION_TYPE { BASE, TOP, SURFACE };
+  enum INTERSECTION_TYPE { BASE, TOP, SURFACE, NONE };
 
  public:
   /*Cylinder(utilsStructs::materialK k,
@@ -36,17 +37,20 @@ class Cylinder : public Object {
         radius(radius),
         center(center),
         height(height),
-        cylinderDir(dCil) {
-    M = Eigen::Matrix<double, 3, 3>::Identity() - dCil * dCil.transpose();
-    topCenter = center + height * dCil;
-    baseLid = std::make_unique<Plane>(k, shininess, center, -cylinderDir);
-    topLid = std::make_unique<Plane>(k, shininess, topCenter, cylinderDir);
-  };
+        cylinderDir(dCil),
+        intersectionType(INTERSECTION_TYPE::NONE){};
 
   double getRadius();
   Eigen::Vector3d getCenter();
   Eigen::Vector3d getNormal(Eigen::Vector3d P_I);
   std::tuple<double, double> intersectRay(Eigen::Vector3d, Eigen::Vector3d);
+
+  void scale(double radiusScale, double heightScale);
+  void shear(double delta, matrix::SHEAR_AXIS axis);
+  void translate(double x, double y, double z, Eigen::Matrix4d wc);
+  void rotate(double theta, matrix::AXIS axis);
+  Cylinder reflection(matrix::REFLECTION_AXIS axis);
+  void generateLids();
 
  private:
   double radius;
