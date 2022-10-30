@@ -48,9 +48,9 @@ int main(int argc, char** argv) {
   double nRow = 500;
   double nCol = 500;
 
-  double lx = 100.0;
-  double ly = 1000.0;
-  double lz = 1900.0;
+  double lx = 300.0;
+  double ly = 200.0;
+  double lz = 1500.0;
 
   Eigen::Vector4d O(lx, ly, lz, 1.0);
   Eigen::Vector3d at(lx, ly, 1.0);
@@ -193,18 +193,18 @@ int main(int argc, char** argv) {
       Cone(K_5, m_1, 1, center1, 1, dCil_3.normalized()));
 
   // Chão
-  Eigen::Vector4d floor_pos(0, -150, 0, 1);
+  Eigen::Vector4d floor_pos(0.0, 0.0, 0.0, 1);
   Plane floor(K_3, m_2, (wc * floor_pos).head<3>(), Eigen::Vector3d(0, 1, 0));
 
   // Posicionando mesa
   table_supportL.scale(5.0, 95.0, 150.0);
-  table_supportL.translate(50.0, -73.0, 1000.0, wc);
+  table_supportL.translate(50.0, 42.5, 500.0, wc);
 
   table_supportR.scale(5.0, 95.0, 150.0);
-  table_supportR.translate(545, -73.0, 1000.0, wc);
+  table_supportR.translate(550.0, 42.5, 500.0, wc);
 
   table_lid.scale(250.0, 5.0, 150.0);
-  table_lid.translate(300.0, 20.0, 1000.0, wc);
+  table_lid.translate(300.0, 200.0, 500.0, wc);
 
   // Posicionando árvore
   bolinha1.scale(4.5);
@@ -223,31 +223,31 @@ int main(int argc, char** argv) {
 
   beamL.scale(300.0, 50.0, 30.0);
   beamL.shear(37.0, matrix::SHEAR_AXIS::XY);
-  beamL.translate(0, 500.0, 1000.0, wc);
+  beamL.translate(150, 570.0, 1000.0, wc);
 
   beamR.scale(300.0, 50.0, 30.0);
   beamR.shear(-37.0, matrix::SHEAR_AXIS::XY);
-  beamR.translate(600.0, 500.0, 1000.0, wc);
+  beamR.translate(450.0, 570.0, 1000.0, wc);
 
   support_columnL.scale(50.0, 500.0, 30.0);
-  support_columnL.translate(0.0, 0.0, 1000.0, wc);
+  support_columnL.translate(0.0, 250.0, 1000.0, wc);
 
   support_columnR.scale(50.0, 500.0, 30.0);
-  support_columnR.translate(600.0, 0.0, 1000.0, wc);
+  support_columnR.translate(600.0, 250.0, 1000.0, wc);
 
   back_beamL.scale(300.0, 50.0, 30.0);
   back_beamL.shear(37.0, matrix::SHEAR_AXIS::XY);
-  back_beamL.translate(0.0, 500.0, 0.0, wc);
+  back_beamL.translate(150, 570.0, 0.0, wc);
 
   back_beamR.scale(300.0, 50.0, 30.0);
   back_beamR.shear(-37.0, matrix::SHEAR_AXIS::XY);
-  back_beamR.translate(600.0, 500.0, 0.0, wc);
+  back_beamR.translate(450.0, 570.0, 0.0, wc);
 
   back_support_columnL.scale(50.0, 500.0, 30.0);
-  back_support_columnL.translate(0.0, 0.0, 0.0, wc);
+  back_support_columnL.translate(0.0, 250.0, 0.0, wc);
 
   back_support_columnR.scale(50.0, 500.0, 30.0);
-  back_support_columnR.translate(600.0, 0.0, 0.0, wc);
+  back_support_columnR.translate(600.0, 250.0, 0.0, wc);
 
   // Posicionando telhados
   roofL.scale(290.0, 20.0, 520.0);
@@ -276,9 +276,9 @@ int main(int argc, char** argv) {
 
   objects.push_back(std::make_shared<Plane>(floor));
 
-  // objects.push_back(std::make_shared<Mesh>(table_supportL));
-  // objects.push_back(std::make_shared<Mesh>(table_supportR));
-  // objects.push_back(std::make_shared<Mesh>(table_lid));
+  objects.push_back(std::make_shared<Mesh>(table_supportL));
+  objects.push_back(std::make_shared<Mesh>(table_supportR));
+  objects.push_back(std::make_shared<Mesh>(table_lid));
   // objects.push_back(woodBase);
   // objects.push_back(wood);
   // objects.push_back(tree);
