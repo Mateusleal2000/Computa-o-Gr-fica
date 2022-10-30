@@ -53,7 +53,6 @@ std::tuple<double, double> Cone::intersectRay(Eigen::Vector3d O,
     validPoint = tSurface;
   }
 
-
   return std::make_tuple(validPoint, validPoint);
 }
 
@@ -93,4 +92,57 @@ double Cone::onSurface(Eigen::Vector3d O, Eigen::Vector3d D, double t1,
     }
   }
   return validPoint;
+}
+
+void Cone::scale(double radiusScale, double heightScale) {
+  this->height *= heightScale;
+  this->radius *= radiusScale;
+  return;
+}
+void Cone::shear(double delta, matrix::SHEAR_AXIS axis) {
+  Eigen::Matrix4d m = matrix::shear(delta, axis);
+  return;
+}
+void Cone::translate(double x, double y, double z, Eigen::Matrix4d wc) {
+  Eigen::Vector4d aux_center(x, y, z, 1);
+  Eigen::Vector4d new_center = wc * aux_center;
+  this->center(0) = new_center(0);
+  this->center(1) = new_center(1);
+  this->center(2) = new_center(2);
+
+  if (this->vertex(0) == INFINITY) {
+    this->vertex = this->center + this->coneDir * this->height;
+  } else {
+    Eigen::Vector4d aux_vertex(this->vertex(0), this->vertex(1),
+                               this->vertex(2), 1);
+    Eigen::Vector4d new_vertex = wc * aux_vertex;
+    this->vertex = new_vertex.head<3>();
+    this->height = (this->vertex - this->center).norm();
+    this->coneDir =
+        (this->vertex - this->center) / (this->vertex - this->center).norm();
+  }
+  generateLids();
+  return;
+}
+void Cone::rotate(double theta, matrix::AXIS axis) {
+  Eigen::Matrix4d m = matrix::rotate(theta, axis);
+  return;
+}
+Cone Cone::reflection(matrix::REFLECTION_AXIS axis) {
+  Eigen::Matrix4d m = matrix::reflection(axis);
+  Cone reflectedCylinder(this->getK(), this->getM(), this->radius, this->center,
+                         this->height, this->coneDir);
+
+  return reflectedCylinder;
+}
+
+void Cone::generateLids() {
+  this->baseLid =
+      std::make_unique<Plane>(this->K, this->m, this->center, -this->coneDir);
+
+  return;
+}
+
+void Cone::mapVertex() {
+  this->vertex = this->center + this->coneDir * this->height;
 }

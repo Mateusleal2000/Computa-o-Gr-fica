@@ -38,7 +38,7 @@ void draw() {
 
 int main(int argc, char** argv) {
   Magick::InitializeMagick(*argv);
-  double radius = 2.5;
+  double radius = 1.0;
   double dWindow = 25;
   double x = 0;
   double y = 0;
@@ -48,8 +48,8 @@ int main(int argc, char** argv) {
   double nRow = 500;
   double nCol = 500;
 
-  double lx = 300.0;
-  double ly = 100.0;
+  double lx = 400.0;
+  double ly = 300.0;
   double lz = 1700.0;
 
   Eigen::Vector4d O(lx, ly, lz, 1.0);
@@ -96,13 +96,14 @@ int main(int argc, char** argv) {
   Eigen::Vector3d Kd_4(0.745, 0.470, 0.058);
 
   // cone
-  Eigen::Vector3d Ke_5(0.824, 0.706, 0.549);
-  Eigen::Vector3d Ka_5(0.824, 0.706, 0.549);
-  Eigen::Vector3d Kd_5(0.824, 0.706, 0.549);
+  Eigen::Vector3d Ke_5(0.031, 0.705, 0.329);
+  Eigen::Vector3d Ka_5(0.031, 0.705, 0.329);
+  Eigen::Vector3d Kd_5(0.031, 0.705, 0.329);
 
-  Eigen::Vector3d Ke_6(0.0, 1.0, 0.498);
-  Eigen::Vector3d Ka_6(0.0, 1.0, 0.498);
-  Eigen::Vector3d Kd_6(0.0, 1.0, 0.498);
+  // roof
+  Eigen::Vector3d Ke_6(0.996, 0.364, 0.203);
+  Eigen::Vector3d Ka_6(0.996, 0.364, 0.203);
+  Eigen::Vector3d Kd_6(0.996, 0.364, 0.203);
 
   Eigen::Vector3d Ke_7(1.0, 0.078, 0.576);
   Eigen::Vector3d Ka_7(1.0, 0.078, 0.576);
@@ -168,10 +169,10 @@ int main(int argc, char** argv) {
   table_supportL.translate(50.0, -73.0, 1000.0, wc);
 
   table_supportR.scale(5.0, 95.0, 150.0);
-  table_supportR.translate(550, -73.0, 1000.0, wc);
+  table_supportR.translate(545, -73.0, 1000.0, wc);
 
   table_lid.scale(250.0, 5.0, 150.0);
-  table_lid.translate(300.0, 20.0, 1046.0, wc);
+  table_lid.translate(300.0, 20.0, 1000.0, wc);
 
   /*Mesh table_supportR =
    * table_supportL.reflection(matrix::REFLECTION_AXIS::YZ);*/
@@ -179,10 +180,10 @@ int main(int argc, char** argv) {
   // Mesh reflectedCube = cube.reflection(matrix::REFLECTION_AXIS::XZ);
 
   Sphere bolinha1(K_1, m_1, radius, center1);
-  bolinha1.scale(10.0);
-  bolinha1.translate(300.0, 600.0, 1000.0, wc);
+  bolinha1.scale(4.5);
+  bolinha1.translate(300.0, 220.0, 1000.0, wc);
   // Sphere bolinha2 = bolinha1.reflection(matrix::REFLECTION_AXIS::YZ);
-  // objects.push_back(std::make_shared<Sphere>(bolinha1));
+  objects.push_back(std::make_shared<Sphere>(bolinha1));
 
   /*Cylinder wood(K_4, m_1, 1.0, center2, 1.0, dCil_3.normalized());
   Cylinder woodBase(K_4, m_1, 1.0, center2, 1.0, dCil_3.normalized());*/
@@ -206,8 +207,6 @@ int main(int argc, char** argv) {
   objects.push_back(std::make_shared<Mesh>(table_supportL));
   objects.push_back(std::make_shared<Mesh>(table_supportR));
   objects.push_back(std::make_shared<Mesh>(table_lid));
-  // objects.push_back(std::make_shared<Cylinder>(wood));
-  // objects.push_back(std::make_shared<Cylinder>(woodBase));
   auto woodBase = std::make_shared<Cylinder>(
       Cylinder(K_4, m_1, 1, center1, 1, dCil_3.normalized()));
   woodBase->scale(30.0, 9.0);
@@ -219,6 +218,12 @@ int main(int argc, char** argv) {
   wood->scale(6.0, 40.0);
   wood->translate(300.0, 28.0, 1000.0, wc);
   objects.push_back(wood);
+
+  auto tree = std::make_shared<Cone>(
+      Cone(K_5, m_1, 1, center1, 1, dCil_3.normalized()));
+  tree->scale(60.0, 150.0);
+  tree->translate(300.0, 68.0, 1000.0, wc);
+  objects.push_back(tree);
 
   lightSources.push_back(std::make_shared<Point>(Point(I_F_1, P_F_1)));
   /*lightSources.push_back(

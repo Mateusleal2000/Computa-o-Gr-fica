@@ -6,6 +6,7 @@
 #include <tuple>
 
 #include "displayStructs.h"
+#include "matrix.h"
 #include "object.h"
 #include "plane.h"
 #include "utilsStructs.h"
@@ -20,23 +21,29 @@ class Cone : public Object {
         radius(radius),
         center(center),
         height(height),
-        coneDir(dCone) {
-    vertex = center + coneDir * height;
-    baseLid = std::make_unique<Plane>(k, shininess, center, -coneDir);
+        coneDir(dCone),
+        vertex(INFINITY, INFINITY, INFINITY) {
+    baseLid = nullptr;
   };
 
   Cone(utilsStructs::materialK k, double shininess, double radius,
        Eigen::Vector3d center, Eigen::Vector3d vertex)
       : Object(k, shininess), radius(radius), center(center), vertex(vertex) {
-    height = (vertex - center).norm();
-    coneDir = (vertex - center) / (vertex - center).norm();
-    baseLid = std::make_unique<Plane>(k, shininess, center, -coneDir);
+    baseLid = nullptr;
   };
 
   double getRadius();
   Eigen::Vector3d getCenter();
   Eigen::Vector3d getNormal(Eigen::Vector3d P_I);
   std::tuple<double, double> intersectRay(Eigen::Vector3d, Eigen::Vector3d);
+
+  void scale(double radiusScale, double heightScale);
+  void shear(double delta, matrix::SHEAR_AXIS axis);
+  void translate(double x, double y, double z, Eigen::Matrix4d wc);
+  void rotate(double theta, matrix::AXIS axis);
+  Cone reflection(matrix::REFLECTION_AXIS axis);
+  void generateLids();
+  void mapVertex();
 
  private:
   INTERSECTION_TYPE intersectionType;
