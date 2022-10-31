@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
 
   Eigen::Vector3d I_F_1(0.7, 0.7, 0.7);
   // Eigen::Vector3d P_F_1(0, 200, -150);
-  Eigen::Vector4d P_F_1(0.0, 1100.0, 1900.0, 1);
+  Eigen::Vector4d P_F_1(300.0, 300.0, 1600.0, 1);
   P_F_1 = wc * P_F_1;
   Eigen::Vector3d P_F_2(100, 200, -20);
 
@@ -81,15 +81,14 @@ int main(int argc, char** argv) {
   Eigen::Vector3d Ka_1(0.854, 0.647, 0.125);
   Eigen::Vector3d Kd_1(0.854, 0.647, 0.125);
 
-  // floor plane
-  Eigen::Vector3d Ke_2(0.0, 0.0, 0.0);
-  Eigen::Vector3d Ka_2(0.7, 0.2, 0.2);
-  Eigen::Vector3d Kd_2(0.7, 0.2, 0.2);
+  Eigen::Vector3d Ke_2(222.0 / 255.0, 184.0 / 255.0, 135.0 / 255.0);
+  Eigen::Vector3d Ka_2(222.0 / 255.0, 184.0 / 255.0, 135.0 / 255.0);
+  Eigen::Vector3d Kd_2(222.0 / 255.0, 184.0 / 255.0, 135.0 / 255.0);
 
   // background plane
-  Eigen::Vector3d Ke_3(0.686, 0.933, 0.933);
-  Eigen::Vector3d Ka_3(0.686, 0.933, 0.933);
-  Eigen::Vector3d Kd_3(0.686, 0.933, 0.933);
+  Eigen::Vector3d Ke_3(0.0, 0.933, 0.0);
+  Eigen::Vector3d Ka_3(0.0, 0.933, 0.0);
+  Eigen::Vector3d Kd_3(0.0, 0.933, 0.0);
 
   // cylinder
   Eigen::Vector3d Ke_4(0.745, 0.470, 0.058);
@@ -179,12 +178,17 @@ int main(int argc, char** argv) {
   Mesh back_beamR(K_4, m_1, "magic_cube.obj");
   Mesh back_support_columnR(K_4, m_1, "magic_cube.obj");
 
+  // Galpão paredes
+  Mesh wallL(K_2, m_1, "magic_cube.obj");
+  Mesh wallR(K_2, m_1, "magic_cube.obj");
+  Mesh back_wall(K_2, m_1, "magic_cube.obj");
+
   // Telhado
   Mesh roofR(K_6, m_1, "magic_cube.obj");
   Mesh roofL(K_6, m_1, "magic_cube.obj");
 
   //Árvore
-  Sphere bolinha1(K_1, m_1, radius, center1);
+  Sphere ball(K_1, m_1, radius, center1);
   auto woodBase = std::make_shared<Cylinder>(
       Cylinder(K_4, m_1, 1, center1, 1, dCil_3.normalized()));
   auto wood = std::make_shared<Cylinder>(
@@ -198,29 +202,30 @@ int main(int argc, char** argv) {
 
   // Posicionando mesa
   table_supportL.scale(5.0, 95.0, 150.0);
-  table_supportL.translate(50.0, 42.5, 500.0, wc);
+  table_supportL.translate(175.0, 42.5, 500.0, wc);
 
   table_supportR.scale(5.0, 95.0, 150.0);
-  table_supportR.translate(550.0, 42.5, 500.0, wc);
+  table_supportR.translate(425.0, 42.5, 500.0, wc);
 
   table_lid.scale(250.0, 5.0, 150.0);
-  table_lid.translate(300.0, 200.0, 500.0, wc);
+  table_lid.translate(300.0, 95.0, 500.0, wc);
 
   // Posicionando árvore
-  bolinha1.scale(4.5);
-  bolinha1.translate(300.0, 220.0, 1000.0, wc);
+  ball.scale(4.5);
+  ball.translate(300.0, 294.0, 500.0, wc);
 
   woodBase->scale(30.0, 9.0);
-  woodBase->translate(300.0, 28.0, 1000.0, wc);
+  woodBase->translate(300.0, 95.0, 500.0, wc);
 
   wood->scale(6.0, 40.0);
-  wood->translate(300.0, 28.0, 1000.0, wc);
+  wood->translate(300.0, 104.0, 500.0, wc);
 
   tree->scale(60.0, 150.0);
-  tree->translate(300.0, 68.0, 1000.0, wc);
+  tree->translate(300.0, 144.0, 500.0, wc);
 
   // Posicionando galpão
 
+  // Vigas
   beamL.scale(300.0, 50.0, 30.0);
   beamL.shear(37.0, matrix::SHEAR_AXIS::XY);
   beamL.translate(150, 570.0, 1000.0, wc);
@@ -229,12 +234,14 @@ int main(int argc, char** argv) {
   beamR.shear(-37.0, matrix::SHEAR_AXIS::XY);
   beamR.translate(450.0, 570.0, 1000.0, wc);
 
+  // Colunas de suporte
   support_columnL.scale(50.0, 500.0, 30.0);
   support_columnL.translate(0.0, 250.0, 1000.0, wc);
 
   support_columnR.scale(50.0, 500.0, 30.0);
   support_columnR.translate(600.0, 250.0, 1000.0, wc);
 
+  // Vigas de trás
   back_beamL.scale(300.0, 50.0, 30.0);
   back_beamL.shear(37.0, matrix::SHEAR_AXIS::XY);
   back_beamL.translate(150, 570.0, 0.0, wc);
@@ -243,22 +250,31 @@ int main(int argc, char** argv) {
   back_beamR.shear(-37.0, matrix::SHEAR_AXIS::XY);
   back_beamR.translate(450.0, 570.0, 0.0, wc);
 
+  // Colunas de trás
   back_support_columnL.scale(50.0, 500.0, 30.0);
   back_support_columnL.translate(0.0, 250.0, 0.0, wc);
 
   back_support_columnR.scale(50.0, 500.0, 30.0);
   back_support_columnR.translate(600.0, 250.0, 0.0, wc);
 
+  wallL.scale(10.0, 500.0, 1000.0);
+  wallL.translate(0.0, 250.0, 500.0, wc);
+  wallR.scale(10.0, 500.0, 1000.0);
+  wallR.translate(600.0, 250.0, 500.0, wc);
+
+  back_wall.scale(600.0, 500.0, 10.0);
+  back_wall.translate(300.0, 250.0, 0.0, wc);
+
   // Posicionando telhados
-  roofL.scale(290.0, 20.0, 520.0);
-  roofL.rotate(39.0, matrix::AXIS::Z);
-  roofL.translate(150.0, 600.0, 500.0, wc);
+  roofL.scale(394.73, 20.0, 1000.0);
+  roofL.rotate(37.0, matrix::AXIS::Z);
+  roofL.translate(150.0, 570.0, 500.0, wc);
 
-  roofR.scale(290.0, 20.0, 520.0);
-  // roofR.shear(-37.0, matrix::SHEAR_AXIS::XY);
-  roofR.rotate(-45.0, matrix::AXIS::Y);
-  roofR.translate(450.0, 600.0, 500.0, wc);
+  roofR.scale(394.73, 20.0, 1000.0);
+  roofR.rotate(-37.0, matrix::AXIS::Z);
+  roofR.translate(450.0, 570.0, 500.0, wc);
 
+  // Inserindo os objetos
   objects.push_back(std::make_shared<Mesh>(support_columnL));
   objects.push_back(std::make_shared<Mesh>(support_columnR));
   objects.push_back(std::make_shared<Mesh>(beamL));
@@ -269,19 +285,23 @@ int main(int argc, char** argv) {
   objects.push_back(std::make_shared<Mesh>(back_support_columnL));
   objects.push_back(std::make_shared<Mesh>(back_support_columnR));
 
-  // objects.push_back(std::make_shared<Mesh>(roofL));
-  //  objects.push_back(std::make_shared<Mesh>(roofR));
+  objects.push_back(std::make_shared<Mesh>(wallL));
+  objects.push_back(std::make_shared<Mesh>(wallR));
+  objects.push_back(std::make_shared<Mesh>(back_wall));
 
-  // objects.push_back(std::make_shared<Sphere>(bolinha1));
+  objects.push_back(std::make_shared<Mesh>(roofL));
+  objects.push_back(std::make_shared<Mesh>(roofR));
+
+  objects.push_back(std::make_shared<Sphere>(ball));
 
   objects.push_back(std::make_shared<Plane>(floor));
 
   objects.push_back(std::make_shared<Mesh>(table_supportL));
   objects.push_back(std::make_shared<Mesh>(table_supportR));
   objects.push_back(std::make_shared<Mesh>(table_lid));
-  // objects.push_back(woodBase);
-  // objects.push_back(wood);
-  // objects.push_back(tree);
+  objects.push_back(woodBase);
+  objects.push_back(wood);
+  objects.push_back(tree);
 
   lightSources.push_back(
       std::make_shared<Point>(Point(I_F_1, P_F_1.head<3>())));
