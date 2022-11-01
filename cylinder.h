@@ -15,22 +15,6 @@ class Cylinder : public Object {
   enum INTERSECTION_TYPE { BASE, TOP, SURFACE, NONE };
 
  public:
-  /*Cylinder(utilsStructs::materialK k,
-          double shininess, double radius, Eigen::Vector3d center,
-          double height, Eigen::Vector3d dCil)
-          : Object(k, shininess),
-          radius(radius),
-          center(center),
-          height(height),
-          cylinderDir(dCil) {
-          M = Eigen::Matrix<double, 3, 3>::Identity() - dCil * dCil.transpose();
-          topCenter = center + height * dCil;
-          baseLid =
-                  std::make_unique<Plane>(k, shininess, center, -cylinderDir);
-          topLid =
-                  std::make_unique<Plane>(k, shininess, topCenter, cylinderDir);
-  };*/
-
   Cylinder(utilsStructs::materialK k, double shininess, double radius,
            Eigen::Vector3d center, double height, Eigen::Vector3d dCil)
       : Object(k, shininess),

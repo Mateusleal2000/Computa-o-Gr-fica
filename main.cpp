@@ -49,23 +49,24 @@ int main(int argc, char** argv) {
   double nCol = 500;
 
   double lx = 300.0;
-  double ly = 200.0;
+  double ly = 500.0;
   double lz = 1500.0;
+
+  double I_A = 0.3;
 
   Eigen::Vector4d O(lx, ly, lz, 1.0);
   Eigen::Vector3d at(lx, ly, 1.0);
   Eigen::Vector3d up(lx, ly + 100.0, lz);
   Eigen::Matrix4d wc = matrix::lookAt(O.head<3>(), at, up);
-  std::cout << wc << "\n";
+  /*std::cout << wc << "\n";*/
   O = wc * O;
   Eigen::Vector3d center(x, y, z);
-  double I_A = 0.3;
 
   Eigen::Vector3d I_F_1(0.7, 0.7, 0.7);
-  // Eigen::Vector3d P_F_1(0, 200, -150);
-  Eigen::Vector4d P_F_1(300.0, 300.0, 1600.0, 1);
-  P_F_1 = wc * P_F_1;
+  Eigen::Vector4d P_F_1(300.0, 300.0, 1500.0, 1);
   Eigen::Vector3d P_F_2(100, 200, -20);
+
+  P_F_1 = wc * P_F_1;
 
   Eigen::Vector3d I_F_2(0.7, 0.7, 0.7);
   Eigen::Vector4d D_F_2(-1, 0, 0, 0);
@@ -161,31 +162,33 @@ int main(int argc, char** argv) {
   double m_2 = 1;
   double m_3 = 1;
 
+  std::string cubePath = "magic_cube.obj";
+
   // Mesa
-  Mesh table_lid(lid_K, m_1, "magic_cube.obj");
-  Mesh table_supportL(support_K, m_1, "magic_cube.obj");
-  Mesh table_supportR(support_K, m_1, "magic_cube.obj");
+  Mesh table_lid(lid_K, m_1, cubePath);
+  Mesh table_supportL(support_K, m_1, cubePath);
+  Mesh table_supportR(support_K, m_1, cubePath);
 
   // Galpão frente
-  Mesh beamL(K_4, m_1, "magic_cube.obj");
-  Mesh support_columnL(K_4, m_1, "magic_cube.obj");
-  Mesh beamR(K_4, m_1, "magic_cube.obj");
-  Mesh support_columnR(K_4, m_1, "magic_cube.obj");
+  Mesh beamL(K_4, m_1, cubePath);
+  Mesh support_columnL(K_4, m_1, cubePath);
+  Mesh beamR(K_4, m_1, cubePath);
+  Mesh support_columnR(K_4, m_1, cubePath);
 
   // Galpão trás
-  Mesh back_beamL(K_4, m_1, "magic_cube.obj");
-  Mesh back_support_columnL(K_4, m_1, "magic_cube.obj");
-  Mesh back_beamR(K_4, m_1, "magic_cube.obj");
-  Mesh back_support_columnR(K_4, m_1, "magic_cube.obj");
+  Mesh back_beamL(K_4, m_1, cubePath);
+  Mesh back_support_columnL(K_4, m_1, cubePath);
+  Mesh back_beamR(K_4, m_1, cubePath);
+  Mesh back_support_columnR(K_4, m_1, cubePath);
 
   // Galpão paredes
-  Mesh wallL(K_2, m_1, "magic_cube.obj");
-  Mesh wallR(K_2, m_1, "magic_cube.obj");
-  Mesh back_wall(K_2, m_1, "magic_cube.obj");
+  Mesh wallL(K_2, m_1, cubePath);
+  Mesh wallR(K_2, m_1, cubePath);
+  Mesh back_wall(K_2, m_1, cubePath);
 
   // Telhado
-  Mesh roofR(K_6, m_1, "magic_cube.obj");
-  Mesh roofL(K_6, m_1, "magic_cube.obj");
+  Mesh roofR(K_6, m_1, cubePath);
+  Mesh roofL(K_6, m_1, cubePath);
 
   //Árvore
   Sphere ball(K_1, m_1, radius, center1);

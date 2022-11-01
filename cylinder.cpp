@@ -113,11 +113,13 @@ void Cylinder::shear(double delta, matrix::SHEAR_AXIS axis) {
   return;
 }
 void Cylinder::translate(double x, double y, double z, Eigen::Matrix4d wc) {
-  Eigen::Vector4d aux_center(x, y, z, 1);
-  Eigen::Vector4d new_center = wc * aux_center;
-  this->center(0) = new_center(0);
-  this->center(1) = new_center(1);
-  this->center(2) = new_center(2);
+  Eigen::Vector4d auxCenter(x, y, z, 1);
+  Eigen::Vector4d newCenter = wc * auxCenter;
+  this->center = newCenter.head<3>();
+
+  Eigen::Vector4d auxDir(cylinderDir(0), cylinderDir(1), cylinderDir(2), 0);
+  Eigen::Vector4d newDir = wc * auxDir;
+  this->cylinderDir = newDir.head<3>();
   generateLids();
   return;
 }

@@ -104,19 +104,24 @@ void Cone::shear(double delta, matrix::SHEAR_AXIS axis) {
   return;
 }
 void Cone::translate(double x, double y, double z, Eigen::Matrix4d wc) {
-  Eigen::Vector4d aux_center(x, y, z, 1);
-  Eigen::Vector4d new_center = wc * aux_center;
-  this->center(0) = new_center(0);
-  this->center(1) = new_center(1);
-  this->center(2) = new_center(2);
+  Eigen::Vector4d auxCenter(x, y, z, 1);
+  Eigen::Vector4d newCenter = wc * auxCenter;
+  this->center = newCenter.head<3>();
 
   if (this->vertex(0) == INFINITY) {
+    Eigen::Vector3d auxVertex3d = this->center + this->coneDir * this->height;
+    Eigen::Vector4d auxVertex4d(auxVertex3d(0), auxVertex3d(1),
+                                 auxVertex3d(2), 0);
+    Eigen::Vector3d newVertex = (wc * auxVertex4d).head<3>();
+
+    this->coneDir = (newVertex - this->center).normalized();
     this->vertex = this->center + this->coneDir * this->height;
+
   } else {
-    Eigen::Vector4d aux_vertex(this->vertex(0), this->vertex(1),
+    Eigen::Vector4d auxVertex(this->vertex(0), this->vertex(1),
                                this->vertex(2), 1);
-    Eigen::Vector4d new_vertex = wc * aux_vertex;
-    this->vertex = new_vertex.head<3>();
+    Eigen::Vector4d newVertex = wc * auxVertex;
+    this->vertex = newVertex.head<3>();
     this->height = (this->vertex - this->center).norm();
     this->coneDir =
         (this->vertex - this->center) / (this->vertex - this->center).norm();
