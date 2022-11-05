@@ -31,5 +31,6 @@ class Sphere : public Object {
  private:
   Eigen::Vector3d center;
   double radius;
+  Eigen::Matrix4d wc;
 };
 #endif

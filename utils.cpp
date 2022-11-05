@@ -31,25 +31,23 @@ bool isLightBlocked(std::shared_ptr<Object> closestObject,
                     Eigen::Vector3d P_I, std::shared_ptr<LightSource> lS,
                     Eigen::Vector3d l) {
   for (std::shared_ptr<Object> object : objects) {
-    if (object != closestObject) {
-      auto [t1, t2] = object->intersectRay(P_I, l);
-      double t = -inf;
-      double normalizedV = 0.0;
-      t = std::min(t1, t2);
-      if (t < 0) {
-        t = (t == t2) ? t = t1 : t = t2;
-      }
-      Eigen::Vector3d v(0.0, 0.0, 0.0);
-      // Adicionar a Origem
-      // v = -P_I;
-      /*v = lS->getDistance(P_I)*/
-      // v = lS->getPF() - P_I;
-      normalizedV = lS->getDistance(P_I);
-      // std::cout << normalizedV << std::endl;
+    auto [t1, t2] = object->intersectRay(P_I, l);
+    double t = -inf;
+    double normalizedV = 0.0;
+    t = std::min(t1, t2);
+    if (t < 0) {
+      t = (t == t2) ? t = t1 : t = t2;
+    }
+    Eigen::Vector3d v(0.0, 0.0, 0.0);
+    // Adicionar a Origem
+    // v = -P_I;
+    /*v = lS->getDistance(P_I)*/
+    // v = lS->getPF() - P_I;
+    normalizedV = lS->getDistance(P_I);
+    // std::cout << normalizedV << std::endl;
 
-      if (t >= 0 && t < normalizedV) {
-        return true;
-      }
+    if (t >= 0.001 && t < normalizedV) {
+      return true;
     }
   }
   return false;

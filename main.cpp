@@ -49,12 +49,13 @@ int main(int argc, char** argv) {
   double nCol = 500;
 
   double lx = 300.0;
-  double ly = 500.0;
-  double lz = 1500.0;
+  double ly = 400.0;
+  double lz = -800.0;
 
   double I_A = 0.3;
 
   Eigen::Vector4d O(lx, ly, lz, 1.0);
+  // Eigen::Vector3d at(500, 97.5, 500.0);
   Eigen::Vector3d at(lx, ly, 1.0);
   Eigen::Vector3d up(lx, ly + 100.0, lz);
   Eigen::Matrix4d wc = matrix::lookAt(O.head<3>(), at, up);
@@ -63,7 +64,8 @@ int main(int argc, char** argv) {
   Eigen::Vector3d center(x, y, z);
 
   Eigen::Vector3d I_F_1(0.7, 0.7, 0.7);
-  Eigen::Vector4d P_F_1(300.0, 300.0, 1500.0, 1);
+  Eigen::Vector4d P_F_1(300.0, 100.0, 2000.0, 1.0);
+  // Eigen::Vector4d P_F_1(300.0, 294.0, 480.0, 1.0);
   Eigen::Vector3d P_F_2(100, 200, -20);
 
   P_F_1 = wc * P_F_1;
@@ -201,7 +203,9 @@ int main(int argc, char** argv) {
 
   // Chão
   Eigen::Vector4d floor_pos(0.0, 0.0, 0.0, 1);
-  Plane floor(K_3, m_2, (wc * floor_pos).head<3>(), Eigen::Vector3d(0, 1, 0));
+  Eigen::Vector4d floor_dir(0.0, 1.0, 0.0, 0.0);
+  Plane floor(K_3, m_2, (wc * floor_pos).head<3>(),
+              ((wc * floor_dir).head<3>()).normalized());
 
   // Posicionando mesa
   table_supportL.scale(5.0, 95.0, 150.0);
@@ -230,11 +234,11 @@ int main(int argc, char** argv) {
 
   // Vigas
   beamL.scale(300.0, 50.0, 30.0);
-  beamL.shear(37.0, matrix::SHEAR_AXIS::XY);
+  beamL.shear(37, matrix::SHEAR_AXIS::XY);
   beamL.translate(150, 570.0, 1000.0, wc);
 
   beamR.scale(300.0, 50.0, 30.0);
-  beamR.shear(-37.0, matrix::SHEAR_AXIS::XY);
+  beamR.shear(-37, matrix::SHEAR_AXIS::XY);
   beamR.translate(450.0, 570.0, 1000.0, wc);
 
   // Colunas de suporte
@@ -270,11 +274,11 @@ int main(int argc, char** argv) {
 
   // Posicionando telhados
   roofL.scale(394.73, 20.0, 1000.0);
-  roofL.rotate(37.0, matrix::AXIS::Z);
+  roofL.rotate(37, matrix::AXIS::Z);
   roofL.translate(150.0, 570.0, 500.0, wc);
 
   roofR.scale(394.73, 20.0, 1000.0);
-  roofR.rotate(-37.0, matrix::AXIS::Z);
+  roofR.rotate(-37, matrix::AXIS::Z);
   roofR.translate(450.0, 570.0, 500.0, wc);
 
   // Inserindo os objetos

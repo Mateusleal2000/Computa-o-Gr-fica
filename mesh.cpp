@@ -48,7 +48,7 @@ Mesh::Mesh(utilsStructs::materialK k, double shininess, std::string path)
       this->vertices.push_back(v);
     } else if (line[0] == 'v' && line[1] == 'n') {
       std::vector<std::string> normal_values = split(line);
-      Eigen::Vector4d vn(0.0, 0.0, 0.0, 1.0);
+      Eigen::Vector4d vn(0.0, 0.0, 0.0, 0.0);
       vn(0) = std::stod(normal_values[1]);
       vn(1) = std::stod(normal_values[3]);
       vn(2) = std::stod(normal_values[2]);
@@ -121,6 +121,7 @@ Eigen::Vector3d Mesh::getNormal(Eigen::Vector3d P_I) { return this->normal; }
 
 void Mesh::applyMatrixVertices(Eigen::Matrix4d m) {
   for (Eigen::Vector4d &v : vertices) {
+    v(3) = 1.0;
     v = m * v;
   }
   return;
@@ -148,8 +149,8 @@ void Mesh::shear(double delta, matrix::SHEAR_AXIS axis) {
 void Mesh::translate(double x, double y, double z, Eigen::Matrix4d wc) {
   Eigen::Matrix4d m = matrix::translate(x, y, z);
   applyMatrixVertices(m);
-  applyMatrixNormals((m.transpose()).inverse());
   applyMatrixVertices(wc);
+  applyMatrixNormals(wc);
   return;
 }
 void Mesh::rotate(double theta, matrix::AXIS axis) {

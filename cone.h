@@ -21,8 +21,8 @@ class Cone : public Object {
         radius(radius),
         center(center),
         height(height),
-        coneDir(dCone),
-        vertex(INFINITY, INFINITY, INFINITY) {
+        coneDir(dCone) {
+    this->vertex = center + dCone * height;
     baseLid = nullptr;
   };
 
@@ -43,7 +43,6 @@ class Cone : public Object {
   void rotate(double theta, matrix::AXIS axis);
   Cone reflection(matrix::REFLECTION_AXIS axis);
   void generateLids();
-  void mapVertex();
 
  private:
   INTERSECTION_TYPE intersectionType;

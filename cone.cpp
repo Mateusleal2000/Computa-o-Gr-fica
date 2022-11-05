@@ -107,25 +107,20 @@ void Cone::translate(double x, double y, double z, Eigen::Matrix4d wc) {
   Eigen::Vector4d auxCenter(x, y, z, 1);
   Eigen::Vector4d newCenter = wc * auxCenter;
   this->center = newCenter.head<3>();
+  std::cout << "primeiro " << this->vertex << "\n";
 
-  if (this->vertex(0) == INFINITY) {
-    Eigen::Vector3d auxVertex3d = this->center + this->coneDir * this->height;
-    Eigen::Vector4d auxVertex4d(auxVertex3d(0), auxVertex3d(1),
-                                 auxVertex3d(2), 0);
-    Eigen::Vector3d newVertex = (wc * auxVertex4d).head<3>();
+  Eigen::Vector4d auxVertex4d(this->vertex(0), this->vertex(1), this->vertex(2),
+                              1.0);
+  //this->vertex = (wc * auxVertex4d).head<3>();
 
-    this->coneDir = (newVertex - this->center).normalized();
-    this->vertex = this->center + this->coneDir * this->height;
+  Eigen::Vector4d auxConeDir4d(this->coneDir(0), this->coneDir(1),
+                               this->coneDir(2), 0.0);
 
-  } else {
-    Eigen::Vector4d auxVertex(this->vertex(0), this->vertex(1),
-                               this->vertex(2), 1);
-    Eigen::Vector4d newVertex = wc * auxVertex;
-    this->vertex = newVertex.head<3>();
-    this->height = (this->vertex - this->center).norm();
-    this->coneDir =
-        (this->vertex - this->center) / (this->vertex - this->center).norm();
-  }
+  this->coneDir = (wc * auxConeDir4d).head<3>().normalized();
+
+  this->vertex = this->center + this->coneDir * this->height;
+  std::cout << "segundo " << this->vertex << "\n";
+
   generateLids();
   return;
 }
@@ -146,8 +141,4 @@ void Cone::generateLids() {
       std::make_unique<Plane>(this->K, this->m, this->center, -this->coneDir);
 
   return;
-}
-
-void Cone::mapVertex() {
-  this->vertex = this->center + this->coneDir * this->height;
 }

@@ -119,7 +119,7 @@ void Cylinder::translate(double x, double y, double z, Eigen::Matrix4d wc) {
 
   Eigen::Vector4d auxDir(cylinderDir(0), cylinderDir(1), cylinderDir(2), 0);
   Eigen::Vector4d newDir = wc * auxDir;
-  this->cylinderDir = newDir.head<3>();
+  this->cylinderDir = (newDir.head<3>()).normalized();
   generateLids();
   return;
 }
@@ -136,6 +136,7 @@ Cylinder Cylinder::reflection(matrix::REFLECTION_AXIS axis) {
 }
 
 void Cylinder::generateLids() {
+  //std::cout << this->cylinderDir << "\n";
   this->M = Eigen::Matrix<double, 3, 3>::Identity() -
             this->cylinderDir * this->cylinderDir.transpose();
 
