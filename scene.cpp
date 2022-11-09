@@ -1,5 +1,6 @@
 #include "scene.h"
 
+#include <chrono>
 #include <iostream>
 
 #include "utils.h"
@@ -11,6 +12,7 @@ std::vector<unsigned char> Scene::display() {
   std::vector<unsigned char> pixelVector;
   Eigen::Vector3d D(0, 0, 0);
 
+  auto start = std::chrono::steady_clock::now();
   for (int r = 0; r < viewport.nRows; r++) {
     y = (viewport.height / 2) - (deltaY / 2) - (r * deltaY);
     for (int c = 0; c < viewport.nColumns; c++) {
@@ -32,5 +34,11 @@ std::vector<unsigned char> Scene::display() {
       pixelVector.push_back(color.B);
     }
   }
+  std::cout << "Elapsed(ms)="
+            << std::chrono::duration_cast<std::chrono::milliseconds>(
+                   std::chrono::steady_clock::now() - start)
+                       .count() /
+                   1000.0
+            << std::endl;
   return pixelVector;
 }

@@ -21,8 +21,8 @@ std::tuple<double, double> Sphere::intersectRay(Eigen::Vector3d O,
     return std::make_tuple(inf, inf);
   }
 
-  double t1 = (-b + std::sqrt(delta)) / (2 * a);
-  double t2 = (-b - std::sqrt(delta)) / (2 * a);
+  double t1 = (-b + std::sqrt(delta)) / (2.0 * a);
+  double t2 = (-b - std::sqrt(delta)) / (2.0 * a);
 
   return std::make_tuple(t1, t2);
 }

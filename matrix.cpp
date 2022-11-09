@@ -85,6 +85,7 @@ Eigen::Matrix4d lookAt(Eigen::Vector3d eye, Eigen::Vector3d at,
   Eigen::Vector3d kc(0.0, 0.0, 0.0);
 
   kc = (eye - at).normalized();
+  
   Eigen::Vector3d vup = up - eye;
 
   ic = (vup.cross(kc)).normalized();
@@ -94,6 +95,8 @@ Eigen::Matrix4d lookAt(Eigen::Vector3d eye, Eigen::Vector3d at,
   // Matrix WC
   wc << ic(0), ic(1), ic(2), -(ic.dot(eye)), jc(0), jc(1), jc(2),
       -(jc.dot(eye)), kc(0), kc(1), kc(2), -(kc.dot(eye)), 0, 0, 0, 1;
+
+  //std::cout << wc << "\n";
 
   // Matrix CW
   /*cw << ic(0), jc(0), kc(0), eye(0), ic(1), jc(1), kc(1), eye(1), ic(2),
