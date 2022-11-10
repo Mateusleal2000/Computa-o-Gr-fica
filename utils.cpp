@@ -29,13 +29,13 @@ std::tuple<double, std::shared_ptr<Object>> closestIntersection(
 bool isLightBlocked(std::shared_ptr<Object> closestObject,
                     std::vector<std::shared_ptr<Object>> objects,
                     Eigen::Vector3d P_I, std::shared_ptr<LightSource> lS,
-                    Eigen::Vector3d l) {
+                    Eigen::Vector3d l, Eigen::Vector3d O) {
   for (std::shared_ptr<Object> object : objects) {
     auto [t1, t2] = object->intersectRay(P_I, l);
     double t = -inf;
     double normalizedV = 0.0;
     t = std::min(t1, t2);
-    if (t < 0) {
+    if (t < 0.0) {
       t = (t == t2) ? t = t1 : t = t2;
     }
     Eigen::Vector3d v(0.0, 0.0, 0.0);
@@ -44,9 +44,9 @@ bool isLightBlocked(std::shared_ptr<Object> closestObject,
     /*v = lS->getDistance(P_I)*/
     // v = lS->getPF() - P_I;
     normalizedV = lS->getDistance(P_I);
-    // std::cout << normalizedV << std::endl;
+    // normalizedV = -(P_I.norm());
 
-    if (t >= 0.001 && t < normalizedV) {
+    if (t > 0.0001 && t < normalizedV) {
       return true;
     }
   }
@@ -84,7 +84,7 @@ std::tuple<double, double, double> calculateLighting(
     v = -D / D.norm();
 
     double F_D = std::max(n.dot(l), 0.0);
-    double F_E = std::max(std::pow(r.dot(v), closestObject->getM()), 0.0);
+    double F_E = std::pow(std::max(r.dot(v), 0.0), closestObject->getM());
 
     if (closestObject->getMode() != textureUtils::TEXTURE_MODE::DEFAULT) {
       utilsStructs::Texel tex = closestObject->getPixel(P_I(0), P_I(2));
@@ -101,7 +101,8 @@ std::tuple<double, double, double> calculateLighting(
       K.Ka(2) = tex.B;
     }
 
-    bool isBlocked = isLightBlocked(closestObject, objects, P_I, lS, l);
+    bool isBlocked =
+        isLightBlocked(closestObject, objects, P_I, lS, l, camera.O);
     if (isBlocked) {
       I_F(0) = 0;
       I_F(1) = 0;

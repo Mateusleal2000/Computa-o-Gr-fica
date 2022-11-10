@@ -23,8 +23,8 @@ std::tuple<double, double> Cylinder::intersectRay(Eigen::Vector3d O,
     return std::make_tuple(validPoint, validPoint);
   }
 
-  double t1 = (-b + std::sqrt(delta)) / (2 * a);
-  double t2 = (-b - std::sqrt(delta)) / (2 * a);
+  double t1 = (-b + std::sqrt(delta)) / (2.0 * a);
+  double t2 = (-b - std::sqrt(delta)) / (2.0 * a);
 
   Eigen::Vector3d P_I;
 

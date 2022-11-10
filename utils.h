@@ -34,7 +34,7 @@ bool isLightBlocked(std::shared_ptr<Object> closestObject,
                     std::vector<std::shared_ptr<Object>> objects,
                     Eigen::Vector3d P_I,
                     std::shared_ptr<LightSource> lS,
-                    Eigen::Vector3d l);
+                    Eigen::Vector3d l, Eigen::Vector3d O);
 }  // namespace utils
 
 #endif

@@ -83,7 +83,7 @@ Mesh::Mesh(utilsStructs::materialK k, double shininess, std::string path)
 std::tuple<double, double> Mesh::intersectRay(Eigen::Vector3d O,
                                               Eigen::Vector3d D) {
   double inf = std::numeric_limits<double>::infinity();
-  Eigen::Vector3d P_I(0, 0, 0);
+  Eigen::Vector3d P_I(0.0, 0.0, 0.0);
   double t = inf;
 
   for (auto &face : this->faces) {
@@ -94,7 +94,7 @@ std::tuple<double, double> Mesh::intersectRay(Eigen::Vector3d O,
     Eigen::Vector3d n = (this->normals[int(face[3]) - 1]).head<3>();
     double t_aux =
         -(O - this->vertices[int(vertex_id1)].head<3>()).dot(n) / D.dot(n);
-    if (t_aux > 0 && t_aux < t) {
+    if (t_aux > 0.00 && t_aux < t) {
       P_I = O + t_aux * D;
 
       Eigen::Vector3d P1 = this->vertices[int(vertex_id1)].head<3>();
@@ -108,7 +108,7 @@ std::tuple<double, double> Mesh::intersectRay(Eigen::Vector3d O,
       double c1 = ((P3 - P_I).cross(P1 - P_I)).dot(n) / (r1.cross(r2)).dot(n);
       double c2 = ((P1 - P_I).cross(P2 - P_I)).dot(n) / (r1.cross(r2)).dot(n);
       double c3 = 1 - c1 - c2;
-      if (c1 >= 0 && c2 >= 0 && c3 >= 0) {
+      if (c1 >= 0.0000 && c2 >= 0.0000 && c3 >= 0.0000) {
         t = t_aux;
         this->normal = n;
       }

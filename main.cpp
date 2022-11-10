@@ -36,6 +36,28 @@ void draw() {
   glutSwapBuffers();
 }
 
+int onMouse;
+void onClick(int button, int state, int x, int y) {
+  double viewPortWidth = 60;
+  double viewPortHeight = 60;
+  double nRow = 500;
+  double nCol = 500;
+
+
+  double deltaX = viewPortWidth / nCol;
+  double deltaY = viewPortHeight / nRow;
+
+  double xj = (viewPortHeight / 2.0) + (deltaX / 2.0) + x * deltaX;
+  double yj = -(viewPortWidth / 2.0) + (deltaY / 2.0) + y * deltaY;
+
+  if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+    onMouse = 1;
+    std::cout << xj << " " << yj << " "
+              << "\n";
+    glutDisplayFunc(draw);
+  }
+}
+
 int main(int argc, char** argv) {
   Magick::InitializeMagick(*argv);
   double radius = 1.0;
@@ -49,17 +71,17 @@ int main(int argc, char** argv) {
   double nCol = 500;
 
   double lx = 300.0;
-  double ly = 400.0;
-  double lz = -800.0;
+  double ly = 300.0;
+  double lz = 1400.0;
 
   double I_A = 0.3;
 
   Eigen::Vector4d O(lx, ly, lz, 1.0);
-  // Eigen::Vector3d at(500, 97.5, 500.0);
-  Eigen::Vector3d at(lx, ly, 1.0);
+  Eigen::Vector3d at(300.0, 97.5, 500.0);
+  // Eigen::Vector3d at(lx, ly, 1.0);
   Eigen::Vector3d up(lx, ly + 100.0, lz);
   Eigen::Matrix4d wc = matrix::lookAt(O.head<3>(), at, up);
-  /*std::cout << wc << "\n";*/
+  // std::cout << up - O.head<3>() << "\n";
   O = wc * O;
   Eigen::Vector3d center(x, y, z);
 
@@ -134,7 +156,7 @@ int main(int argc, char** argv) {
                           1.0 / std::sqrt(3));
   Eigen::Vector3d dCone_3(0.0, 1.0, 0.0);
   double height_1 = 3 * radius;
-  double height_2 = radius / 3;
+  double height_2 = radius / 3.0;
 
   utilsStructs::materialK K_1(Ke_1, Ka_1, Kd_1);
   utilsStructs::materialK K_2(Ke_2, Ka_2, Kd_2);
@@ -155,7 +177,7 @@ int main(int argc, char** argv) {
   std::vector<std::shared_ptr<LightSource>> lightSources;
   std::vector<std::shared_ptr<Object>> objects;
 
-  Eigen::Vector3d center1(0, 0, 0);
+  Eigen::Vector3d center1(0.0, 0.0, 0.0);
   Eigen::Vector3d center2(0.0, 0.0, 0.0);
   Eigen::Vector3d center3(0, -60, -200);
   Eigen::Vector3d center4(0, 20, -150);
@@ -336,6 +358,7 @@ int main(int argc, char** argv) {
   glOrtho(0.0, 1.0, 0.0, 1.0, -1.0, 1.0);
 
   glutDisplayFunc(draw);
+  glutMouseFunc(onClick);
   glutIdleFunc(draw);
   glutMainLoop();
   return 0;

@@ -14,11 +14,11 @@ utilsStructs::Texel Object::getPixel(double x, double z) {
   int imgW = imageRGB.size();
   int imgH = imageRGB[0].size();
 
-  double fx = (x - (-200)) / 400;
-  double fz = (z - (-400)) / 400;
+  double fx = (x - (-200.0)) / 400.0;
+  double fz = (z - (-400.0)) / 400.0;
 
-  int indexX = 0 + fx * (imgW - 1);
-  int indexZ = 0 + fz * (imgH - 1);
+  int indexX = int(0 + fx * (imgW - 1));
+  int indexZ = int(0 + fz * (imgH - 1));
 
   return imageRGB[indexX][indexZ];
 }
