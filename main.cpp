@@ -70,9 +70,9 @@ int main(int argc, char** argv) {
   double nRow = 500;
   double nCol = 500;
 
-  double lx = 500.0;
+  double lx = 300.0;
   double ly = 300.0;
-  double lz = -400.0;
+  double lz = 1400.0;
 
   double I_A = 0.3;
 

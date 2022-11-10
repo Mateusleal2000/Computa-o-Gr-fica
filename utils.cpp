@@ -84,7 +84,7 @@ std::tuple<double, double, double> calculateLighting(
     v = -D / D.norm();
 
     double F_D = std::max(n.dot(l), 0.0);
-    double F_E = std::max(std::pow(r.dot(v), closestObject->getM()), 0.0);
+    double F_E = std::pow(std::max(r.dot(v), 0.0), closestObject->getM());
 
     if (closestObject->getMode() != textureUtils::TEXTURE_MODE::DEFAULT) {
       utilsStructs::Texel tex = closestObject->getPixel(P_I(0), P_I(2));
