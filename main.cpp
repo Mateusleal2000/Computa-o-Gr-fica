@@ -36,6 +36,28 @@ void draw() {
   glutSwapBuffers();
 }
 
+int onMouse;
+void onClick(int button, int state, int x, int y) {
+  double viewPortWidth = 60;
+  double viewPortHeight = 60;
+  double nRow = 500;
+  double nCol = 500;
+
+
+  double deltaX = viewPortWidth / nCol;
+  double deltaY = viewPortHeight / nRow;
+
+  double xj = (viewPortHeight / 2.0) + (deltaX / 2.0) + x * deltaX;
+  double yj = -(viewPortWidth / 2.0) + (deltaY / 2.0) + y * deltaY;
+
+  if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+    onMouse = 1;
+    std::cout << xj << " " << yj << " "
+              << "\n";
+    glutDisplayFunc(draw);
+  }
+}
+
 int main(int argc, char** argv) {
   Magick::InitializeMagick(*argv);
   double radius = 1.0;
@@ -48,7 +70,7 @@ int main(int argc, char** argv) {
   double nRow = 500;
   double nCol = 500;
 
-  double lx = 300.0;
+  double lx = 500.0;
   double ly = 300.0;
   double lz = -400.0;
 
@@ -336,6 +358,7 @@ int main(int argc, char** argv) {
   glOrtho(0.0, 1.0, 0.0, 1.0, -1.0, 1.0);
 
   glutDisplayFunc(draw);
+  glutMouseFunc(onClick);
   glutIdleFunc(draw);
   glutMainLoop();
   return 0;

@@ -16,4 +16,5 @@ double Point::getDistance(Eigen::Vector3d P_I) {
   /*std::cout << this->P_F(0) << " " << this->P_F(1) << " " << this->P_F(2)
             << "\n";*/
   return (this->P_F - P_I).norm();
+  //return -P_I.norm();
 }

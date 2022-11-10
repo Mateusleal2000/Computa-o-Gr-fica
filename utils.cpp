@@ -43,10 +43,10 @@ bool isLightBlocked(std::shared_ptr<Object> closestObject,
     // v = -P_I;
     /*v = lS->getDistance(P_I)*/
     // v = lS->getPF() - P_I;
-    // normalizedV = lS->getDistance(P_I);
-    normalizedV = -(P_I.norm());
+    normalizedV = lS->getDistance(P_I);
+    // normalizedV = -(P_I.norm());
 
-    if (t > 0.0 && t < normalizedV) {
+    if (t > 0.0001 && t < normalizedV) {
       return true;
     }
   }
