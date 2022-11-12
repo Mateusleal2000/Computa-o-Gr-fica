@@ -6,7 +6,6 @@
 #include <tuple>
 
 #include "displayStructs.h"
-#include "textureUtils.h"
 #include "utilsStructs.h"
 
 class Object {
@@ -16,22 +15,15 @@ class Object {
   virtual Eigen::Vector3d getNormal(Eigen::Vector3d) = 0;
   utilsStructs::materialK getK();
   double getM();
-  textureUtils::TEXTURE_MODE getMode();
   utilsStructs::Texel getPixel(double x, double z);
 
  protected:
-  Object(utilsStructs::materialK k, double m, std::string path = "",
-         textureUtils::TEXTURE_MODE mode = textureUtils::TEXTURE_MODE::DEFAULT)
-      : K(k), m(m), mode(mode) {
-    if (path != "" && mode != textureUtils::TEXTURE_MODE::DEFAULT) {
-      imageRGB = textureUtils::getTextureRGB(path);
-    }
-  };
+  Object(utilsStructs::materialK k, double m)
+      : K(k), m(m) {};
 
   utilsStructs::materialK K;
   double m;
   std::vector<std::vector<utilsStructs::Texel>> imageRGB;
-  textureUtils::TEXTURE_MODE mode;
 };
 
 #endif

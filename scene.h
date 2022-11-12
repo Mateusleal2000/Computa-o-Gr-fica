@@ -19,7 +19,7 @@ class Scene {
         lightSources(lightSources),
         objects(objects) {}
 
-  std::vector<unsigned char> display();
+  std::vector<unsigned char> display(bool isPerspective);
 
  private:
   displayStructs::Viewport viewport;

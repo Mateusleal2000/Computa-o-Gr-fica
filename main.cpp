@@ -1,7 +1,6 @@
 #define _USE_MATH_DEFINES
 
 #include <GL/glut.h>
-#include <Magick++.h>
 
 #include <Eigen/Dense>
 #include <cmath>
@@ -23,12 +22,18 @@
 #include "scene.h"
 #include "sphere.h"
 #include "spot.h"
-#include "textureUtils.h"
 #include "utils.h"
 #include "utilsStructs.h"
 
+int xj;
+int yj;
+bool isPerspective = true;
 double canvasWidth = 500;
 double canvasHeight = 500;
+double viewPortWidth = isPerspective ? 60 : 2000;
+double viewPortHeight = isPerspective ? 60 : 2000;
+double nRow = 500;
+double nCol = 500;
 unsigned char* pixelArray;
 
 void draw() {
@@ -36,43 +41,31 @@ void draw() {
   glutSwapBuffers();
 }
 
-int onMouse;
 void onClick(int button, int state, int x, int y) {
-  double viewPortWidth = 60;
-  double viewPortHeight = 60;
-  double nRow = 500;
-  double nCol = 500;
-
-
   double deltaX = viewPortWidth / nCol;
   double deltaY = viewPortHeight / nRow;
 
-  double xj = (viewPortHeight / 2.0) + (deltaX / 2.0) + x * deltaX;
-  double yj = -(viewPortWidth / 2.0) + (deltaY / 2.0) + y * deltaY;
+  xj = (viewPortHeight / 2.0) + (deltaX / 2.0) + x * deltaX;
+  yj = -(viewPortWidth / 2.0) + (deltaY / 2.0) + y * deltaY;
 
   if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-    onMouse = 1;
     std::cout << xj << " " << yj << " "
               << "\n";
-    glutDisplayFunc(draw);
+    // glutDisplayFunc(draw);
+    glutPostRedisplay();
   }
 }
 
 int main(int argc, char** argv) {
-  Magick::InitializeMagick(*argv);
   double radius = 1.0;
   double dWindow = 25;
   double x = 0;
   double y = 0;
   double z = -(dWindow + radius);
-  double viewPortWidth = 60;
-  double viewPortHeight = 60;
-  double nRow = 500;
-  double nCol = 500;
 
-  double lx = 300.0;
+  double lx = -600.0;
   double ly = 300.0;
-  double lz = 1400.0;
+  double lz = 500.0;
 
   double I_A = 0.3;
 
@@ -86,7 +79,7 @@ int main(int argc, char** argv) {
   Eigen::Vector3d center(x, y, z);
 
   Eigen::Vector3d I_F_1(0.7, 0.7, 0.7);
-  Eigen::Vector4d P_F_1(300.0, 100.0, 2000.0, 1.0);
+  Eigen::Vector4d P_F_1(300.0, 100.0, 1200.0, 1.0);
   // Eigen::Vector4d P_F_1(300.0, 294.0, 480.0, 1.0);
   Eigen::Vector3d P_F_2(100, 200, -20);
 
@@ -187,6 +180,10 @@ int main(int argc, char** argv) {
   double m_3 = 1;
 
   std::string cubePath = "magic_cube.obj";
+  std::string catPath = "gato.obj";
+
+  //Gato
+  //Mesh cat(lid_K, m_1, catPath);
 
   // Mesa
   Mesh table_lid(lid_K, m_1, cubePath);
@@ -304,6 +301,11 @@ int main(int argc, char** argv) {
   roofR.translate(450.0, 570.0, 500.0, wc);
 
   // Inserindo os objetos
+   
+  /*cat.scale(100.0, 100.0, 100.0);
+  cat.translate(450.0, 570.0, 500.0, wc);
+  objects.push_back(std::make_shared<Mesh>(cat));*/
+
   objects.push_back(std::make_shared<Mesh>(support_columnL));
   objects.push_back(std::make_shared<Mesh>(support_columnR));
   objects.push_back(std::make_shared<Mesh>(beamL));
@@ -334,6 +336,7 @@ int main(int argc, char** argv) {
 
   lightSources.push_back(
       std::make_shared<Point>(Point(I_F_1, P_F_1.head<3>())));
+  lightSources.push_back(std::make_shared<Ambient>(Ambient(I_A)));
   /*lightSources.push_back(
       std::make_shared<Directional>(Directional(I_F_2, D_F_2)));*/
   // lightSources.push_back(std::make_shared<Point>(Point(I_F_1, P_F_2)));
@@ -341,11 +344,12 @@ int main(int argc, char** argv) {
       std::make_shared<Spot>(Spot(I_F_3, P_I_3, P_S_3, 12.0)));*/
   /*lightSources.push_back(
       std::make_shared<Spot>(Spot(I_F_3, P_I_3, P_S_4, 12.0)));*/
-  lightSources.push_back(std::make_shared<Ambient>(Ambient(I_A)));
+
 
   Scene scene(viewport, camera, lightSources, objects);
 
-  std::vector<unsigned char> pixelVector = scene.display();
+  std::vector<unsigned char> pixelVector = scene.display(isPerspective);
+  std::reverse(pixelVector.begin(), pixelVector.end());
 
   pixelArray = pixelVector.data();
 
@@ -361,5 +365,6 @@ int main(int argc, char** argv) {
   glutMouseFunc(onClick);
   glutIdleFunc(draw);
   glutMainLoop();
+
   return 0;
 }

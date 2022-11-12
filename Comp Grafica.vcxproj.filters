@@ -65,9 +65,6 @@
     <ClCompile Include="mesh.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="textureUtils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="lightSource.cpp">
       <Filter>Source Files\Light Sources</Filter>
     </ClCompile>
@@ -117,9 +114,6 @@
     </ClInclude>
     <ClInclude Include="mesh.h">
       <Filter>Header Files\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="textureUtils.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="lightSource.h">
       <Filter>Header Files\Light Sources</Filter>

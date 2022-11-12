@@ -86,21 +86,6 @@ std::tuple<double, double, double> calculateLighting(
     double F_D = std::max(n.dot(l), 0.0);
     double F_E = std::pow(std::max(r.dot(v), 0.0), closestObject->getM());
 
-    if (closestObject->getMode() != textureUtils::TEXTURE_MODE::DEFAULT) {
-      utilsStructs::Texel tex = closestObject->getPixel(P_I(0), P_I(2));
-      K.Kd(0) = tex.R;
-      K.Kd(1) = tex.G;
-      K.Kd(2) = tex.B;
-
-      K.Ke(0) = tex.R;
-      K.Ke(1) = tex.G;
-      K.Ke(2) = tex.B;
-
-      K.Ka(0) = tex.R;
-      K.Ka(1) = tex.G;
-      K.Ka(2) = tex.B;
-    }
-
     bool isBlocked =
         isLightBlocked(closestObject, objects, P_I, lS, l, camera.O);
     if (isBlocked) {
