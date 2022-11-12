@@ -355,9 +355,7 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder
 .mfractor/
-
-# Local History for Visual Studio
-.localhistory/
+.vscode/
 
 # Visual Studio History (VSHistory) files
 .vshistory/
@@ -375,15 +373,13 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # VS Code files for those working on multiple tools
-.vscode/
-.vscode/*
+vscode/
 
 # Local History for Visual Studio Code
 .history/
 
 #cmake
-./build
-./build/*
+build/
 
 # Windows Installer files from build outputs
 *.cab
