@@ -1,9 +1,7 @@
 #ifndef DISPLAY_H_
 #define DISPLAY_H_
 
-#include <GL/glut.h>
-
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 #include <fstream>
 #include <limits>
 #include <memory>
@@ -11,9 +9,9 @@
 #include <vector>
 
 #include "displayStructs.h"
+#include "lightSource.h"
 #include "object.h"
 #include "utils.h"
-#include "lightSource.h"
 
 class Sphere;
 namespace display {

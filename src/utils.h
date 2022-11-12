@@ -1,17 +1,17 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 
-#include <Eigen/Dense>
 #include <algorithm>
+#include <eigen3/Eigen/Dense>
 #include <limits>
 #include <memory>
 #include <tuple>
 #include <vector>
 
 #include "displayStructs.h"
+#include "lightSource.h"
 #include "object.h"
 #include "utilsStructs.h"
-#include "lightSource.h"
 
 namespace utils {
 

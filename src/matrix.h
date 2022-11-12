@@ -1,16 +1,25 @@
 #ifndef MATRIX_H_
 #define MATRIX_H_
 
-#include <Eigen/Dense>
 #include <algorithm>
+#include <eigen3/Eigen/Dense>
 #include <iostream>
 #include <memory>
 #include <tuple>
 
 namespace matrix {
-enum AXIS { X, Y, Z };
-enum class SHEAR_AXIS { XY, XZ, YX, YZ, ZX, ZY };
-enum class REFLECTION_AXIS { XY, XZ, YZ };
+enum AXIS { X,
+            Y,
+            Z };
+enum class SHEAR_AXIS { XY,
+                        XZ,
+                        YX,
+                        YZ,
+                        ZX,
+                        ZY };
+enum class REFLECTION_AXIS { XY,
+                             XZ,
+                             YZ };
 
 Eigen::Matrix4d scale(double x, double y, double z);
 
