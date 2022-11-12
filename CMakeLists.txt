@@ -5,8 +5,6 @@ include(CTest)
 enable_testing()
 
 find_package(SDL2 REQUIRED)
-find_package( OpenCV REQUIRED )
-include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 add_executable(comp-grafica 
 
