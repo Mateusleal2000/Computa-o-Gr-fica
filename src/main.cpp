@@ -27,7 +27,7 @@
 
 int xj;
 int yj;
-bool isPerspective = true;
+bool isPerspective = false;
 double canvasWidth = 500;
 double canvasHeight = 500;
 double viewPortWidth = isPerspective ? 60 : 2000;
@@ -36,8 +36,10 @@ double nRow = 500;
 double nCol = 500;
 unsigned char *pixelArray;
 
-int draw(int canvasHeight, int canvasWidth, unsigned char *pixelArray) {
-    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+int draw(int canvasHeight, int canvasWidth, unsigned char *pixelArray)
+{
+    if (SDL_Init(SDL_INIT_VIDEO) != 0)
+    {
         std::cerr << "SDL_Init() Error: " << SDL_GetError() << std::endl;
         return 1;
     }
@@ -49,14 +51,16 @@ int draw(int canvasHeight, int canvasWidth, unsigned char *pixelArray) {
         canvasWidth, canvasHeight,
         0);
 
-    if (win == nullptr) {
+    if (win == nullptr)
+    {
         std::cerr << "SDL_CreateWindow() Error: " << SDL_GetError() << std::endl;
         return 1;
     }
 
     // Create and init the renderer
     SDL_Renderer *ren = SDL_CreateRenderer(win, -1, 0);
-    if (ren == nullptr) {
+    if (ren == nullptr)
+    {
         std::cerr << "SDL_CreateRenderer() Error: " << SDL_GetError() << std::endl;
         SDL_DestroyWindow(win);
         return 1;
@@ -69,16 +73,18 @@ int draw(int canvasHeight, int canvasWidth, unsigned char *pixelArray) {
     SDL_FreeSurface(surf);
 
     SDL_Rect texture_rect;
-    texture_rect.x = 0;             // the x coordinate
-    texture_rect.y = 0;             // the y coordinate
-    texture_rect.w = canvasWidth;   // the width of the texture
-    texture_rect.h = canvasHeight;  // the height of the texture
+    texture_rect.x = 0;            // the x coordinate
+    texture_rect.y = 0;            // the y coordinate
+    texture_rect.w = canvasWidth;  // the width of the texture
+    texture_rect.h = canvasHeight; // the height of the texture
 
     SDL_Event event;
     const Uint32 startMs = SDL_GetTicks();
-    while (true) {
+    while (true)
+    {
         SDL_PollEvent(&event);
-        if (event.type == SDL_QUIT) {
+        if (event.type == SDL_QUIT)
+        {
             break;
         }
         SDL_PumpEvents();
@@ -95,14 +101,16 @@ int draw(int canvasHeight, int canvasWidth, unsigned char *pixelArray) {
     return EXIT_SUCCESS;
 }
 
-// void onClick(int button, int state, int x, int y) {
+// void onClick(int button, int state, int x, int y)
+// {
 //     double deltaX = viewPortWidth / nCol;
 //     double deltaY = viewPortHeight / nRow;
 
 //     xj = (viewPortHeight / 2.0) + (deltaX / 2.0) + x * deltaX;
 //     yj = -(viewPortWidth / 2.0) + (deltaY / 2.0) + y * deltaY;
 
-//     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+//     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+//     {
 //         std::cout << xj << " " << yj << " "
 //                   << "\n";
 //         // glutDisplayFunc(draw);
@@ -110,16 +118,17 @@ int draw(int canvasHeight, int canvasWidth, unsigned char *pixelArray) {
 //     }
 // }
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     double radius = 1.0;
     double dWindow = 25;
     double x = 0;
     double y = 0;
     double z = -(dWindow + radius);
 
-    double lx = -600.0;
-    double ly = 300.0;
-    double lz = 500.0;
+    double lx = 600.0;
+    double ly = 1500.0;
+    double lz = 1000.0;
 
     double I_A = 0.3;
 
@@ -133,7 +142,7 @@ int main(int argc, char **argv) {
     Eigen::Vector3d center(x, y, z);
 
     Eigen::Vector3d I_F_1(0.7, 0.7, 0.7);
-    Eigen::Vector4d P_F_1(300.0, 100.0, 1200.0, 1.0);
+    Eigen::Vector4d P_F_1(300.0, 100.0, 2000.0, 1.0);
     // Eigen::Vector4d P_F_1(300.0, 294.0, 480.0, 1.0);
     Eigen::Vector3d P_F_2(100, 200, -20);
 
