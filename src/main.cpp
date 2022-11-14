@@ -27,7 +27,7 @@
 
 int xj;
 int yj;
-bool isPerspective = false;
+bool isPerspective = true;
 double canvasWidth = 500;
 double canvasHeight = 500;
 double viewPortWidth = isPerspective ? 60 : 2000;
@@ -80,13 +80,32 @@ int draw(int canvasHeight, int canvasWidth, unsigned char *pixelArray)
 
     SDL_Event event;
     const Uint32 startMs = SDL_GetTicks();
+
+    double xj, yj;
+    double deltaX = viewPortWidth / nCol;
+    double deltaY = viewPortHeight / nRow;
+
     while (true)
     {
-        SDL_PollEvent(&event);
-        if (event.type == SDL_QUIT)
+        if (SDL_PollEvent(&event))
         {
-            break;
+            if (event.type == SDL_QUIT)
+            {
+                break;
+            }
+
+            if (event.type == SDL_MOUSEBUTTONDOWN)
+            {
+                xj = (-viewPortWidth / 2.0) + (deltaX / 2.0) +
+                     (event.motion.x * deltaX);
+                yj = (viewPortHeight / 2.0) - (deltaY / 2.0) -
+                     (event.motion.y * deltaY);
+
+                std::cout << "X: " << xj << " "
+                          << "Y: " << yj << std::endl;
+            }
         }
+
         SDL_PumpEvents();
         SDL_RenderSetLogicalSize(ren, canvasWidth, canvasHeight);
         SDL_RenderClear(ren);
@@ -101,23 +120,6 @@ int draw(int canvasHeight, int canvasWidth, unsigned char *pixelArray)
     return EXIT_SUCCESS;
 }
 
-// void onClick(int button, int state, int x, int y)
-// {
-//     double deltaX = viewPortWidth / nCol;
-//     double deltaY = viewPortHeight / nRow;
-
-//     xj = (viewPortHeight / 2.0) + (deltaX / 2.0) + x * deltaX;
-//     yj = -(viewPortWidth / 2.0) + (deltaY / 2.0) + y * deltaY;
-
-//     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
-//     {
-//         std::cout << xj << " " << yj << " "
-//                   << "\n";
-//         // glutDisplayFunc(draw);
-//         glutPostRedisplay();
-//     }
-// }
-
 int main(int argc, char **argv)
 {
     double radius = 1.0;
@@ -126,9 +128,9 @@ int main(int argc, char **argv)
     double y = 0;
     double z = -(dWindow + radius);
 
-    double lx = 600.0;
-    double ly = 1500.0;
-    double lz = 1000.0;
+    double lx = 300.0;
+    double ly = 400.0;
+    double lz = 1500.0;
 
     double I_A = 0.3;
 
