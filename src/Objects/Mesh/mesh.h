@@ -8,8 +8,8 @@
 #include <tuple>
 #include <vector>
 
-#include "matrix.h"
-#include "object.h"
+#include "../../Matrix/matrix.h"
+#include "../Object/object.h"
 
 class Mesh : public Object {
    public:

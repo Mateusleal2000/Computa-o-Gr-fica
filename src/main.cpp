@@ -8,34 +8,22 @@
 #include <memory>
 #include <vector>
 
-#include "ambient.h"
-#include "cone.h"
-#include "cylinder.h"
-#include "directional.h"
-#include "display.h"
-#include "displayStructs.h"
-#include "lightSource.h"
-#include "matrix.h"
-#include "mesh.h"
-#include "plane.h"
-#include "point.h"
-#include "scene.h"
-#include "sphere.h"
-#include "spot.h"
-#include "utils.h"
-#include "utilsStructs.h"
-
-int xj;
-int yj;
-bool isPerspective = true;
-double canvasWidth = 500;
-double canvasHeight = 500;
-double viewPortWidth = isPerspective ? 60 : 2000;
-double viewPortHeight = isPerspective ? 60 : 2000;
-double nRow = 500;
-double nCol = 500;
-
-unsigned char *pixelArray;
+#include "Display/display.h"
+#include "Display/displayStructs.h"
+#include "LightSources/Ambient/ambient.h"
+#include "LightSources/Directional/directional.h"
+#include "LightSources/LightSource/lightSource.h"
+#include "LightSources/Point/point.h"
+#include "LightSources/Spot/spot.h"
+#include "Matrix/matrix.h"
+#include "Objects/Cone/cone.h"
+#include "Objects/Cylinder/cylinder.h"
+#include "Objects/Mesh/mesh.h"
+#include "Objects/Plane/plane.h"
+#include "Objects/Sphere/sphere.h"
+#include "Scene/scene.h"
+#include "Utils/utils.h"
+#include "Utils/utilsStructs.h"
 
 int draw(int canvasHeight, int canvasWidth, unsigned char *pixelArray, Eigen::Vector4d O, Scene scene) {
     double z = -25.0;  // COLOCAR DWINDOW PARA FORA DO MAIN OU CRIAR O Z AQUI MESMO?
@@ -80,8 +68,8 @@ int draw(int canvasHeight, int canvasWidth, unsigned char *pixelArray, Eigen::Ve
     const Uint32 startMs = SDL_GetTicks();
 
     double xj, yj;
-    double deltaX = viewPortWidth / nCol;
-    double deltaY = viewPortHeight / nRow;
+    double deltaX = scene.getViewport().width / scene.getViewport().nColumns;
+    double deltaY = scene.getViewport().height / scene.getViewport().nRows;
 
     while (true) {
         if (SDL_PollEvent(&event)) {
@@ -90,9 +78,9 @@ int draw(int canvasHeight, int canvasWidth, unsigned char *pixelArray, Eigen::Ve
             }
 
             if (event.type == SDL_MOUSEBUTTONDOWN) {
-                xj = (-viewPortWidth / 2.0) + (deltaX / 2.0) +
+                xj = (-scene.getViewport().width / 2.0) + (deltaX / 2.0) +
                      (event.motion.x * deltaX);
-                yj = (viewPortHeight / 2.0) - (deltaY / 2.0) -
+                yj = (scene.getViewport().height / 2.0) - (deltaY / 2.0) -
                      (event.motion.y * deltaY);
 
                 Eigen::Vector4d pickedD(xj, yj, z, 0);
@@ -125,11 +113,21 @@ int draw(int canvasHeight, int canvasWidth, unsigned char *pixelArray, Eigen::Ve
 }
 
 int main(int argc, char **argv) {
+    unsigned char *pixelArray;
+
     double radius = 1.0;
     double dWindow = 25;
     double x = 0;
     double y = 0;
     double z = -(dWindow + radius);
+
+    bool isPerspective = true;
+    double canvasWidth = 500;
+    double canvasHeight = 500;
+    double viewPortWidth = isPerspective ? 60 : 2000;
+    double viewPortHeight = isPerspective ? 60 : 2000;
+    double nRow = 500;
+    double nCol = 500;
 
     double lx = 300.0;
     double ly = 400.0;
@@ -247,8 +245,8 @@ int main(int argc, char **argv) {
     double m_2 = 1;
     double m_3 = 1;
 
-    std::string cubePath = "../src/magic_cube.obj";
-    std::string catPath = "gato.obj";
+    std::string cubePath = "../resources/cube.obj";
+    // std::string catPath = "cat.obj";
 
     // Gato
     // Mesh cat(lid_K, m_1, catPath);

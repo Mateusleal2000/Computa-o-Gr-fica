@@ -4,7 +4,7 @@
 #include <iostream>
 #include <tuple>
 
-#include "object.h"
+#include "../Object/object.h"
 
 class Plane : public Object {
    public:

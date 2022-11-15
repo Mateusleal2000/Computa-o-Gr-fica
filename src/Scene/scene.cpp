@@ -3,8 +3,6 @@
 #include <chrono>
 #include <iostream>
 
-#include "utils.h"
-
 std::vector<unsigned char> Scene::display(bool isPerspective) {
     double deltaX = viewport.width / viewport.nColumns;
     double deltaY = viewport.height / viewport.nRows;
@@ -61,4 +59,8 @@ std::shared_ptr<Object> Scene::pick(Eigen::Vector3d O, Eigen::Vector3d D, std::v
 
 std::vector<std::shared_ptr<Object>> Scene::getObjects() {
     return this->objects;
+}
+
+displayStructs::Viewport Scene::getViewport() {
+    return this->viewport;
 }

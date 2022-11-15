@@ -107,7 +107,6 @@ void Cone::translate(double x, double y, double z, Eigen::Matrix4d wc) {
     Eigen::Vector4d auxCenter(x, y, z, 1);
     Eigen::Vector4d newCenter = wc * auxCenter;
     this->center = newCenter.head<3>();
-    std::cout << "primeiro " << this->vertex << "\n";
 
     Eigen::Vector4d auxVertex4d(this->vertex(0), this->vertex(1), this->vertex(2),
                                 1.0);
@@ -119,7 +118,6 @@ void Cone::translate(double x, double y, double z, Eigen::Matrix4d wc) {
     this->coneDir = (wc * auxConeDir4d).head<3>().normalized();
 
     this->vertex = this->center + this->coneDir * this->height;
-    std::cout << "segundo " << this->vertex << "\n";
 
     generateLids();
     return;

@@ -16,20 +16,20 @@ find_package(SDL2 REQUIRED)
 
 add_executable(comp-grafica 
 
-src/utils.cpp
-src/matrix.cpp
-src/scene.cpp
-src/lightSource.cpp
-src/ambient.cpp
-src/directional.cpp
-src/point.cpp
-src/spot.cpp
-src/object.cpp
-src/sphere.cpp
-src/plane.cpp
-src/cylinder.cpp
-src/cone.cpp
-src/mesh.cpp
+src/Utils/utils.cpp
+src/Matrix/matrix.cpp
+src/Scene/scene.cpp
+src/LightSources/LightSource/lightSource.cpp
+src/LightSources/Ambient/ambient.cpp
+src/LightSources/Directional/directional.cpp
+src/LightSources/Point/point.cpp
+src/LightSources/Spot/spot.cpp
+src/Objects/Object/object.cpp
+src/Objects/Sphere/sphere.cpp
+src/Objects/Plane/plane.cpp
+src/Objects/Cylinder/cylinder.cpp
+src/Objects/Cone/cone.cpp
+src/Objects/Mesh/mesh.cpp
 src/main.cpp)
 
 target_link_libraries(comp-grafica ${SDL2_LIBRARIES})

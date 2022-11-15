@@ -8,10 +8,10 @@
 #include <tuple>
 #include <vector>
 
+#include "../LightSources/LightSource/lightSource.h"
+#include "../Objects/Object/object.h"
+#include "../Utils/utils.h"
 #include "displayStructs.h"
-#include "lightSource.h"
-#include "object.h"
-#include "utils.h"
 
 class Sphere;
 namespace display {

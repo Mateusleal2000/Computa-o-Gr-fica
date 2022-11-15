@@ -5,8 +5,8 @@
 #include <memory>
 #include <tuple>
 
-#include "displayStructs.h"
-#include "utilsStructs.h"
+#include "../../Display/displayStructs.h"
+#include "../../Utils/utilsStructs.h"
 
 class Object {
    public:

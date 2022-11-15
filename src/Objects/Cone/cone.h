@@ -5,11 +5,11 @@
 #include <memory>
 #include <tuple>
 
-#include "displayStructs.h"
-#include "matrix.h"
-#include "object.h"
-#include "plane.h"
-#include "utilsStructs.h"
+#include "../../Display/displayStructs.h"
+#include "../../Matrix/matrix.h"
+#include "../../Utils/utilsStructs.h"
+#include "../Object/object.h"
+#include "../Plane/plane.h"
 
 class Cone : public Object {
     enum INTERSECTION_TYPE { BASE,

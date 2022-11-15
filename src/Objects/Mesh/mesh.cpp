@@ -2,8 +2,6 @@
 
 #include <regex>
 
-#include "matrix.h"
-
 std::vector<std::string> split(std::string s, std::string del = " ") {
   std::vector<std::string> values;
   int start, end = -1 * del.size();

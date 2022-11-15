@@ -5,10 +5,10 @@
 #include <memory>
 #include <tuple>
 
-#include "displayStructs.h"
-#include "matrix.h"
-#include "object.h"
-#include "utilsStructs.h"
+#include "../../Display/displayStructs.h"
+#include "../../Matrix/matrix.h"
+#include "../../Utils/utilsStructs.h"
+#include "../Object/object.h"
 
 class Sphere : public Object {
    public:

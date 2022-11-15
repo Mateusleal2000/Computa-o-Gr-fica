@@ -3,8 +3,6 @@
 
 #include <eigen3/Eigen/Dense>
 
-#include "ambient.h"
-
 namespace displayStructs {
 struct Viewport {
     double width;

@@ -8,9 +8,9 @@
 #include <tuple>
 #include <vector>
 
-#include "displayStructs.h"
-#include "lightSource.h"
-#include "object.h"
+#include "../Display/displayStructs.h"
+#include "../LightSources/LightSource/lightSource.h"
+#include "../Objects/Object/object.h"
 #include "utilsStructs.h"
 
 namespace utils {
