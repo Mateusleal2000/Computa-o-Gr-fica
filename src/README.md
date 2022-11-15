@@ -8,3 +8,4 @@ Equipe:
 ## Bibliotecas
  - Eigen 3 (Operações de Álg. Linear)
  - OpenGL/Glut
+ - SDL2
