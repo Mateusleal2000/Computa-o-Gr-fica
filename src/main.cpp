@@ -34,12 +34,12 @@ double viewPortWidth = isPerspective ? 60 : 2000;
 double viewPortHeight = isPerspective ? 60 : 2000;
 double nRow = 500;
 double nCol = 500;
+
 unsigned char *pixelArray;
 
-int draw(int canvasHeight, int canvasWidth, unsigned char *pixelArray)
-{
-    if (SDL_Init(SDL_INIT_VIDEO) != 0)
-    {
+int draw(int canvasHeight, int canvasWidth, unsigned char *pixelArray, Eigen::Vector4d O, Scene scene) {
+    double z = -25.0;  // COLOCAR DWINDOW PARA FORA DO MAIN OU CRIAR O Z AQUI MESMO?
+    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         std::cerr << "SDL_Init() Error: " << SDL_GetError() << std::endl;
         return 1;
     }
@@ -51,16 +51,14 @@ int draw(int canvasHeight, int canvasWidth, unsigned char *pixelArray)
         canvasWidth, canvasHeight,
         0);
 
-    if (win == nullptr)
-    {
+    if (win == nullptr) {
         std::cerr << "SDL_CreateWindow() Error: " << SDL_GetError() << std::endl;
         return 1;
     }
 
     // Create and init the renderer
     SDL_Renderer *ren = SDL_CreateRenderer(win, -1, 0);
-    if (ren == nullptr)
-    {
+    if (ren == nullptr) {
         std::cerr << "SDL_CreateRenderer() Error: " << SDL_GetError() << std::endl;
         SDL_DestroyWindow(win);
         return 1;
@@ -73,10 +71,10 @@ int draw(int canvasHeight, int canvasWidth, unsigned char *pixelArray)
     SDL_FreeSurface(surf);
 
     SDL_Rect texture_rect;
-    texture_rect.x = 0;            // the x coordinate
-    texture_rect.y = 0;            // the y coordinate
-    texture_rect.w = canvasWidth;  // the width of the texture
-    texture_rect.h = canvasHeight; // the height of the texture
+    texture_rect.x = 0;             // the x coordinate
+    texture_rect.y = 0;             // the y coordinate
+    texture_rect.w = canvasWidth;   // the width of the texture
+    texture_rect.h = canvasHeight;  // the height of the texture
 
     SDL_Event event;
     const Uint32 startMs = SDL_GetTicks();
@@ -85,24 +83,30 @@ int draw(int canvasHeight, int canvasWidth, unsigned char *pixelArray)
     double deltaX = viewPortWidth / nCol;
     double deltaY = viewPortHeight / nRow;
 
-    while (true)
-    {
-        if (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_QUIT)
-            {
+    while (true) {
+        if (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
                 break;
             }
 
-            if (event.type == SDL_MOUSEBUTTONDOWN)
-            {
+            if (event.type == SDL_MOUSEBUTTONDOWN) {
                 xj = (-viewPortWidth / 2.0) + (deltaX / 2.0) +
                      (event.motion.x * deltaX);
                 yj = (viewPortHeight / 2.0) - (deltaY / 2.0) -
                      (event.motion.y * deltaY);
 
-                std::cout << "X: " << xj << " "
-                          << "Y: " << yj << std::endl;
+                Eigen::Vector4d pickedD(xj, yj, z, 0);
+                Eigen::Vector4d direction = pickedD - O;
+
+                std::shared_ptr<Object> obj = scene.pick(O.head<3>(), direction.head<3>(), scene.getObjects());
+                if (obj != nullptr) {
+                    utilsStructs::materialK k = obj->getK();
+                    std::cout << k.Kd(0) << " " << k.Kd(1) << " " << k.Kd(2) << std::endl;
+                } else {
+                    std::cout << "No object in these coordinates" << std::endl;
+                }
+                // std::cout << "X: " << xj << " "
+                //           << "Y: " << yj << std::endl;
             }
         }
 
@@ -120,8 +124,7 @@ int draw(int canvasHeight, int canvasWidth, unsigned char *pixelArray)
     return EXIT_SUCCESS;
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     double radius = 1.0;
     double dWindow = 25;
     double x = 0;
@@ -416,7 +419,7 @@ int main(int argc, char **argv)
 
     pixelArray = pixelVector.data();
 
-    draw(canvasHeight, canvasWidth, pixelArray);
+    draw(canvasHeight, canvasWidth, pixelArray, O, scene);
 
     return 0;
 }

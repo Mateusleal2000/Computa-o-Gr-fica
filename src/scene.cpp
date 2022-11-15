@@ -46,3 +46,19 @@ std::vector<unsigned char> Scene::display(bool isPerspective) {
               << std::endl;
     return pixelVector;
 }
+
+std::shared_ptr<Object> Scene::pick(Eigen::Vector3d O, Eigen::Vector3d D, std::vector<std::shared_ptr<Object>> objects) {
+    double inf = INFINITY;
+    // double t;
+    // std::shared_ptr<Object> closestObject = nullptr;
+
+    auto [closestT, closestObject] = utils::closestIntersection(O, D, 0, inf, objects);
+    if (closestT == INFINITY) {
+        closestObject = nullptr;
+    }
+    return closestObject;
+}
+
+std::vector<std::shared_ptr<Object>> Scene::getObjects() {
+    return this->objects;
+}
