@@ -25,6 +25,7 @@ class Scene {
     std::shared_ptr<Object> pick(Eigen::Vector3d O, Eigen::Vector3d D, std::vector<std::shared_ptr<Object>>);
     std::vector<std::shared_ptr<Object>> getObjects();
     displayStructs::Viewport getViewport();
+    Eigen::Vector3d getCamera();
 
    private:
     displayStructs::Viewport viewport;

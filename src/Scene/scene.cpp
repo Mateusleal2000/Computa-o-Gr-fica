@@ -3,6 +3,8 @@
 #include <chrono>
 #include <iostream>
 
+#include "../Matrix/matrix.h"
+
 std::vector<unsigned char> Scene::display(bool isPerspective) {
     double deltaX = viewport.width / viewport.nColumns;
     double deltaY = viewport.height / viewport.nRows;
@@ -17,18 +19,21 @@ std::vector<unsigned char> Scene::display(bool isPerspective) {
         for (int c = 0; c < viewport.nColumns; c++) {
             x = -(viewport.width / 2) + (deltaX / 2) + (c * deltaX);
 
-            D(0) = x - camera.O(0);
-            D(1) = y - camera.O(1);
-            D(2) = -viewport.dWindow;
-
             utilsStructs::Color color(0);
 
             if (isPerspective) {
+                D(0) = x - this->camera.O(0);
+                D(1) = y - this->camera.O(1);
+                D(2) = -viewport.dWindow;
                 color =
-                    utils::traceRay(camera, D, lightSources, objects, int(x), int(y));
+                    utils::traceRay(this->camera, D, lightSources, objects, int(x), int(y));
             } else {
+                D(0) = x;
+                D(1) = y;
+                D(2) = -viewport.dWindow;
+                this->camera.O = D;
                 color =
-                    utils::traceRay(D, orthDir, lightSources, objects, int(x), int(y));
+                    utils::traceRay(this->camera, orthDir, lightSources, objects, int(x), int(y));
             }
 
             pixelVector.push_back(color.R);
@@ -63,4 +68,8 @@ std::vector<std::shared_ptr<Object>> Scene::getObjects() {
 
 displayStructs::Viewport Scene::getViewport() {
     return this->viewport;
+}
+
+Eigen::Vector3d Scene::getCamera() {
+    return this->camera.O;
 }
