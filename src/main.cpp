@@ -25,7 +25,7 @@
 #include "Utils/utils.h"
 #include "Utils/utilsStructs.h"
 
-int draw(int canvasHeight, int canvasWidth, double z, unsigned char *pixelArray, Eigen::Vector4d O, Scene scene) {
+int draw(int canvasHeight, int canvasWidth, double z, unsigned char *pixelArray, Scene scene) {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         std::cerr << "SDL_Init() Error: " << SDL_GetError() << std::endl;
         return 1;
@@ -81,17 +81,19 @@ int draw(int canvasHeight, int canvasWidth, double z, unsigned char *pixelArray,
                      (event.motion.x * deltaX);
                 yj = (scene.getViewport().height / 2.0) - (deltaY / 2.0) -
                      (event.motion.y * deltaY);
-
                 Eigen::Vector4d pickedD(xj, yj, z, 0);
-                // Eigen::Vector4d direction = pickedD - O;
-                Eigen::Vector4d auxO(0, 0, 0, 1);
-                Eigen::Vector3d cam = scene.getCamera();
-                auxO(0) = cam(0);
-                auxO(1) = cam(1);
-                auxO(2) = cam(2);
-                Eigen::Vector4d direction = pickedD - auxO;
-
-                std::shared_ptr<Object> obj = scene.pick(cam, direction.head<3>(), scene.getObjects());
+                std::shared_ptr<Object> obj = nullptr;
+                if (scene.getProjection()) {
+                    Eigen::Vector4d auxO(0, 0, 0, 1);
+                    Eigen::Vector3d cam = scene.getCamera();
+                    auxO(0) = cam(0);
+                    auxO(1) = cam(1);
+                    auxO(2) = cam(2);
+                    Eigen::Vector4d direction = pickedD - auxO;
+                    obj = scene.pick(cam, direction.head<3>(), scene.getObjects());
+                } else {
+                    obj = scene.pick(pickedD.head<3>(), Eigen::Vector3d(0.0, 0.0, -1.0), scene.getObjects());
+                }
                 if (obj != nullptr) {
                     utilsStructs::materialK k = obj->getK();
                     std::cout << k.Kd(0) << " " << k.Kd(1) << " " << k.Kd(2) << std::endl;
@@ -124,7 +126,7 @@ int main(int argc, char **argv) {
     double y = 0;
     double z = -(dWindow + radius);
 
-    bool isPerspective = false;
+    bool isPerspective = true;
     double canvasWidth = 500;
     double canvasHeight = 500;
     double viewPortWidth = isPerspective ? 60 : 1500;
@@ -133,7 +135,7 @@ int main(int argc, char **argv) {
     double nCol = 500;
 
     double lx = 300.0;
-    double ly = 97.0;
+    double ly = 400.0;
     double lz = 1500.0;
 
     double I_A = 0.3;
@@ -414,13 +416,13 @@ int main(int argc, char **argv) {
     /*lightSources.push_back(
         std::make_shared<Spot>(Spot(I_F_3, P_I_3, P_S_4, 12.0)));*/
 
-    Scene scene(viewport, camera, lightSources, objects);
+    Scene scene(viewport, camera, lightSources, objects, isPerspective);
 
-    std::vector<unsigned char> pixelVector = scene.display(isPerspective);
+    std::vector<unsigned char> pixelVector = scene.display();
 
     pixelArray = pixelVector.data();
 
-    draw(canvasHeight, canvasWidth, -dWindow, pixelArray, O, scene);
+    draw(canvasHeight, canvasWidth, -dWindow, pixelArray, scene);
 
     return 0;
 }

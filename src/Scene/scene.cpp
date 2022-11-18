@@ -5,7 +5,7 @@
 
 #include "../Matrix/matrix.h"
 
-std::vector<unsigned char> Scene::display(bool isPerspective) {
+std::vector<unsigned char> Scene::display() {
     double deltaX = viewport.width / viewport.nColumns;
     double deltaY = viewport.height / viewport.nRows;
     double x, y;
@@ -21,7 +21,7 @@ std::vector<unsigned char> Scene::display(bool isPerspective) {
 
             utilsStructs::Color color(0);
 
-            if (isPerspective) {
+            if (this->isPerspective) {
                 D(0) = x - this->camera.O(0);
                 D(1) = y - this->camera.O(1);
                 D(2) = -viewport.dWindow;
@@ -72,4 +72,8 @@ displayStructs::Viewport Scene::getViewport() {
 
 Eigen::Vector3d Scene::getCamera() {
     return this->camera.O;
+}
+
+bool Scene::getProjection() {
+    return this->isPerspective;
 }
