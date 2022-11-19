@@ -16,6 +16,7 @@ class Object {
     utilsStructs::materialK getK();
     double getM();
     utilsStructs::Texel getPixel(double x, double z);
+    virtual void translate(double x, double y, double z, Eigen::Matrix4d wc) = 0;
 
    protected:
     Object(utilsStructs::materialK k, double m)
