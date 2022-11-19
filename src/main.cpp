@@ -9,6 +9,7 @@
 #include <thread>
 #include <vector>
 
+#include "Canvas/canvas.h"
 #include "Display/display.h"
 #include "Display/displayStructs.h"
 #include "LightSources/Ambient/ambient.h"
@@ -26,27 +27,35 @@
 #include "Utils/utils.h"
 #include "Utils/utilsStructs.h"
 
-void draw(int canvasHeight, int canvasWidth, unsigned char *pixelArray, SDL_Renderer *ren) {
+void draw(int canvasHeight, int canvasWidth, unsigned char *pixelArray, SDL_Renderer *ren, SDL_Texture *texture) {
+    std::cout << "Entrou no draw"
+              << "\n";
     SDL_Surface *surf = SDL_CreateRGBSurfaceFrom(
         (void *)pixelArray, canvasWidth, canvasHeight, 24, 3 * canvasWidth, 0x000000ff,
         0x0000ff00, 0x00ff0000, 0xff000000);
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(ren, surf);
+    std::cout << "cria surface"
+              << "\n";
+    SDL_Texture *texture_aux = SDL_CreateTextureFromSurface(ren, surf);
+    std::cout << "cria textura"
+              << "\n";
     SDL_FreeSurface(surf);
+    std::cout << "Free no surface"
+              << "\n";
 
-    SDL_Rect texture_rect;
-    texture_rect.x = 0;             // the x coordinate
-    texture_rect.y = 0;             // the y coordinate
-    texture_rect.w = canvasWidth;   // the width of the texture
-    texture_rect.h = canvasHeight;  // the height of the texture
+    // SDL_Rect texture_rect;
+    // texture_rect.x = 0;             // the x coordinate
+    // texture_rect.y = 0;             // the y coordinate
+    // texture_rect.w = canvasWidth;   // the width of the texture
+    // texture_rect.h = canvasHeight;  // the height of the texture
 
-    SDL_PumpEvents();
-    SDL_RenderSetLogicalSize(ren, canvasWidth, canvasHeight);
-    SDL_RenderClear(ren);
-    SDL_RenderCopy(ren, texture, NULL, &texture_rect);
-    SDL_RenderPresent(ren);
+    // SDL_PumpEvents();
+    // SDL_RenderSetLogicalSize(ren, canvasWidth, canvasHeight);
+    // SDL_RenderClear(ren);
+    // SDL_RenderCopy(ren, texture, NULL, &texture_rect);
+    // SDL_RenderPresent(ren);
 }
 
-void eventLoop(int canvasHeight, int canvasWidth, Scene scene, std::shared_ptr<Object> &pickedObj, unsigned char *pixelArray, SDL_Renderer *ren, double z) {
+void eventLoop(int canvasHeight, int canvasWidth, Scene scene, std::shared_ptr<Object> &pickedObj, unsigned char *pixelArray, SDL_Renderer *ren, double z, SDL_Texture **texture) {
     displayStructs::Viewport vw = scene.getViewport();
     double xj, yj;
     double deltaX = vw.width / vw.nColumns;
@@ -58,7 +67,8 @@ void eventLoop(int canvasHeight, int canvasWidth, Scene scene, std::shared_ptr<O
     SDL_Surface *surf = SDL_CreateRGBSurfaceFrom(
         (void *)pixelArray, canvasWidth, canvasHeight, 24, 3 * canvasWidth, 0x000000ff,
         0x0000ff00, 0x00ff0000, 0xff000000);
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(ren, surf);
+    *texture = SDL_CreateTextureFromSurface(ren, surf);
+    // SDL_Texture *texture = SDL_CreateTextureFromSurface(ren, surf);
     SDL_FreeSurface(surf);
 
     SDL_Rect texture_rect;
@@ -96,20 +106,19 @@ void eventLoop(int canvasHeight, int canvasWidth, Scene scene, std::shared_ptr<O
                     std::cout << "No object in these coordinates" << std::endl;
                 }
             }
+            SDL_PumpEvents();
+            SDL_RenderSetLogicalSize(ren, canvasWidth, canvasHeight);
+            SDL_RenderClear(ren);
+            SDL_RenderCopy(ren, *texture, NULL, &texture_rect);
+            SDL_RenderPresent(ren);
         }
-
-        SDL_PumpEvents();
-        SDL_RenderSetLogicalSize(ren, canvasWidth, canvasHeight);
-        SDL_RenderClear(ren);
-        SDL_RenderCopy(ren, texture, NULL, &texture_rect);
-        SDL_RenderPresent(ren);
 
         // draw(canvasHeight, canvasWidth, pixelArray, ren);
     }
 }
 
-int sdlLoop(int canvasHeight, int canvasWidth, double z, unsigned char *pixelArray, Scene scene, std::shared_ptr<Object> &pickedObj, SDL_Window *win, SDL_Renderer *ren) {
-    eventLoop(canvasHeight, canvasWidth, scene, pickedObj, pixelArray, ren, z);
+int sdlLoop(int canvasHeight, int canvasWidth, double z, unsigned char *pixelArray, Scene scene, std::shared_ptr<Object> &pickedObj, SDL_Window *win, SDL_Renderer *ren, SDL_Texture **texture) {
+    eventLoop(canvasHeight, canvasWidth, scene, pickedObj, pixelArray, ren, z, texture);
 
     SDL_DestroyRenderer(ren);
     SDL_DestroyWindow(win);
@@ -153,7 +162,7 @@ int main(int argc, char **argv) {
     double y = 0;
     double z = -(dWindow + radius);
 
-    bool isPerspective = false;
+    bool isPerspective = true;
     double canvasWidth = 500;
     double canvasHeight = 500;
     double viewPortWidth = isPerspective ? 60 : 1500;
@@ -450,9 +459,13 @@ int main(int argc, char **argv) {
     pixelArray = pixelVector.data();
 
     std::shared_ptr<Object> pickedObj = nullptr;
-
-    SDL_Window *win = initWindow(canvasWidth, canvasHeight);
-    SDL_Renderer *ren = initRenderer(win);
+    // int canvasWidth, int canvasHeight, double z, unsigned char* pixelArray, Scene scene
+    Canvas canvas(canvasWidth, canvasHeight, -dWindow, scene);
+    canvas.init();
+    canvas.update(pixelArray);
+    // SDL_Window *win = initWindow(canvasWidth, canvasHeight);
+    // SDL_Renderer *ren = initRenderer(win);
+    // SDL_Texture *texture;
 
     std::thread inputThread([&]() {
         int selected;
@@ -474,12 +487,26 @@ int main(int argc, char **argv) {
                     std::cin >> y;
                     std::cin >> z;
                     if (pickedObj != nullptr) {
-                        std::cout << "Entrou";
+                        std::cout << "Entrou" << std::endl;
                         utilsStructs::materialK k = pickedObj->getK();
                         std::cout << k.Kd(0) << " " << k.Kd(1) << " " << k.Kd(2) << std::endl;
 
-                        pixelArray = scene.display().data();
-                        // draw(canvasHeight, canvasWidth, pixelArray, ren);
+                        std::vector<unsigned char> pixelVector = scene.display();
+                        pixelArray = pixelVector.data();
+
+                        // SDL_Rect texture_rect;
+                        // texture_rect.x = 0;             // the x coordinate
+                        // texture_rect.y = 0;             // the y coordinate
+                        // texture_rect.w = canvasWidth;   // the width of the texture
+                        // texture_rect.h = canvasHeight;  // the height of the texture
+
+                        // SDL_UpdateTexture(texture,
+                        //                   &texture_rect,
+                        //                   (void *)pixelArray, canvasWidth * 3);
+
+                        // draw(canvasHeight, canvasWidth, pixelArray, ren, texture);
+                        std::cout << "Saiu do draw"
+                                  << "\n";
                     } else {
                         std::cout << "Entrou else";
                     }
@@ -499,8 +526,8 @@ int main(int argc, char **argv) {
             }
         }
     });
-
-    sdlLoop(canvasHeight, canvasWidth, -dWindow, pixelArray, scene, pickedObj, win, ren);
+    canvas.eventLoop(pickedObj);
+    // sdlLoop(canvasHeight, canvasWidth, -dWindow, pixelArray, scene, pickedObj, win, ren, &texture);
 
     return 0;
 }

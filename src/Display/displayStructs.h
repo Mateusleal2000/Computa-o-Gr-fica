@@ -15,13 +15,6 @@ struct Viewport {
         : width(w), height(h), nRows(r), nColumns(c), dWindow(dW) {}
 };
 
-struct Canvas {
-    double width;
-    double height;
-
-    Canvas(double w, double h) : width(w), height(h) {}
-};
-
 struct Camera {
     Eigen::Vector3d O;
     Camera(Eigen::Vector3d O) : O(O) {}

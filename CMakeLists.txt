@@ -36,6 +36,7 @@ src/Objects/Plane/plane.cpp
 src/Objects/Cylinder/cylinder.cpp
 src/Objects/Cone/cone.cpp
 src/Objects/Mesh/mesh.cpp
+src/Canvas/canvas.cpp
 src/main.cpp)
 
 target_link_libraries(comp-grafica ${SDL2_LIBRARIES})
