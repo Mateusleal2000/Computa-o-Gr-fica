@@ -140,3 +140,9 @@ void Cone::generateLids() {
 
     return;
 }
+
+void Cone::returnToWorld(Eigen::Matrix4d cw) {
+    auto bla = this->getRadius();
+    std::cout << bla << "\n";
+    return;
+}

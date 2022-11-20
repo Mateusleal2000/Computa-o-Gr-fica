@@ -18,6 +18,7 @@ class Sphere : public Object {
     double getRadius();
     Eigen::Vector3d getCenter();
     Eigen::Vector3d getNormal(Eigen::Vector3d P_I);
+    void returnToWorld(Eigen::Matrix4d cw);
     std::tuple<double, double> intersectRay(Eigen::Vector3d, Eigen::Vector3d);
 
     /*void applyMatrixVertices(Eigen::Matrix4d);

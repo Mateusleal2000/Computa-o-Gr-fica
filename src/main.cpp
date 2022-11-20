@@ -181,6 +181,7 @@ int main(int argc, char **argv) {
     // Eigen::Vector3d at(lx, ly, 1.0);
     Eigen::Vector3d up(lx, ly + 100.0, lz);
     Eigen::Matrix4d wc = matrix::lookAt(O.head<3>(), at, up);
+    Eigen::Matrix4d cw = matrix::cwMatrix(O.head<3>(), at, up);
     // std::cout << up - O.head<3>() << "\n";
     O = wc * O;
     Eigen::Vector3d center(x, y, z);
@@ -413,33 +414,33 @@ int main(int argc, char **argv) {
     cat.translate(450.0, 570.0, 500.0, wc);
     objects.push_back(std::make_shared<Mesh>(cat));*/
 
-    objects.push_back(std::make_shared<Mesh>(support_columnL));
-    objects.push_back(std::make_shared<Mesh>(support_columnR));
-    objects.push_back(std::make_shared<Mesh>(beamL));
-    objects.push_back(std::make_shared<Mesh>(beamR));
+    // objects.push_back(std::make_shared<Mesh>(support_columnL));
+    // objects.push_back(std::make_shared<Mesh>(support_columnR));
+    // objects.push_back(std::make_shared<Mesh>(beamL));
+    // objects.push_back(std::make_shared<Mesh>(beamR));
 
-    objects.push_back(std::make_shared<Mesh>(back_beamR));
-    objects.push_back(std::make_shared<Mesh>(back_beamL));
+    // objects.push_back(std::make_shared<Mesh>(back_beamR));
+    // objects.push_back(std::make_shared<Mesh>(back_beamL));
     objects.push_back(std::make_shared<Mesh>(back_support_columnL));
-    objects.push_back(std::make_shared<Mesh>(back_support_columnR));
+    // objects.push_back(std::make_shared<Mesh>(back_support_columnR));
 
-    objects.push_back(std::make_shared<Mesh>(wallL));
-    objects.push_back(std::make_shared<Mesh>(wallR));
-    objects.push_back(std::make_shared<Mesh>(back_wall));
+    // objects.push_back(std::make_shared<Mesh>(wallL));
+    // objects.push_back(std::make_shared<Mesh>(wallR));
+    // objects.push_back(std::make_shared<Mesh>(back_wall));
 
-    objects.push_back(std::make_shared<Mesh>(roofL));
-    objects.push_back(std::make_shared<Mesh>(roofR));
+    // objects.push_back(std::make_shared<Mesh>(roofL));
+    // objects.push_back(std::make_shared<Mesh>(roofR));
 
-    objects.push_back(std::make_shared<Sphere>(ball));
+    // objects.push_back(std::make_shared<Sphere>(ball));
 
     objects.push_back(std::make_shared<Plane>(floor));
 
-    objects.push_back(std::make_shared<Mesh>(table_supportL));
-    objects.push_back(std::make_shared<Mesh>(table_supportR));
-    objects.push_back(std::make_shared<Mesh>(table_lid));
-    objects.push_back(woodBase);
-    objects.push_back(wood);
-    objects.push_back(tree);
+    // objects.push_back(std::make_shared<Mesh>(table_supportL));
+    // objects.push_back(std::make_shared<Mesh>(table_supportR));
+    // objects.push_back(std::make_shared<Mesh>(table_lid));
+    // objects.push_back(woodBase);
+    // objects.push_back(wood);
+    // objects.push_back(tree);
 
     lightSources.push_back(
         std::make_shared<Point>(Point(I_F_1, P_F_1.head<3>())));
@@ -482,17 +483,23 @@ int main(int argc, char **argv) {
 
             switch (selected) {
                 case 1:
-                    // std::cout<<"Current position: "<<"X: "<< x <<"Y: "<< y <<"Z: "<< z <<"\n";
                     std::cin >> x;
                     std::cin >> y;
                     std::cin >> z;
+                    // std::cout << "Current position: " << "X: " << x << " Y: " << y << " Z: " << z << "\n";
                     if (pickedObj != nullptr) {
                         std::cout << "Entrou" << std::endl;
                         utilsStructs::materialK k = pickedObj->getK();
                         std::cout << k.Kd(0) << " " << k.Kd(1) << " " << k.Kd(2) << std::endl;
 
+                        // pickedObj->returnToWorld(cw);
+                        // pickedObj->getNormal();
+                        pickedObj->returnToWorld(cw);
+                        pickedObj->translate(x, y, z, wc);
                         std::vector<unsigned char> pixelVector = scene.display();
                         pixelArray = pixelVector.data();
+
+                        canvas.update(pixelArray);
 
                         // SDL_Rect texture_rect;
                         // texture_rect.x = 0;             // the x coordinate

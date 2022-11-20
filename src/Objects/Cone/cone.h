@@ -43,6 +43,7 @@ class Cone : public Object {
     void translate(double x, double y, double z, Eigen::Matrix4d wc);
     void rotate(double theta, matrix::AXIS axis);
     Cone reflection(matrix::REFLECTION_AXIS axis);
+    void returnToWorld(Eigen::Matrix4d cw);
     void generateLids();
 
    private:

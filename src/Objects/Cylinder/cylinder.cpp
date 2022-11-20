@@ -149,3 +149,9 @@ void Cylinder::generateLids() {
         std::make_unique<Plane>(this->K, this->m, topCenter, cylinderDir);
     return;
 }
+
+void Cylinder::returnToWorld(Eigen::Matrix4d cw) {
+    auto bla = this->getRadius();
+    std::cout << bla << "\n";
+    return;
+}

@@ -20,6 +20,7 @@ class Mesh : public Object {
          std::vector<Eigen::Vector4d> faces);
     std::tuple<double, double> intersectRay(Eigen::Vector3d, Eigen::Vector3d);
     Eigen::Vector3d getNormal(Eigen::Vector3d P_I);
+    void returnToWorld(Eigen::Matrix4d cw);
     void applyMatrixVertices(Eigen::Matrix4d);
     void applyMatrixNormals(Eigen::Matrix4d);
     void scale(double x, double y, double z);

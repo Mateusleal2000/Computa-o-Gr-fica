@@ -11,3 +11,6 @@ std::tuple<double, double> Plane::intersectRay(Eigen::Vector3d O,
 
 void Plane::translate(double x, double y, double z, Eigen::Matrix4d wc) {
 }
+
+void Plane::returnToWorld(Eigen::Matrix4d cw) {
+}

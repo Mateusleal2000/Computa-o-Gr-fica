@@ -59,3 +59,12 @@ Sphere Sphere::reflection(matrix::REFLECTION_AXIS axis) {
 
     return reflectedSphere;
 }
+
+void Sphere::returnToWorld(Eigen::Matrix4d cw) {
+    Eigen::Vector4d aux_center(this->center(0), this->center(1), this->center(2), 1);
+    Eigen::Vector4d new_center = cw * aux_center;
+    this->center(0) = new_center(0);
+    this->center(1) = new_center(1);
+    this->center(2) = new_center(2);
+    // this->wc = wc;
+}

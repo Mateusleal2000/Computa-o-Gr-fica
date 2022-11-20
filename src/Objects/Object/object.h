@@ -13,6 +13,7 @@ class Object {
     virtual std::tuple<double, double> intersectRay(Eigen::Vector3d,
                                                     Eigen::Vector3d) = 0;
     virtual Eigen::Vector3d getNormal(Eigen::Vector3d) = 0;
+    virtual void returnToWorld(Eigen::Matrix4d cw) = 0;
     utilsStructs::materialK getK();
     double getM();
     utilsStructs::Texel getPixel(double x, double z);

@@ -14,6 +14,7 @@ class Plane : public Object {
 
     std::tuple<double, double> intersectRay(Eigen::Vector3d, Eigen::Vector3d);
     Eigen::Vector3d getNormal(Eigen::Vector3d);
+    void returnToWorld(Eigen::Matrix4d cw);
     void translate(double x, double y, double z, Eigen::Matrix4d wc);
 
    private:
