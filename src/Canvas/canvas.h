@@ -2,6 +2,8 @@
 #define CANVAS_H_
 #include <SDL2/SDL.h>
 
+#include <tuple>
+
 #include "../Scene/scene.h"
 
 class Canvas {

@@ -118,8 +118,14 @@ std::tuple<double, double> Mesh::intersectRay(Eigen::Vector3d O,
 Eigen::Vector3d Mesh::getNormal(Eigen::Vector3d P_I) { return this->normal; }
 
 void Mesh::returnToWorld(Eigen::Matrix4d cw) {
+    this->x = -x;
+    this->y = -y;
+    this->z = -z;
     applyMatrixVertices(cw);
     applyMatrixNormals(cw);
+    Eigen::Matrix4d m = matrix::translate(this->x, this->y, this->z);
+    applyMatrixVertices(m);
+
     return;
 }
 
@@ -151,6 +157,9 @@ void Mesh::shear(double delta, matrix::SHEAR_AXIS axis) {
     return;
 }
 void Mesh::translate(double x, double y, double z, Eigen::Matrix4d wc) {
+    this->x = x;
+    this->y = y;
+    this->z = z;
     Eigen::Matrix4d m = matrix::translate(x, y, z);
     applyMatrixVertices(m);
     applyMatrixVertices(wc);

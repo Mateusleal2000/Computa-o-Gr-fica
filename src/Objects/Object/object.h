@@ -18,6 +18,7 @@ class Object {
     double getM();
     utilsStructs::Texel getPixel(double x, double z);
     virtual void translate(double x, double y, double z, Eigen::Matrix4d wc) = 0;
+    std::tuple<double, double, double> getCoordinates();
 
    protected:
     Object(utilsStructs::materialK k, double m)
@@ -25,6 +26,9 @@ class Object {
 
     utilsStructs::materialK K;
     double m;
+    double x = 0.0;
+    double y = 0.0;
+    double z = 0.0;
     std::vector<std::vector<utilsStructs::Texel>> imageRGB;
 };
 

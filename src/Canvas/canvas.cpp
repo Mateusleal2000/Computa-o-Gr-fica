@@ -57,11 +57,17 @@ void Canvas::eventLoop(std::shared_ptr<Object> &pickedObj) {
                 } else {
                     pickedObj = scene.pick(pickedD.head<3>(), Eigen::Vector3d(0.0, 0.0, -1.0), scene.getObjects());
                 }
+
                 if (pickedObj != nullptr) {
                     utilsStructs::materialK k = pickedObj->getK();
-                    std::cout << k.Kd(0) << " " << k.Kd(1) << " " << k.Kd(2) << std::endl;
+                    std::tuple<double, double, double> coordinates = pickedObj->getCoordinates();
+
+                    std::cout << "Current coordinates: "
+                              << "X: " << get<0>(coordinates) << " Y: " << get<1>(coordinates) << " Z: " << get<2>(coordinates) << std::endl;
+
+                    std::cout << "Current Kd: " << k.Kd(0) << " " << k.Kd(1) << " " << k.Kd(2) << std::endl;
                 } else {
-                    std::cout << "No object in these coordinates" << std::endl;
+                    std::cout << "No object found" << std::endl;
                 }
             }
         }
