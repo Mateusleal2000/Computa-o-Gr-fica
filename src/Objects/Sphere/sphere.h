@@ -14,7 +14,7 @@ class Sphere : public Object {
    public:
     Sphere(utilsStructs::materialK k, double shininess, double radius,
            Eigen::Vector3d center)
-        : Object(k, shininess), radius(radius), center(center){};
+        : Object(k, shininess, utilsStructs::OBJ_TYPE::SPHERE), radius(radius), center(center){};
     double getRadius();
     Eigen::Vector3d getCenter();
     Eigen::Vector3d getNormal(Eigen::Vector3d P_I);
@@ -23,6 +23,8 @@ class Sphere : public Object {
 
     /*void applyMatrixVertices(Eigen::Matrix4d);
     void applyMatrixNormals(Eigen::Matrix4d);*/
+
+    void scale(double x, double y, double z);
     void scale(double s);
     // void shear(double delta, matrix::SHEAR_AXIS axis);
     void translate(double x, double y, double z, Eigen::Matrix4d wc);

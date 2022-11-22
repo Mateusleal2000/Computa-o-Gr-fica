@@ -40,6 +40,10 @@ void Sphere::scale(double s) {
     return;
 }
 
+void Sphere::scale(double x, double y, double z) {
+    return;
+}
+
 void Sphere::translate(double x, double y, double z, Eigen::Matrix4d wc) {
     Eigen::Vector4d aux_center(x, y, z, 1);
     Eigen::Vector4d new_center = wc * aux_center;

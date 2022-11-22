@@ -24,3 +24,7 @@ utilsStructs::Texel Object::getPixel(double x, double z) {
 std::tuple<double, double, double> Object::getCoordinates() {
     return std::make_tuple(this->x, this->y, this->z);
 }
+
+utilsStructs::OBJ_TYPE Object::getType(){
+    return this->type;
+}

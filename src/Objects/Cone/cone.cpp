@@ -99,6 +99,10 @@ void Cone::scale(double radiusScale, double heightScale) {
     this->radius *= radiusScale;
     return;
 }
+
+void Cone::scale(double x, double y, double z) {
+    return;
+}
 void Cone::shear(double delta, matrix::SHEAR_AXIS axis) {
     Eigen::Matrix4d m = matrix::shear(delta, axis);
     return;

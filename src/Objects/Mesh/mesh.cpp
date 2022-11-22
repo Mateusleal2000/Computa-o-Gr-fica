@@ -18,14 +18,14 @@ Mesh::Mesh(utilsStructs::materialK k, double shininess,
            std::vector<Eigen::Vector4d> normals,
            std::vector<Eigen::Vector3d> edges,
            std::vector<Eigen::Vector4d> faces)
-    : Object(k, shininess),
+    : Object(k, shininess, utilsStructs::OBJ_TYPE::MESH),
       vertices(vertices),
       normals(normals),
       edges(edges),
       faces(faces) {}
 
 Mesh::Mesh(utilsStructs::materialK k, double shininess, std::string path)
-    : Object(k, shininess) {
+    : Object(k, shininess, utilsStructs::OBJ_TYPE::MESH) {
     std::ifstream objFile;
     objFile.open(path);
     std::string line;
@@ -118,12 +118,12 @@ std::tuple<double, double> Mesh::intersectRay(Eigen::Vector3d O,
 Eigen::Vector3d Mesh::getNormal(Eigen::Vector3d P_I) { return this->normal; }
 
 void Mesh::returnToWorld(Eigen::Matrix4d cw) {
-    this->x = -x;
-    this->y = -y;
-    this->z = -z;
+    // this->x = -x;
+    // this->y = -y;
+    // this->z = -z;
     applyMatrixVertices(cw);
     applyMatrixNormals(cw);
-    Eigen::Matrix4d m = matrix::translate(this->x, this->y, this->z);
+    Eigen::Matrix4d m = matrix::translate(-this->x, -this->y, -this->z);
     applyMatrixVertices(m);
 
     return;

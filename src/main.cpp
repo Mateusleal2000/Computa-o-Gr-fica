@@ -375,6 +375,37 @@ int main(int argc, char **argv) {
                     canvas.update(pixelArray);
                 } break;
                 case 2:
+
+                    if (pickedObj->getType() == utilsStructs::OBJ_TYPE::CONE) {
+                        std::cout << "Oi eu sou um cone\n";
+                    }
+                    if (pickedObj->getType() == utilsStructs::OBJ_TYPE::CYLINDER) {
+                        std::cout << "Oi eu sou um cilindris\n";
+                    }
+                    if (pickedObj->getType() == utilsStructs::OBJ_TYPE::MESH) {
+                        double x, y, z;
+                        // scale(50.0, 500.0, 30.0)
+                        std::cin >> x;
+                        std::cin >> y;
+                        std::cin >> z;
+                        pickedObj->returnToWorld(cw);
+
+                        
+                        pickedObj->scale(x, y, z);
+
+                        std::tuple<double, double, double> coordinates = pickedObj->getCoordinates();
+                        pickedObj->translate(get<0>(coordinates), get<1>(coordinates), get<2>(coordinates), wc);
+                        std::vector<unsigned char> pixelVector = scene.display();
+                        pixelArray = pixelVector.data();
+
+                        canvas.update(pixelArray);
+                    }
+                    if (pickedObj->getType() == utilsStructs::OBJ_TYPE::PLANE) {
+                        std::cout << "Oi eu sou um PLANAS\n";
+                    }
+                    if (pickedObj->getType() == utilsStructs::OBJ_TYPE::SPHERE) {
+                        std::cout << "Oi eu sou um esfera\n";
+                    }
                     break;
                 case 3:
                     break;

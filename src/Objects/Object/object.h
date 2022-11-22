@@ -18,17 +18,20 @@ class Object {
     double getM();
     utilsStructs::Texel getPixel(double x, double z);
     virtual void translate(double x, double y, double z, Eigen::Matrix4d wc) = 0;
+    virtual void scale(double x, double y, double z) = 0;
     std::tuple<double, double, double> getCoordinates();
+    utilsStructs::OBJ_TYPE getType();
 
    protected:
-    Object(utilsStructs::materialK k, double m)
-        : K(k), m(m){};
+    Object(utilsStructs::materialK k, double m, utilsStructs::OBJ_TYPE type)
+        : K(k), m(m), type(type){};
 
     utilsStructs::materialK K;
     double m;
     double x = 0.0;
     double y = 0.0;
     double z = 0.0;
+    utilsStructs::OBJ_TYPE type;
     std::vector<std::vector<utilsStructs::Texel>> imageRGB;
 };
 

@@ -108,6 +108,12 @@ void Cylinder::scale(double radiusScale, double heightScale) {
     this->radius *= radiusScale;
     return;
 }
+
+void Cylinder::scale(double x, double y, double z){
+    std::cout<<"Eu sou inutil :P\n";
+    return;
+}
+
 void Cylinder::shear(double delta, matrix::SHEAR_AXIS axis) {
     Eigen::Matrix4d m = matrix::shear(delta, axis);
     return;

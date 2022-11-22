@@ -20,7 +20,7 @@ class Cylinder : public Object {
    public:
     Cylinder(utilsStructs::materialK k, double shininess, double radius,
              Eigen::Vector3d center, double height, Eigen::Vector3d dCil)
-        : Object(k, shininess),
+        : Object(k, shininess, utilsStructs::OBJ_TYPE::CYLINDER),
           radius(radius),
           center(center),
           height(height),
@@ -34,6 +34,7 @@ class Cylinder : public Object {
     std::tuple<double, double> intersectRay(Eigen::Vector3d, Eigen::Vector3d);
 
     void scale(double radiusScale, double heightScale);
+    void scale(double x, double y, double z);
     void shear(double delta, matrix::SHEAR_AXIS axis);
     void translate(double x, double y, double z, Eigen::Matrix4d wc);
     void rotate(double theta, matrix::AXIS axis);

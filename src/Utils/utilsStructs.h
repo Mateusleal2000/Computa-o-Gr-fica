@@ -26,6 +26,13 @@ struct materialK {
     Eigen::Vector3d Ka;
     Eigen::Vector3d Kd;
 };
+
+enum class OBJ_TYPE { CONE,
+                      CYLINDER,
+                      MESH,
+                      PLANE,
+                      SPHERE
+};
 }  // namespace utilsStructs
 
 #endif
