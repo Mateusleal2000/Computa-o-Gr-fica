@@ -390,7 +390,6 @@ int main(int argc, char **argv) {
                         std::cin >> z;
                         pickedObj->returnToWorld(cw);
 
-                        
                         pickedObj->scale(x, y, z);
 
                         std::tuple<double, double, double> coordinates = pickedObj->getCoordinates();
@@ -407,9 +406,63 @@ int main(int argc, char **argv) {
                         std::cout << "Oi eu sou um esfera\n";
                     }
                     break;
-                case 3:
-                    break;
+                case 3: {
+                    double angle;
+                    int axis;
+
+                    std::cout << "Rotating Angle: ";
+                    std::cin >> angle;
+                    std::cout << "Select Axis: ";
+                    std::cout << "0 - X" << std::endl;
+                    std::cout << "1 - Y" << std::endl;
+                    std::cout << "2 - Z" << std::endl;
+                    std::cin >> axis;
+
+                    matrix::AXIS axisEnum = static_cast<matrix::AXIS>(axis);
+
+                    pickedObj->returnToWorld(cw);
+
+                    pickedObj->rotate(angle, axisEnum);
+
+                    std::tuple<double, double, double> coordinates = pickedObj->getCoordinates();
+                    pickedObj->translate(get<0>(coordinates), get<1>(coordinates), get<2>(coordinates), wc);
+                    std::vector<unsigned char> pixelVector = scene.display();
+                    pixelArray = pixelVector.data();
+
+                    canvas.update(pixelArray);
+                }
+
+                break;
                 case 4:
+                    if (pickedObj->getType() == utilsStructs::OBJ_TYPE::MESH) {
+                        double angle;
+                        int axis;
+
+                        std::cout << "Shearing Angle: ";
+                        std::cin >> angle;
+                        std::cout << "Select Axis: ";
+                        std::cout << "0 - XY" << std::endl;
+                        std::cout << "1 - XZ" << std::endl;
+                        std::cout << "2 - YX" << std::endl;
+                        std::cout << "3 - YZ" << std::endl;
+                        std::cout << "4 - ZX" << std::endl;
+                        std::cout << "5 - ZY" << std::endl;
+                        std::cin >> axis;
+
+                        matrix::SHEAR_AXIS axisEnum = static_cast<matrix::SHEAR_AXIS>(axis);
+
+                        pickedObj->returnToWorld(cw);
+
+                        pickedObj->shear(angle, axisEnum);
+                        // pickedObj->scale(x, y, z);
+
+                        std::tuple<double, double, double> coordinates = pickedObj->getCoordinates();
+                        pickedObj->translate(get<0>(coordinates), get<1>(coordinates), get<2>(coordinates), wc);
+                        std::vector<unsigned char> pixelVector = scene.display();
+                        pixelArray = pixelVector.data();
+
+                        canvas.update(pixelArray);
+                    }
                     break;
                 case 5:
                     break;

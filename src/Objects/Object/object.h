@@ -6,6 +6,7 @@
 #include <tuple>
 
 #include "../../Display/displayStructs.h"
+#include "../../Matrix/matrix.h"
 #include "../../Utils/utilsStructs.h"
 
 class Object {
@@ -19,6 +20,8 @@ class Object {
     utilsStructs::Texel getPixel(double x, double z);
     virtual void translate(double x, double y, double z, Eigen::Matrix4d wc) = 0;
     virtual void scale(double x, double y, double z) = 0;
+    virtual void shear(double delta, matrix::SHEAR_AXIS axis) = 0;
+    virtual void rotate(double theta, matrix::AXIS axis) = 0;
     std::tuple<double, double, double> getCoordinates();
     utilsStructs::OBJ_TYPE getType();
 

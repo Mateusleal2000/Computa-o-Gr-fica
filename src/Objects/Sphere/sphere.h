@@ -6,7 +6,6 @@
 #include <tuple>
 
 #include "../../Display/displayStructs.h"
-#include "../../Matrix/matrix.h"
 #include "../../Utils/utilsStructs.h"
 #include "../Object/object.h"
 
@@ -26,9 +25,9 @@ class Sphere : public Object {
 
     void scale(double x, double y, double z);
     void scale(double s);
-    // void shear(double delta, matrix::SHEAR_AXIS axis);
+    void shear(double delta, matrix::SHEAR_AXIS axis);
     void translate(double x, double y, double z, Eigen::Matrix4d wc);
-    // void rotate(double theta, matrix::AXIS axis);
+    void rotate(double theta, matrix::AXIS axis);
     Sphere reflection(matrix::REFLECTION_AXIS axis);
 
    private:

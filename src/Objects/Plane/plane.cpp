@@ -9,8 +9,8 @@ std::tuple<double, double> Plane::intersectRay(Eigen::Vector3d O,
     return std::make_tuple(t, t);
 }
 
-void Plane::scale(double x, double y, double z){
-    std::cout<<"Eu sou inutil :P\n";
+void Plane::scale(double x, double y, double z) {
+    std::cout << "Eu sou inutil :P\n";
     return;
 }
 
@@ -18,4 +18,13 @@ void Plane::translate(double x, double y, double z, Eigen::Matrix4d wc) {
 }
 
 void Plane::returnToWorld(Eigen::Matrix4d cw) {
+}
+
+void Plane::shear(double delta, matrix::SHEAR_AXIS axis) {
+    return;
+}
+
+void Plane::rotate(double theta, matrix::AXIS axis) {
+    std::cout << "Eu sou inutil\n";
+    return;
 }

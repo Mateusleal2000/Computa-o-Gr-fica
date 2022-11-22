@@ -172,12 +172,12 @@ void Mesh::rotate(double theta, matrix::AXIS axis) {
     applyMatrixNormals(m);
     return;
 }
-// Mesh Mesh::reflection(matrix::REFLECTION_AXIS axis) {
-//     Eigen::Matrix4d m = matrix::reflection(axis);
-//     Mesh reflectedMesh(this->getK(), this->getM(), this->vertices, this->normals,
-//                        this->edges, this->faces);
+Mesh Mesh::reflection(matrix::REFLECTION_AXIS axis) {
+    Eigen::Matrix4d m = matrix::reflection(axis);
+    Mesh reflectedMesh(this->getK(), this->getM(), this->vertices, this->normals,
+                       this->edges, this->faces);
 
-//     reflectedMesh.applyMatrixVertices(m);
-//     reflectedMesh.applyMatrixNormals(m);
-//     return reflectedMesh;
-// }
+    reflectedMesh.applyMatrixVertices(m);
+    reflectedMesh.applyMatrixNormals(m);
+    return reflectedMesh;
+}

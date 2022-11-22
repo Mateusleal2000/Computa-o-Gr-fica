@@ -17,6 +17,8 @@ class Plane : public Object {
     void returnToWorld(Eigen::Matrix4d cw);
     void scale(double x, double y, double z);
     void translate(double x, double y, double z, Eigen::Matrix4d wc);
+    void shear(double delta, matrix::SHEAR_AXIS axis);
+    void rotate(double theta, matrix::AXIS axis);
 
    private:
     Eigen::Vector3d pPI;

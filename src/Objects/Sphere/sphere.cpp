@@ -64,6 +64,16 @@ Sphere Sphere::reflection(matrix::REFLECTION_AXIS axis) {
     return reflectedSphere;
 }
 
+void Sphere::shear(double delta, matrix::SHEAR_AXIS axis) {
+    std::cout << "Eu sou inutil\n";
+    return;
+}
+
+void Sphere::rotate(double theta, matrix::AXIS axis) {
+    std::cout << "Eu sou inutil\n";
+    return;
+}
+
 void Sphere::returnToWorld(Eigen::Matrix4d cw) {
     Eigen::Vector4d aux_center(this->center(0), this->center(1), this->center(2), 1);
     Eigen::Vector4d new_center = cw * aux_center;
