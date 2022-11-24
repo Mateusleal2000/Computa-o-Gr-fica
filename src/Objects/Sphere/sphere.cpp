@@ -35,16 +35,15 @@ Eigen::Vector3d Sphere::getNormal(Eigen::Vector3d P_I) {
     return ((P_I - this->center) / this->radius);
 }
 
-void Sphere::scale(double s) {
+void Sphere::scale(double s, double opt, double opt2) {
     this->radius = this->radius * s;
     return;
 }
 
-void Sphere::scale(double x, double y, double z) {
-    return;
-}
-
 void Sphere::translate(double x, double y, double z, Eigen::Matrix4d wc) {
+    this->x = x;
+    this->y = y;
+    this->z = z;
     Eigen::Vector4d aux_center(x, y, z, 1);
     Eigen::Vector4d new_center = wc * aux_center;
     this->center(0) = new_center(0);

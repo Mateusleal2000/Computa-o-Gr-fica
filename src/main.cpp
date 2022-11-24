@@ -288,33 +288,33 @@ int main(int argc, char **argv) {
     cat.translate(450.0, 570.0, 500.0, wc);
     objects.push_back(std::make_shared<Mesh>(cat));*/
 
-    // objects.push_back(std::make_shared<Mesh>(support_columnL));
-    // objects.push_back(std::make_shared<Mesh>(support_columnR));
-    // objects.push_back(std::make_shared<Mesh>(beamL));
-    // objects.push_back(std::make_shared<Mesh>(beamR));
+    objects.push_back(std::make_shared<Mesh>(support_columnL));
+    objects.push_back(std::make_shared<Mesh>(support_columnR));
+    objects.push_back(std::make_shared<Mesh>(beamL));
+    objects.push_back(std::make_shared<Mesh>(beamR));
 
-    // objects.push_back(std::make_shared<Mesh>(back_beamR));
-    // objects.push_back(std::make_shared<Mesh>(back_beamL));
+    objects.push_back(std::make_shared<Mesh>(back_beamR));
+    objects.push_back(std::make_shared<Mesh>(back_beamL));
     objects.push_back(std::make_shared<Mesh>(back_support_columnL));
-    // objects.push_back(std::make_shared<Mesh>(back_support_columnR));
+    objects.push_back(std::make_shared<Mesh>(back_support_columnR));
 
-    // objects.push_back(std::make_shared<Mesh>(wallL));
-    // objects.push_back(std::make_shared<Mesh>(wallR));
-    // objects.push_back(std::make_shared<Mesh>(back_wall));
+    objects.push_back(std::make_shared<Mesh>(wallL));
+    objects.push_back(std::make_shared<Mesh>(wallR));
+    objects.push_back(std::make_shared<Mesh>(back_wall));
 
-    // objects.push_back(std::make_shared<Mesh>(roofL));
-    // objects.push_back(std::make_shared<Mesh>(roofR));
+    objects.push_back(std::make_shared<Mesh>(roofL));
+    objects.push_back(std::make_shared<Mesh>(roofR));
 
-    // objects.push_back(std::make_shared<Sphere>(ball));
+    objects.push_back(std::make_shared<Sphere>(ball));
 
     objects.push_back(std::make_shared<Plane>(floor));
 
-    // objects.push_back(std::make_shared<Mesh>(table_supportL));
-    // objects.push_back(std::make_shared<Mesh>(table_supportR));
-    // objects.push_back(std::make_shared<Mesh>(table_lid));
-    // objects.push_back(woodBase);
-    // objects.push_back(wood);
-    // objects.push_back(tree);
+    objects.push_back(std::make_shared<Mesh>(table_supportL));
+    objects.push_back(std::make_shared<Mesh>(table_supportR));
+    objects.push_back(std::make_shared<Mesh>(table_lid));
+    objects.push_back(woodBase);
+    objects.push_back(wood);
+    objects.push_back(tree);
 
     lightSources.push_back(
         std::make_shared<Point>(Point(I_F_1, P_F_1.head<3>())));
@@ -345,16 +345,20 @@ int main(int argc, char **argv) {
     std::thread inputThread([&]() {
         int selected;
         while (true) {
-            std::cout << "1 - Translate: " << std::endl;
-            std::cout << "2 - Scale: " << std::endl;
-            std::cout << "3 - Rotate: " << std::endl;
-            std::cout << "4 - Shear: " << std::endl;
-            std::cout << "5 - Mirroring: " << std::endl;
+            std::cout << "1 - Translate " << std::endl;
+            std::cout << "2 - Scale " << std::endl;
+            std::cout << "3 - Rotate " << std::endl;
+            std::cout << "4 - Shear " << std::endl;
+            std::cout << "5 - Mirroring " << std::endl;
+            std::cout << "6 - Modify Material " << std::endl;
+            std::cout << "7 - Reposition Camera " << std::endl;
+            std::cout << "8 - Manage Light Sources " << std::endl;
+            std::cout << "9 - Switch Camera Projection" << std::endl;
 
             std::cin >> selected;
             Eigen::Matrix4d m;
 
-            if (pickedObj == nullptr) {
+            if (pickedObj == nullptr && selected >= 1 && selected <= 6) {
                 std::cout << "No selected object" << std::endl;
                 continue;
             }
@@ -362,7 +366,7 @@ int main(int argc, char **argv) {
             switch (selected) {
                 case 1: {
                     double x, y, z;
-
+                    std::cout << "Set coordinates (X,Y,Z): ";
                     std::cin >> x;
                     std::cin >> y;
                     std::cin >> z;
@@ -373,39 +377,49 @@ int main(int argc, char **argv) {
                     pixelArray = pixelVector.data();
 
                     canvas.update(pixelArray);
-                } break;
-                case 2:
+                    break;
+                }
+                case 2: {
+                    double x = 0.0, y = x, z = x;
 
                     if (pickedObj->getType() == utilsStructs::OBJ_TYPE::CONE) {
-                        std::cout << "Oi eu sou um cone\n";
+                        std::cout << "Set scale (Radius, Height): ";
+                        std::cin >> x;
+                        std::cin >> y;
                     }
                     if (pickedObj->getType() == utilsStructs::OBJ_TYPE::CYLINDER) {
-                        std::cout << "Oi eu sou um cilindris\n";
+                        std::cout << "Set scale (Radius, Height): ";
+                        std::cin >> x;
+                        std::cin >> y;
                     }
                     if (pickedObj->getType() == utilsStructs::OBJ_TYPE::MESH) {
-                        double x, y, z;
-                        // scale(50.0, 500.0, 30.0)
+                        std::cout << "Set scale (X,Y,Z): ";
                         std::cin >> x;
                         std::cin >> y;
                         std::cin >> z;
-                        pickedObj->returnToWorld(cw);
-
-                        pickedObj->scale(x, y, z);
-
-                        std::tuple<double, double, double> coordinates = pickedObj->getCoordinates();
-                        pickedObj->translate(get<0>(coordinates), get<1>(coordinates), get<2>(coordinates), wc);
-                        std::vector<unsigned char> pixelVector = scene.display();
-                        pixelArray = pixelVector.data();
-
-                        canvas.update(pixelArray);
                     }
                     if (pickedObj->getType() == utilsStructs::OBJ_TYPE::PLANE) {
-                        std::cout << "Oi eu sou um PLANAS\n";
+                        std::cout << "Invalid transformation for plane" << std::endl;
+                        break;
                     }
                     if (pickedObj->getType() == utilsStructs::OBJ_TYPE::SPHERE) {
-                        std::cout << "Oi eu sou um esfera\n";
+                        std::cout << "Set scale: ";
+                        std::cin >> x;
                     }
+
+                    pickedObj->returnToWorld(cw);
+
+                    pickedObj->scale(x, y, z);
+
+                    std::tuple<double, double, double> coordinates = pickedObj->getCoordinates();
+                    pickedObj->translate(get<0>(coordinates), get<1>(coordinates), get<2>(coordinates), wc);
+                    std::vector<unsigned char> pixelVector = scene.display();
+                    pixelArray = pixelVector.data();
+
+                    canvas.update(pixelArray);
                     break;
+                }
+
                 case 3: {
                     double angle;
                     int axis;
@@ -430,9 +444,9 @@ int main(int argc, char **argv) {
                     pixelArray = pixelVector.data();
 
                     canvas.update(pixelArray);
+                    break;
                 }
 
-                break;
                 case 4:
                     if (pickedObj->getType() == utilsStructs::OBJ_TYPE::MESH) {
                         double angle;
@@ -454,7 +468,6 @@ int main(int argc, char **argv) {
                         pickedObj->returnToWorld(cw);
 
                         pickedObj->shear(angle, axisEnum);
-                        // pickedObj->scale(x, y, z);
 
                         std::tuple<double, double, double> coordinates = pickedObj->getCoordinates();
                         pickedObj->translate(get<0>(coordinates), get<1>(coordinates), get<2>(coordinates), wc);
@@ -462,15 +475,52 @@ int main(int argc, char **argv) {
                         pixelArray = pixelVector.data();
 
                         canvas.update(pixelArray);
+                        break;
                     }
+
+                case 6: {
+                    int matOption;
+                    double p1, p2, p3;
+
+                    std::cout << "Modify Material" << std::endl;
+                    std::cout << "1 - Ambient" << std::endl;
+                    std::cout << "2 - Difuse" << std::endl;
+                    std::cout << "3 - Specular" << std::endl;
+                    std::cout << "4 - All" << std::endl;
+                    std::cin >> matOption;
+                    std::cout << "Enter new properties (0 to 1): (p1, p2, p3) " << std::endl;
+                    std::cin >> p1;
+                    std::cin >> p2;
+                    std::cin >> p3;
+
+                    pickedObj->modifyK(Eigen::Vector3d(p1, p2, p3), matOption);
+                    std::vector<unsigned char> pixelVector = scene.display();
+                    pixelArray = pixelVector.data();
+
+                    canvas.update(pixelArray);
                     break;
-                case 5:
+                }
+
+                case 7:
                     break;
+                case 8:
+                    break;
+                case 9: {
+                    scene.switchProjection();
+                    std::string projection = scene.getProjection() ? "Perspective" : "Ortogonal";
+                    std::vector<unsigned char> pixelVector = scene.display();
+                    pixelArray = pixelVector.data();
+                    canvas.update(pixelArray);
+                    std::cout << "Projection changed to: " << projection << std::endl;
+                }
+
+                break;
 
                 default:
                     std::cout << "Invalid Option" << std::endl;
                     break;
             }
+            // system("clear");
         }
     });
     canvas.eventLoop(pickedObj);

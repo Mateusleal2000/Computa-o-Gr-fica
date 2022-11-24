@@ -32,8 +32,7 @@ class Cylinder : public Object {
     void returnToWorld(Eigen::Matrix4d cw);
     std::tuple<double, double> intersectRay(Eigen::Vector3d, Eigen::Vector3d);
 
-    void scale(double radiusScale, double heightScale);
-    void scale(double x, double y, double z);
+    void scale(double radiusScale, double heightScale, double opt = 0.0);
     void shear(double delta, matrix::SHEAR_AXIS axis);
     void translate(double x, double y, double z, Eigen::Matrix4d wc);
     void rotate(double theta, matrix::AXIS axis);

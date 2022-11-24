@@ -94,20 +94,20 @@ double Cone::onSurface(Eigen::Vector3d O, Eigen::Vector3d D, double t1,
     return validPoint;
 }
 
-void Cone::scale(double radiusScale, double heightScale) {
+void Cone::scale(double radiusScale, double heightScale, double opt) {
     this->height *= heightScale;
     this->radius *= radiusScale;
     return;
 }
 
-void Cone::scale(double x, double y, double z) {
-    return;
-}
 void Cone::shear(double delta, matrix::SHEAR_AXIS axis) {
     Eigen::Matrix4d m = matrix::shear(delta, axis);
     return;
 }
 void Cone::translate(double x, double y, double z, Eigen::Matrix4d wc) {
+    this->x = x;
+    this->y = y;
+    this->z = z;
     Eigen::Vector4d auxCenter(x, y, z, 1);
     Eigen::Vector4d newCenter = wc * auxCenter;
     this->center = newCenter.head<3>();

@@ -22,6 +22,7 @@ std::vector<unsigned char> Scene::display() {
             utilsStructs::Color color(0);
 
             if (this->isPerspective) {
+                this->camera.O = this->originBackup;
                 D(0) = x - this->camera.O(0);
                 D(1) = y - this->camera.O(1);
                 D(2) = -viewport.dWindow;
@@ -35,7 +36,6 @@ std::vector<unsigned char> Scene::display() {
                 color =
                     utils::traceRay(this->camera, orthDir, lightSources, objects, int(x), int(y));
             }
-
             pixelVector.push_back(color.R);
             pixelVector.push_back(color.G);
             pixelVector.push_back(color.B);
@@ -76,4 +76,18 @@ Eigen::Vector3d Scene::getCamera() {
 
 bool Scene::getProjection() {
     return this->isPerspective;
+}
+
+void Scene::switchProjection() {
+    this->isPerspective = !isPerspective;
+    this->viewport.width = this->isPerspective ? 60 : 1500;
+    this->viewport.height = this->isPerspective ? 60 : 1500;
+}
+
+void Scene::setOrigin(double x, double y, double z) {
+    this->camera.O(0) = x;
+    this->camera.O(1) = y;
+    this->camera.O(2) = z;
+
+    this->originBackup = this->camera.O;
 }

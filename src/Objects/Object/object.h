@@ -16,6 +16,7 @@ class Object {
     virtual Eigen::Vector3d getNormal(Eigen::Vector3d) = 0;
     virtual void returnToWorld(Eigen::Matrix4d cw) = 0;
     utilsStructs::materialK getK();
+    void modifyK(Eigen::Vector3d K, int option);
     double getM();
     utilsStructs::Texel getPixel(double x, double z);
     virtual void translate(double x, double y, double z, Eigen::Matrix4d wc) = 0;

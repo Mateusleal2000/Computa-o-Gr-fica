@@ -25,6 +25,32 @@ std::tuple<double, double, double> Object::getCoordinates() {
     return std::make_tuple(this->x, this->y, this->z);
 }
 
-utilsStructs::OBJ_TYPE Object::getType(){
+utilsStructs::OBJ_TYPE Object::getType() {
     return this->type;
+}
+
+void Object::modifyK(Eigen::Vector3d K, int option) {
+    switch (option) {
+        case 1: {
+            this->K.Ka = K;
+            break;
+        }
+        case 2: {
+            this->K.Kd = K;
+            break;
+        }
+        case 3: {
+            this->K.Ke = K;
+            break;
+        }
+        case 4: {
+            this->K.Ka = K;
+            this->K.Kd = K;
+            this->K.Ke = K;
+            break;
+        }
+
+        default:
+            break;
+    }
 }

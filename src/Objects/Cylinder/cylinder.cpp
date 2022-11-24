@@ -103,14 +103,9 @@ double Cylinder::onSurface(Eigen::Vector3d O, Eigen::Vector3d D, double t1,
     return validPoint;
 }
 
-void Cylinder::scale(double radiusScale, double heightScale) {
+void Cylinder::scale(double radiusScale, double heightScale, double opt) {
     this->height *= heightScale;
     this->radius *= radiusScale;
-    return;
-}
-
-void Cylinder::scale(double x, double y, double z){
-    std::cout<<"Eu sou inutil :P\n";
     return;
 }
 
@@ -119,6 +114,9 @@ void Cylinder::shear(double delta, matrix::SHEAR_AXIS axis) {
     return;
 }
 void Cylinder::translate(double x, double y, double z, Eigen::Matrix4d wc) {
+    this->x = x;
+    this->y = y;
+    this->z = z;
     Eigen::Vector4d auxCenter(x, y, z, 1);
     Eigen::Vector4d newCenter = wc * auxCenter;
     this->center = newCenter.head<3>();
@@ -157,7 +155,7 @@ void Cylinder::generateLids() {
 }
 
 void Cylinder::returnToWorld(Eigen::Matrix4d cw) {
-    auto bla = this->getRadius();
-    std::cout << bla << "\n";
+    // auto bla = this->getRadius();
+    // std::cout << bla << "\n";
     return;
 }

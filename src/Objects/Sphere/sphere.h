@@ -23,8 +23,8 @@ class Sphere : public Object {
     /*void applyMatrixVertices(Eigen::Matrix4d);
     void applyMatrixNormals(Eigen::Matrix4d);*/
 
-    void scale(double x, double y, double z);
-    void scale(double s);
+    void scale(double s, double opt = 0.0, double opt2 = 0.0);
+
     void shear(double delta, matrix::SHEAR_AXIS axis);
     void translate(double x, double y, double z, Eigen::Matrix4d wc);
     void rotate(double theta, matrix::AXIS axis);
