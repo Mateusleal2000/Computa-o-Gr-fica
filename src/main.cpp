@@ -465,10 +465,10 @@ int main(int argc, char **argv) {
                     std::cin >> axis;
 
                     matrix::REFLECTION_AXIS axisEnum = static_cast<matrix::REFLECTION_AXIS>(axis);
-                    pickedObj->returnToWorld(cw);
+                    // pickedObj->returnToWorld(cw);
                     pickedObj->reflection(axisEnum, scene->objects);
-                    std::tuple<double, double, double> coordinates = pickedObj->getCoordinates();
-                    pickedObj->translate(get<0>(coordinates), get<1>(coordinates), get<2>(coordinates), wc);
+                    // std::tuple<double, double, double> coordinates = pickedObj->getCoordinates();
+                    // pickedObj->translate(get<0>(coordinates), get<1>(coordinates), get<2>(coordinates), wc);
                     canvas.update();
                     break;
                 }

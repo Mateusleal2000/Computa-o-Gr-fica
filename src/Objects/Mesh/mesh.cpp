@@ -174,8 +174,6 @@ void Mesh::rotate(double theta, matrix::AXIS axis) {
 }
 void Mesh::reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<Object>> &objects) {
     Eigen::Matrix4d m = matrix::reflection(axis);
-    Mesh reflectedMesh(this->getK(), this->getM(), this->vertices, this->normals,
-                       this->edges, this->faces);
 
     applyMatrixVertices(m);
     applyMatrixNormals(m);
