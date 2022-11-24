@@ -28,7 +28,7 @@ class Sphere : public Object {
     void shear(double delta, matrix::SHEAR_AXIS axis);
     void translate(double x, double y, double z, Eigen::Matrix4d wc);
     void rotate(double theta, matrix::AXIS axis);
-    Sphere reflection(matrix::REFLECTION_AXIS axis);
+    void reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<Object>> &objects);
 
    private:
     Eigen::Vector3d center;

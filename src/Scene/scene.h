@@ -18,11 +18,12 @@ class Scene {
           std::vector<std::shared_ptr<Object>> objects, bool isPerspective)
         : viewport(viewport),
           camera(camera),
+          orthCamera(camera),
           lightSources(lightSources),
           objects(objects),
-          isPerspective(isPerspective),
-          originBackup(camera.O) {}
+          isPerspective(isPerspective) {}
 
+    std::vector<std::shared_ptr<Object>> objects;
     std::vector<unsigned char> display();
     std::shared_ptr<Object> pick(Eigen::Vector3d O, Eigen::Vector3d D, std::vector<std::shared_ptr<Object>>);
     std::vector<std::shared_ptr<Object>> getObjects();
@@ -36,8 +37,7 @@ class Scene {
     bool isPerspective;
     displayStructs::Viewport viewport;
     displayStructs::Camera camera;
-    Eigen::Vector3d originBackup;
+    displayStructs::Camera orthCamera;
     std::vector<std::shared_ptr<LightSource>> lightSources;
-    std::vector<std::shared_ptr<Object>> objects;
 };
 #endif

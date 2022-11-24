@@ -130,12 +130,10 @@ void Cone::rotate(double theta, matrix::AXIS axis) {
     Eigen::Matrix4d m = matrix::rotate(theta, axis);
     return;
 }
-Cone Cone::reflection(matrix::REFLECTION_AXIS axis) {
+void Cone::reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<Object>> &objects) {
     Eigen::Matrix4d m = matrix::reflection(axis);
     Cone reflectedCylinder(this->getK(), this->getM(), this->radius, this->center,
                            this->height, this->coneDir);
-
-    return reflectedCylinder;
 }
 
 void Cone::generateLids() {

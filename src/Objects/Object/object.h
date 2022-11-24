@@ -23,6 +23,7 @@ class Object {
     virtual void scale(double x, double y, double z) = 0;
     virtual void shear(double delta, matrix::SHEAR_AXIS axis) = 0;
     virtual void rotate(double theta, matrix::AXIS axis) = 0;
+    virtual void reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<Object>> &objects) = 0;
     std::tuple<double, double, double> getCoordinates();
     utilsStructs::OBJ_TYPE getType();
 

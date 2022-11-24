@@ -22,7 +22,7 @@ std::vector<unsigned char> Scene::display() {
             utilsStructs::Color color(0);
 
             if (this->isPerspective) {
-                this->camera.O = this->originBackup;
+                // this->camera.O = this->originBackup;
                 D(0) = x - this->camera.O(0);
                 D(1) = y - this->camera.O(1);
                 D(2) = -viewport.dWindow;
@@ -32,9 +32,9 @@ std::vector<unsigned char> Scene::display() {
                 D(0) = x;
                 D(1) = y;
                 D(2) = -viewport.dWindow;
-                this->camera.O = D;
+                this->orthCamera.O = D;
                 color =
-                    utils::traceRay(this->camera, orthDir, lightSources, objects, int(x), int(y));
+                    utils::traceRay(this->orthCamera, orthDir, lightSources, objects, int(x), int(y));
             }
             pixelVector.push_back(color.R);
             pixelVector.push_back(color.G);
@@ -88,6 +88,4 @@ void Scene::setOrigin(double x, double y, double z) {
     this->camera.O(0) = x;
     this->camera.O(1) = y;
     this->camera.O(2) = z;
-
-    this->originBackup = this->camera.O;
 }

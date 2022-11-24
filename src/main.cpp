@@ -286,33 +286,33 @@ int main(int argc, char **argv) {
     cat.translate(450.0, 570.0, 500.0, wc);
     objects.push_back(std::make_shared<Mesh>(cat));*/
 
-    objects.push_back(std::make_shared<Mesh>(support_columnL));
-    objects.push_back(std::make_shared<Mesh>(support_columnR));
-    objects.push_back(std::make_shared<Mesh>(beamL));
-    objects.push_back(std::make_shared<Mesh>(beamR));
+    // objects.push_back(std::make_shared<Mesh>(support_columnL));
+    // objects.push_back(std::make_shared<Mesh>(support_columnR));
+    // objects.push_back(std::make_shared<Mesh>(beamL));
+    // objects.push_back(std::make_shared<Mesh>(beamR));
 
-    objects.push_back(std::make_shared<Mesh>(back_beamR));
-    objects.push_back(std::make_shared<Mesh>(back_beamL));
-    objects.push_back(std::make_shared<Mesh>(back_support_columnL));
-    objects.push_back(std::make_shared<Mesh>(back_support_columnR));
+    // objects.push_back(std::make_shared<Mesh>(back_beamR));
+    // objects.push_back(std::make_shared<Mesh>(back_beamL));
+    // objects.push_back(std::make_shared<Mesh>(back_support_columnL));
+    // objects.push_back(std::make_shared<Mesh>(back_support_columnR));
 
     objects.push_back(std::make_shared<Mesh>(wallL));
-    objects.push_back(std::make_shared<Mesh>(wallR));
-    objects.push_back(std::make_shared<Mesh>(back_wall));
+    // objects.push_back(std::make_shared<Mesh>(wallR));
+    // objects.push_back(std::make_shared<Mesh>(back_wall));
 
-    objects.push_back(std::make_shared<Mesh>(roofL));
-    objects.push_back(std::make_shared<Mesh>(roofR));
+    // objects.push_back(std::make_shared<Mesh>(roofL));
+    // objects.push_back(std::make_shared<Mesh>(roofR));
 
-    objects.push_back(std::make_shared<Sphere>(ball));
+    // objects.push_back(std::make_shared<Sphere>(ball));
 
     objects.push_back(std::make_shared<Plane>(floor));
 
-    objects.push_back(std::make_shared<Mesh>(table_supportL));
-    objects.push_back(std::make_shared<Mesh>(table_supportR));
-    objects.push_back(std::make_shared<Mesh>(table_lid));
-    objects.push_back(woodBase);
-    objects.push_back(wood);
-    objects.push_back(tree);
+    // objects.push_back(std::make_shared<Mesh>(table_supportL));
+    // objects.push_back(std::make_shared<Mesh>(table_supportR));
+    // objects.push_back(std::make_shared<Mesh>(table_lid));
+    // objects.push_back(woodBase);
+    // objects.push_back(wood);
+    // objects.push_back(tree);
 
     lightSources.push_back(
         std::make_shared<Point>(Point(I_F_1, P_F_1.head<3>())));
@@ -457,6 +457,19 @@ int main(int argc, char **argv) {
                         break;
                     }
                 case 5: {
+                    int axis;
+                    std::cout << "Select Axis: " << std::endl;
+                    std::cout << "0 - XY" << std::endl;
+                    std::cout << "1 - XZ" << std::endl;
+                    std::cout << "2 - YZ" << std::endl;
+                    std::cin >> axis;
+
+                    matrix::REFLECTION_AXIS axisEnum = static_cast<matrix::REFLECTION_AXIS>(axis);
+                    pickedObj->returnToWorld(cw);
+                    pickedObj->reflection(axisEnum, scene->objects);
+                    std::tuple<double, double, double> coordinates = pickedObj->getCoordinates();
+                    pickedObj->translate(get<0>(coordinates), get<1>(coordinates), get<2>(coordinates), wc);
+                    canvas.update();
                     break;
                 }
 

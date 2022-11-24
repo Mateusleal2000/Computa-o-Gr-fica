@@ -53,14 +53,12 @@ void Sphere::translate(double x, double y, double z, Eigen::Matrix4d wc) {
     return;
 }
 
-Sphere Sphere::reflection(matrix::REFLECTION_AXIS axis) {
+void Sphere::reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<Object>> &objects) {
     Eigen::Matrix4d m = matrix::reflection(axis);
     Eigen::Vector4d aux(this->center(0), this->center(1), this->center(2), 1);
     Eigen::Vector4d aux2 = m * aux;
     Sphere reflectedSphere(this->getK(), this->getM(), this->radius,
                            aux2.head<3>());
-
-    return reflectedSphere;
 }
 
 void Sphere::shear(double delta, matrix::SHEAR_AXIS axis) {
@@ -80,4 +78,8 @@ void Sphere::returnToWorld(Eigen::Matrix4d cw) {
     this->center(1) = new_center(1);
     this->center(2) = new_center(2);
     // this->wc = wc;
+}
+
+void reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<Object>> &objects) {
+    return;
 }

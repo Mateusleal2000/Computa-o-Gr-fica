@@ -28,3 +28,7 @@ void Plane::rotate(double theta, matrix::AXIS axis) {
     std::cout << "Eu sou inutil\n";
     return;
 }
+
+void Plane::reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<Object>> &objects) {
+    return;
+}

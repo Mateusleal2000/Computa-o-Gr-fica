@@ -131,12 +131,10 @@ void Cylinder::rotate(double theta, matrix::AXIS axis) {
     Eigen::Matrix4d m = matrix::rotate(theta, axis);
     return;
 }
-Cylinder Cylinder::reflection(matrix::REFLECTION_AXIS axis) {
+void Cylinder::reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<Object>> &objects) {
     Eigen::Matrix4d m = matrix::reflection(axis);
     Cylinder reflectedCylinder(this->getK(), this->getM(), this->radius,
                                this->center, this->height, this->cylinderDir);
-
-    return reflectedCylinder;
 }
 
 void Cylinder::generateLids() {
