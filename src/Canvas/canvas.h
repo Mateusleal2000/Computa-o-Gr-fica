@@ -8,7 +8,7 @@
 
 class Canvas {
    public:
-    Canvas(int canvasWidth, int canvasHeight, double z, Scene scene) : scene(scene) {
+    Canvas(int canvasWidth, int canvasHeight, double z, std::shared_ptr<Scene> scene) : scene(scene) {
         this->canvasWidth = canvasWidth;
         this->canvasHeight = canvasHeight;
         this->z = z;
@@ -25,15 +25,15 @@ class Canvas {
     }
 
     void init();
-    void update(unsigned char* pixelArray);
+    void update();
     void eventLoop(std::shared_ptr<Object>& pickedObj);
+    std::shared_ptr<Scene> getScene();
 
    private:
     int canvasWidth;
     int canvasHeight;
     double z;
-    unsigned char* pixelArray = nullptr;
-    Scene scene;
+    std::shared_ptr<Scene> scene;
     SDL_Surface* surf = nullptr;
     SDL_Surface* screenSurf = nullptr;
     SDL_Window* window = nullptr;

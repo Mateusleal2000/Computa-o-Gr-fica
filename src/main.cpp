@@ -28,8 +28,6 @@
 #include "Utils/utilsStructs.h"
 
 int main(int argc, char **argv) {
-    unsigned char *pixelArray;
-
     double radius = 1.0;
     double dWindow = 25;
     double x = 0;
@@ -327,20 +325,12 @@ int main(int argc, char **argv) {
     /*lightSources.push_back(
         std::make_shared<Spot>(Spot(I_F_3, P_I_3, P_S_4, 12.0)));*/
 
-    Scene scene(viewport, camera, lightSources, objects, isPerspective);
-
-    std::vector<unsigned char> pixelVector = scene.display();
-
-    pixelArray = pixelVector.data();
-
     std::shared_ptr<Object> pickedObj = nullptr;
-    // int canvasWidth, int canvasHeight, double z, unsigned char* pixelArray, Scene scene
+    std::shared_ptr<Scene> scene = std::make_shared<Scene>(Scene(viewport, camera, lightSources, objects, isPerspective));
     Canvas canvas(canvasWidth, canvasHeight, -dWindow, scene);
+
     canvas.init();
-    canvas.update(pixelArray);
-    // SDL_Window *win = initWindow(canvasWidth, canvasHeight);
-    // SDL_Renderer *ren = initRenderer(win);
-    // SDL_Texture *texture;
+    canvas.update();
 
     std::thread inputThread([&]() {
         int selected;
@@ -373,10 +363,7 @@ int main(int argc, char **argv) {
 
                     pickedObj->returnToWorld(cw);
                     pickedObj->translate(x, y, z, wc);
-                    std::vector<unsigned char> pixelVector = scene.display();
-                    pixelArray = pixelVector.data();
-
-                    canvas.update(pixelArray);
+                    canvas.update();
                     break;
                 }
                 case 2: {
@@ -413,10 +400,8 @@ int main(int argc, char **argv) {
 
                     std::tuple<double, double, double> coordinates = pickedObj->getCoordinates();
                     pickedObj->translate(get<0>(coordinates), get<1>(coordinates), get<2>(coordinates), wc);
-                    std::vector<unsigned char> pixelVector = scene.display();
-                    pixelArray = pixelVector.data();
 
-                    canvas.update(pixelArray);
+                    canvas.update();
                     break;
                 }
 
@@ -440,10 +425,7 @@ int main(int argc, char **argv) {
 
                     std::tuple<double, double, double> coordinates = pickedObj->getCoordinates();
                     pickedObj->translate(get<0>(coordinates), get<1>(coordinates), get<2>(coordinates), wc);
-                    std::vector<unsigned char> pixelVector = scene.display();
-                    pixelArray = pixelVector.data();
-
-                    canvas.update(pixelArray);
+                    canvas.update();
                     break;
                 }
 
@@ -471,12 +453,12 @@ int main(int argc, char **argv) {
 
                         std::tuple<double, double, double> coordinates = pickedObj->getCoordinates();
                         pickedObj->translate(get<0>(coordinates), get<1>(coordinates), get<2>(coordinates), wc);
-                        std::vector<unsigned char> pixelVector = scene.display();
-                        pixelArray = pixelVector.data();
-
-                        canvas.update(pixelArray);
+                        canvas.update();
                         break;
                     }
+                case 5: {
+                    break;
+                }
 
                 case 6: {
                     int matOption;
@@ -494,10 +476,7 @@ int main(int argc, char **argv) {
                     std::cin >> p3;
 
                     pickedObj->modifyK(Eigen::Vector3d(p1, p2, p3), matOption);
-                    std::vector<unsigned char> pixelVector = scene.display();
-                    pixelArray = pixelVector.data();
-
-                    canvas.update(pixelArray);
+                    canvas.update();
                     break;
                 }
 
@@ -506,15 +485,12 @@ int main(int argc, char **argv) {
                 case 8:
                     break;
                 case 9: {
-                    scene.switchProjection();
-                    std::string projection = scene.getProjection() ? "Perspective" : "Ortogonal";
-                    std::vector<unsigned char> pixelVector = scene.display();
-                    pixelArray = pixelVector.data();
-                    canvas.update(pixelArray);
+                    scene->switchProjection();
+                    std::string projection = scene->getProjection() ? "Perspective" : "Ortogonal";
+                    canvas.update();
                     std::cout << "Projection changed to: " << projection << std::endl;
+                    break;
                 }
-
-                break;
 
                 default:
                     std::cout << "Invalid Option" << std::endl;
@@ -524,7 +500,5 @@ int main(int argc, char **argv) {
         }
     });
     canvas.eventLoop(pickedObj);
-    // sdlLoop(canvasHeight, canvasWidth, -dWindow, pixelArray, scene, pickedObj, win, ren, &texture);
-
     return 0;
 }

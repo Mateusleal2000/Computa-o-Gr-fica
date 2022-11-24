@@ -13,8 +13,9 @@ void Canvas::init() {
         }
     }
 }
-void Canvas::update(unsigned char *pixelArray) {
-    this->pixelArray = pixelArray;
+void Canvas::update() {
+    std::vector<unsigned char> pixelVector = this->scene->display();
+    unsigned char *pixelArray = pixelVector.data();
     SDL_Rect offset;
     // Give the offsets to the rectangle
     offset.x = 0;
@@ -30,7 +31,7 @@ void Canvas::update(unsigned char *pixelArray) {
 }
 void Canvas::eventLoop(std::shared_ptr<Object> &pickedObj) {
     double xj, yj;
-    displayStructs::Viewport vw = scene.getViewport();
+    displayStructs::Viewport vw = scene->getViewport();
     double deltaX = vw.width / vw.nColumns;
     double deltaY = vw.height / vw.nRows;
     SDL_Event event;
@@ -46,16 +47,16 @@ void Canvas::eventLoop(std::shared_ptr<Object> &pickedObj) {
                 yj = (vw.height / 2.0) - (deltaY / 2.0) -
                      (event.motion.y * deltaY);
                 Eigen::Vector4d pickedD(xj, yj, z, 0);
-                if (scene.getProjection()) {
+                if (scene->getProjection()) {
                     Eigen::Vector4d auxO(0, 0, 0, 1);
-                    Eigen::Vector3d cam = scene.getCamera();
+                    Eigen::Vector3d cam = scene->getCamera();
                     auxO(0) = cam(0);
                     auxO(1) = cam(1);
                     auxO(2) = cam(2);
                     Eigen::Vector4d direction = pickedD - auxO;
-                    pickedObj = scene.pick(cam, direction.head<3>(), scene.getObjects());
+                    pickedObj = scene->pick(cam, direction.head<3>(), scene->getObjects());
                 } else {
-                    pickedObj = scene.pick(pickedD.head<3>(), Eigen::Vector3d(0.0, 0.0, -1.0), scene.getObjects());
+                    pickedObj = scene->pick(pickedD.head<3>(), Eigen::Vector3d(0.0, 0.0, -1.0), scene->getObjects());
                 }
 
                 if (pickedObj != nullptr) {
@@ -72,4 +73,8 @@ void Canvas::eventLoop(std::shared_ptr<Object> &pickedObj) {
             }
         }
     }
+}
+
+std::shared_ptr<Scene> Canvas::getScene() {
+    return this->scene;
 }
