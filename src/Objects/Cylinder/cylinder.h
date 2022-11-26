@@ -29,14 +29,15 @@ class Cylinder : public Object {
     double getRadius();
     Eigen::Vector3d getCenter();
     Eigen::Vector3d getNormal(Eigen::Vector3d P_I);
-    void returnToWorld(Eigen::Matrix4d cw);
+    void returnToWorld(Eigen::Matrix4d cw, bool isReflection);
+    void backToCamera(Eigen::Matrix4d wc);
     std::tuple<double, double> intersectRay(Eigen::Vector3d, Eigen::Vector3d);
 
     void scale(double radiusScale, double heightScale, double opt = 0.0);
     void shear(double delta, matrix::SHEAR_AXIS axis);
     void translate(double x, double y, double z, Eigen::Matrix4d wc);
     void rotate(double theta, matrix::AXIS axis);
-    void reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<Object>> &objects);
+    void reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<Object>> &objects, Eigen::Matrix4d wc);
     void generateLids();
 
    private:

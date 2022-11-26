@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
 
     double lx = 300.0;
     double ly = 400.0;
-    double lz = 1500.0;
+    double lz = 1800.0;
 
     double I_A = 0.3;
 
@@ -217,13 +217,15 @@ int main(int argc, char **argv) {
     table_lid.translate(300.0, 95.0, 500.0, wc);
 
     // Posicionando �rvore
-    ball.scale(4.5);
-    ball.translate(300.0, 294.0, 500.0, wc);
+    // ball.scale(4.5);
+    // ball.translate(300.0, 294.0, 500.0, wc);
+    ball.scale(20);
+    ball.translate(300.0, 500.0, 1000.0, wc);
 
     woodBase->scale(30.0, 9.0);
     woodBase->translate(300.0, 95.0, 500.0, wc);
 
-    wood->scale(6.0, 40.0);
+    wood->scale(30.0, 40.0);
     wood->translate(300.0, 104.0, 500.0, wc);
 
     tree->scale(60.0, 150.0);
@@ -287,7 +289,7 @@ int main(int argc, char **argv) {
     objects.push_back(std::make_shared<Mesh>(cat));*/
 
     // objects.push_back(std::make_shared<Mesh>(support_columnL));
-    // objects.push_back(std::make_shared<Mesh>(support_columnR));
+    objects.push_back(std::make_shared<Mesh>(support_columnR));
     // objects.push_back(std::make_shared<Mesh>(beamL));
     // objects.push_back(std::make_shared<Mesh>(beamR));
 
@@ -303,15 +305,15 @@ int main(int argc, char **argv) {
     // objects.push_back(std::make_shared<Mesh>(roofL));
     // objects.push_back(std::make_shared<Mesh>(roofR));
 
-    // objects.push_back(std::make_shared<Sphere>(ball));
+    objects.push_back(std::make_shared<Sphere>(ball));
 
-    objects.push_back(std::make_shared<Plane>(floor));
+    // objects.push_back(std::make_shared<Plane>(floor));
 
     // objects.push_back(std::make_shared<Mesh>(table_supportL));
     // objects.push_back(std::make_shared<Mesh>(table_supportR));
     // objects.push_back(std::make_shared<Mesh>(table_lid));
     // objects.push_back(woodBase);
-    // objects.push_back(wood);
+    objects.push_back(wood);
     // objects.push_back(tree);
 
     lightSources.push_back(
@@ -361,7 +363,7 @@ int main(int argc, char **argv) {
                     std::cin >> y;
                     std::cin >> z;
 
-                    pickedObj->returnToWorld(cw);
+                    pickedObj->returnToWorld(cw, false);
                     pickedObj->translate(x, y, z, wc);
                     canvas.update();
                     break;
@@ -394,7 +396,7 @@ int main(int argc, char **argv) {
                         std::cin >> x;
                     }
 
-                    pickedObj->returnToWorld(cw);
+                    pickedObj->returnToWorld(cw, false);
 
                     pickedObj->scale(x, y, z);
 
@@ -419,9 +421,10 @@ int main(int argc, char **argv) {
 
                     matrix::AXIS axisEnum = static_cast<matrix::AXIS>(axis);
 
-                    pickedObj->returnToWorld(cw);
+                    pickedObj->returnToWorld(cw, false);
 
                     pickedObj->rotate(angle, axisEnum);
+                    pickedObj->backToCamera(wc);
 
                     std::tuple<double, double, double> coordinates = pickedObj->getCoordinates();
                     pickedObj->translate(get<0>(coordinates), get<1>(coordinates), get<2>(coordinates), wc);
@@ -447,7 +450,7 @@ int main(int argc, char **argv) {
 
                         matrix::SHEAR_AXIS axisEnum = static_cast<matrix::SHEAR_AXIS>(axis);
 
-                        pickedObj->returnToWorld(cw);
+                        pickedObj->returnToWorld(cw, false);
 
                         pickedObj->shear(angle, axisEnum);
 
@@ -465,10 +468,9 @@ int main(int argc, char **argv) {
                     std::cin >> axis;
 
                     matrix::REFLECTION_AXIS axisEnum = static_cast<matrix::REFLECTION_AXIS>(axis);
-                    // pickedObj->returnToWorld(cw);
-                    pickedObj->reflection(axisEnum, scene->objects);
-                    // std::tuple<double, double, double> coordinates = pickedObj->getCoordinates();
-                    // pickedObj->translate(get<0>(coordinates), get<1>(coordinates), get<2>(coordinates), wc);
+                    pickedObj->returnToWorld(cw, true);
+                    pickedObj->reflection(axisEnum, scene->objects, wc);
+                    pickedObj->backToCamera(wc);
                     canvas.update();
                     break;
                 }

@@ -14,7 +14,8 @@ class Object {
     virtual std::tuple<double, double> intersectRay(Eigen::Vector3d,
                                                     Eigen::Vector3d) = 0;
     virtual Eigen::Vector3d getNormal(Eigen::Vector3d) = 0;
-    virtual void returnToWorld(Eigen::Matrix4d cw) = 0;
+    virtual void returnToWorld(Eigen::Matrix4d cw, bool isReflection) = 0;
+    virtual void backToCamera(Eigen::Matrix4d wc) = 0;
     utilsStructs::materialK getK();
     void modifyK(Eigen::Vector3d K, int option);
     double getM();
@@ -23,8 +24,9 @@ class Object {
     virtual void scale(double x, double y, double z) = 0;
     virtual void shear(double delta, matrix::SHEAR_AXIS axis) = 0;
     virtual void rotate(double theta, matrix::AXIS axis) = 0;
-    virtual void reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<Object>> &objects) = 0;
+    virtual void reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<Object>> &objects, Eigen::Matrix4d wc) = 0;
     std::tuple<double, double, double> getCoordinates();
+    void setCoordinates(double newX, double newY, double newZ);
     utilsStructs::OBJ_TYPE getType();
 
    protected:

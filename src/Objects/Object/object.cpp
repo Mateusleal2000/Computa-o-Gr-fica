@@ -54,3 +54,10 @@ void Object::modifyK(Eigen::Vector3d K, int option) {
             break;
     }
 }
+
+void Object::setCoordinates(double newX, double newY, double newZ) {
+    this->x = newX;
+    this->y = newY;
+    this->z = newZ;
+    return;
+}

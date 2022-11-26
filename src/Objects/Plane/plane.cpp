@@ -17,7 +17,7 @@ void Plane::scale(double x, double y, double z) {
 void Plane::translate(double x, double y, double z, Eigen::Matrix4d wc) {
 }
 
-void Plane::returnToWorld(Eigen::Matrix4d cw) {
+void Plane::returnToWorld(Eigen::Matrix4d cw, bool isReflection) {
 }
 
 void Plane::shear(double delta, matrix::SHEAR_AXIS axis) {
@@ -29,6 +29,8 @@ void Plane::rotate(double theta, matrix::AXIS axis) {
     return;
 }
 
-void Plane::reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<Object>> &objects) {
+void Plane::reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<Object>> &objects, Eigen::Matrix4d wc) {
     return;
 }
+
+void Plane::backToCamera(Eigen::Matrix4d wc) { return; }

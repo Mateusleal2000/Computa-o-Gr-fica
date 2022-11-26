@@ -117,15 +117,27 @@ std::tuple<double, double> Mesh::intersectRay(Eigen::Vector3d O,
 
 Eigen::Vector3d Mesh::getNormal(Eigen::Vector3d P_I) { return this->normal; }
 
-void Mesh::returnToWorld(Eigen::Matrix4d cw) {
+void Mesh::returnToWorld(Eigen::Matrix4d cw, bool isReflection) {
     // this->x = -x;
     // this->y = -y;
     // this->z = -z;
     applyMatrixVertices(cw);
     applyMatrixNormals(cw);
-    Eigen::Matrix4d m = matrix::translate(-this->x, -this->y, -this->z);
-    applyMatrixVertices(m);
+    if (!isReflection) {
+        // Eigen::Matrix4d m = matrix::translate(-this->x, -this->y, -this->z);
+        // applyMatrixVertices(m);
+        std::cout << "ok\n";
+    } else {
+        this->coordinatesAux = Eigen::Vector4d(this->x, this->y, this->z, 1.0);
+        this->coordinatesAux = cw * this->coordinatesAux;
+    }
+    return;
+}
 
+void Mesh::backToCamera(Eigen::Matrix4d wc) {
+    applyMatrixVertices(wc);
+    applyMatrixNormals(wc);
+    // this->coordinatesAux = wc * this->coordinatesAux;
     return;
 }
 
@@ -160,8 +172,10 @@ void Mesh::translate(double x, double y, double z, Eigen::Matrix4d wc) {
     this->x = x;
     this->y = y;
     this->z = z;
+    this->coordinatesAux = Eigen::Vector4d(this->x, this->y, this->z, 1.0);
     Eigen::Matrix4d m = matrix::translate(x, y, z);
     applyMatrixVertices(m);
+    applyMatrixNormals(m);
     applyMatrixVertices(wc);
     applyMatrixNormals(wc);
     return;
@@ -172,11 +186,25 @@ void Mesh::rotate(double theta, matrix::AXIS axis) {
     applyMatrixNormals(m);
     return;
 }
-void Mesh::reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<Object>> &objects) {
+void Mesh::reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<Object>> &objects, Eigen::Matrix4d wc) {
     Eigen::Matrix4d m = matrix::reflection(axis);
+    Mesh reflectedMesh(this->K, this->m, this->vertices, this->normals, this->edges, this->faces);
 
-    applyMatrixVertices(m);
-    applyMatrixNormals(m);
-    // objects.push_back(std::make_shared<Mesh>(reflectedMesh));
+    // Updating object center
+    reflectedMesh.coordinatesAux = this->coordinatesAux;
+    reflectedMesh.coordinatesAux = m * reflectedMesh.coordinatesAux;
+    // reflectedMesh.coordinatesAux = wc * reflectedMesh.coordinatesAux;
+
+    // Operating vertices and normals
+    reflectedMesh.applyMatrixVertices(m);
+    reflectedMesh.applyMatrixNormals(m);
+
+    reflectedMesh.x = reflectedMesh.coordinatesAux(0);
+    reflectedMesh.y = reflectedMesh.coordinatesAux(1);
+    reflectedMesh.z = reflectedMesh.coordinatesAux(2);
+
+    reflectedMesh.backToCamera(wc);
+
+    objects.push_back(std::make_shared<Mesh>(reflectedMesh));
     return;
 }

@@ -110,7 +110,7 @@ void Cylinder::scale(double radiusScale, double heightScale, double opt) {
 }
 
 void Cylinder::shear(double delta, matrix::SHEAR_AXIS axis) {
-    Eigen::Matrix4d m = matrix::shear(delta, axis);
+    std::cout << "Eu sou inutil\n";
     return;
 }
 void Cylinder::translate(double x, double y, double z, Eigen::Matrix4d wc) {
@@ -129,12 +129,50 @@ void Cylinder::translate(double x, double y, double z, Eigen::Matrix4d wc) {
 }
 void Cylinder::rotate(double theta, matrix::AXIS axis) {
     Eigen::Matrix4d m = matrix::rotate(theta, axis);
+    Eigen::Vector4d centerAux = Eigen::Vector4d(this->center(0), this->center(1), this->center(2), 1);
+    Eigen::Vector4d cylDirAux = Eigen::Vector4d(this->cylinderDir(0), this->cylinderDir(1), this->cylinderDir(2), 0);
+    Eigen::Vector4d topCenterAux = Eigen::Vector4d(this->topCenter(0), this->topCenter(1), this->topCenter(2), 1);
+
+    centerAux = m * centerAux;
+    cylDirAux = m * cylDirAux;
+    topCenterAux = m * topCenterAux;
+
+    this->center = centerAux.head<3>();
+    this->cylinderDir = cylDirAux.head<3>();
+    this->topCenter = topCenterAux.head<3>();
+
     return;
 }
-void Cylinder::reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<Object>> &objects) {
+
+void Cylinder::reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<Object>> &objects, Eigen::Matrix4d wc) {
     Eigen::Matrix4d m = matrix::reflection(axis);
-    Cylinder reflectedCylinder(this->getK(), this->getM(), this->radius,
-                               this->center, this->height, this->cylinderDir);
+    // Cylinder reflectedCylinder(this->getK(), this->getM(), this->radius, this->center, this->height, this->cylinderDir);
+    std::shared_ptr<Cylinder> reflectedCylinder = std::make_shared<Cylinder>(
+        Cylinder(this->getK(), this->getM(), this->radius, this->center, this->height, this->cylinderDir));
+
+    Eigen::Vector4d centerAux = Eigen::Vector4d(reflectedCylinder->center(0), reflectedCylinder->center(1), reflectedCylinder->center(2), 1);
+    Eigen::Vector4d cylDirAux = Eigen::Vector4d(reflectedCylinder->cylinderDir(0), reflectedCylinder->cylinderDir(1), reflectedCylinder->cylinderDir(2), 0);
+    Eigen::Vector4d topCenterAux = Eigen::Vector4d(reflectedCylinder->topCenter(0), reflectedCylinder->topCenter(1), reflectedCylinder->topCenter(2), 1);
+
+    centerAux = m * centerAux;
+    cylDirAux = m * cylDirAux;
+    topCenterAux = m * topCenterAux;
+
+    centerAux = wc * centerAux;
+    cylDirAux = wc * cylDirAux;
+    topCenterAux = wc * topCenterAux;
+
+    reflectedCylinder->center = centerAux.head<3>();
+    reflectedCylinder->cylinderDir = cylDirAux.head<3>();
+    reflectedCylinder->topCenter = topCenterAux.head<3>();
+
+    reflectedCylinder->x = reflectedCylinder->center(0);
+    reflectedCylinder->y = reflectedCylinder->center(1);
+    reflectedCylinder->z = reflectedCylinder->center(2);
+
+    reflectedCylinder->generateLids();
+
+    objects.push_back(reflectedCylinder);
 }
 
 void Cylinder::generateLids() {
@@ -152,8 +190,31 @@ void Cylinder::generateLids() {
     return;
 }
 
-void Cylinder::returnToWorld(Eigen::Matrix4d cw) {
-    // auto bla = this->getRadius();
-    // std::cout << bla << "\n";
+void Cylinder::returnToWorld(Eigen::Matrix4d cw, bool isReflection) {
+    Eigen::Vector4d centerAux = Eigen::Vector4d(this->center(0), this->center(1), this->center(2), 1);
+    Eigen::Vector4d cylDirAux = Eigen::Vector4d(this->cylinderDir(0), this->cylinderDir(1), this->cylinderDir(2), 0);
+    Eigen::Vector4d topCenterAux = Eigen::Vector4d(this->topCenter(0), this->topCenter(1), this->topCenter(2), 1);
+    topCenterAux = cw * topCenterAux;
+    centerAux = cw * centerAux;
+    cylDirAux = (cw * cylDirAux).normalized();
+    this->center = centerAux.head<3>();
+    this->cylinderDir = cylDirAux.head<3>();
+    this->topCenter = topCenterAux.head<3>();
+    return;
+}
+
+void Cylinder::backToCamera(Eigen::Matrix4d wc) {
+    Eigen::Vector4d centerAux = Eigen::Vector4d(this->center(0), this->center(1), this->center(2), 1);
+    Eigen::Vector4d cylDirAux = Eigen::Vector4d(this->cylinderDir(0), this->cylinderDir(1), this->cylinderDir(2), 0);
+    Eigen::Vector4d topCenterAux = Eigen::Vector4d(this->topCenter(0), this->topCenter(1), this->topCenter(2), 1);
+    topCenterAux = wc * topCenterAux;
+    centerAux = wc * centerAux;
+    cylDirAux = wc * cylDirAux;
+    this->center = centerAux.head<3>();
+    this->cylinderDir = cylDirAux.head<3>();
+    this->topCenter = topCenterAux.head<3>();
+    this->x = this->center(0);
+    this->y = this->center(1);
+    this->z = this->center(2);
     return;
 }

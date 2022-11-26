@@ -53,14 +53,6 @@ void Sphere::translate(double x, double y, double z, Eigen::Matrix4d wc) {
     return;
 }
 
-void Sphere::reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<Object>> &objects) {
-    Eigen::Matrix4d m = matrix::reflection(axis);
-    Eigen::Vector4d aux(this->center(0), this->center(1), this->center(2), 1);
-    Eigen::Vector4d aux2 = m * aux;
-    Sphere reflectedSphere(this->getK(), this->getM(), this->radius,
-                           aux2.head<3>());
-}
-
 void Sphere::shear(double delta, matrix::SHEAR_AXIS axis) {
     std::cout << "Eu sou inutil\n";
     return;
@@ -71,7 +63,7 @@ void Sphere::rotate(double theta, matrix::AXIS axis) {
     return;
 }
 
-void Sphere::returnToWorld(Eigen::Matrix4d cw) {
+void Sphere::returnToWorld(Eigen::Matrix4d cw, bool isReflection) {
     Eigen::Vector4d aux_center(this->center(0), this->center(1), this->center(2), 1);
     Eigen::Vector4d new_center = cw * aux_center;
     this->center(0) = new_center(0);
@@ -80,6 +72,29 @@ void Sphere::returnToWorld(Eigen::Matrix4d cw) {
     // this->wc = wc;
 }
 
-void reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<Object>> &objects) {
+void Sphere::backToCamera(Eigen::Matrix4d wc) {
+    Eigen::Vector4d aux_center(this->center(0), this->center(1), this->center(2), 1);
+    Eigen::Vector4d new_center = wc * aux_center;
+    this->center(0) = new_center(0);
+    this->center(1) = new_center(1);
+    this->center(2) = new_center(2);
+    return;
+}
+
+void Sphere::reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<Object>> &objects, Eigen::Matrix4d wc) {
+    Eigen::Matrix4d m = matrix::reflection(axis);
+    Sphere reflectedSphere(this->K, this->m, this->radius, this->center);
+
+    Eigen::Vector4d aux_center(this->center(0), this->center(1), this->center(2), 1);
+    Eigen::Vector4d new_center = m * aux_center;
+    reflectedSphere.center(0) = new_center(0);
+    reflectedSphere.center(1) = new_center(1);
+    reflectedSphere.center(2) = new_center(2);
+    reflectedSphere.x = new_center(0);
+    reflectedSphere.y = new_center(1);
+    reflectedSphere.z = new_center(2);
+    reflectedSphere.backToCamera(wc);
+    objects.push_back(std::make_shared<Sphere>(reflectedSphere));
+
     return;
 }
