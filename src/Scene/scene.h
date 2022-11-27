@@ -24,6 +24,7 @@ class Scene {
           isPerspective(isPerspective) {}
 
     std::vector<std::shared_ptr<Object>> objects;
+    std::vector<std::shared_ptr<LightSource>> lightSources;
     std::vector<unsigned char> display();
     std::shared_ptr<Object> pick(Eigen::Vector3d O, Eigen::Vector3d D, std::vector<std::shared_ptr<Object>>);
     std::vector<std::shared_ptr<Object>> getObjects();
@@ -32,12 +33,13 @@ class Scene {
     bool getProjection();
     void switchProjection();
     void setOrigin(double x, double y, double z);
+    void setFocalLength(double x, double y, double z);
+    void resizeViewport(double width, double height);
 
    private:
     bool isPerspective;
     displayStructs::Viewport viewport;
     displayStructs::Camera camera;
     displayStructs::Camera orthCamera;
-    std::vector<std::shared_ptr<LightSource>> lightSources;
 };
 #endif

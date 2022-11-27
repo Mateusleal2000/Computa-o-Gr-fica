@@ -15,3 +15,9 @@ std::tuple<Eigen::Vector3d, Eigen::Vector3d> Point::calculateL(
 double Point::getDistance(Eigen::Vector3d P_I) {
     return (this->P_F - P_I).norm();
 }
+
+void Point::translate(double x, double y, double z, Eigen::Matrix4d wc) {
+    Eigen::Vector4d auxPF(x, y, z, 1.0);
+    auxPF = wc * auxPF;
+    this->P_F = auxPF.head<3>();
+}

@@ -10,7 +10,6 @@ std::vector<unsigned char> Scene::display() {
     double deltaY = viewport.height / viewport.nRows;
     double x, y;
     std::vector<unsigned char> pixelVector;
-    Eigen::Vector3d D(0, 0, 0);
     Eigen::Vector3d orthDir(0, 0, -1);
 
     auto start = std::chrono::steady_clock::now();
@@ -23,18 +22,18 @@ std::vector<unsigned char> Scene::display() {
 
             if (this->isPerspective) {
                 // this->camera.O = this->originBackup;
-                D(0) = x - this->camera.O(0);
-                D(1) = y - this->camera.O(1);
-                D(2) = -viewport.dWindow;
+                this->camera.D(0) = x - this->camera.O(0);
+                this->camera.D(1) = y - this->camera.O(1);
+                this->camera.D(2) = -viewport.dWindow;
                 color =
-                    utils::traceRay(this->camera, D, lightSources, objects, int(x), int(y));
+                    utils::traceRay(this->camera, lightSources, objects, int(x), int(y));
             } else {
-                D(0) = x;
-                D(1) = y;
-                D(2) = -viewport.dWindow;
-                this->orthCamera.O = D;
+                this->orthCamera.O(0) = x;
+                this->orthCamera.O(1) = y;
+                this->orthCamera.O(2) = -viewport.dWindow;
+                this->orthCamera.D = orthDir;
                 color =
-                    utils::traceRay(this->orthCamera, orthDir, lightSources, objects, int(x), int(y));
+                    utils::traceRay(this->orthCamera, lightSources, objects, int(x), int(y));
             }
             pixelVector.push_back(color.R);
             pixelVector.push_back(color.G);
@@ -88,4 +87,15 @@ void Scene::setOrigin(double x, double y, double z) {
     this->camera.O(0) = x;
     this->camera.O(1) = y;
     this->camera.O(2) = z;
+}
+
+void Scene::setFocalLength(double x, double y, double z) {
+    this->camera.D(0) = x;
+    this->camera.D(1) = y;
+    this->camera.D(2) = z;
+}
+
+void Scene::resizeViewport(double width, double height) {
+    this->viewport.width = width;
+    this->viewport.height = height;
 }

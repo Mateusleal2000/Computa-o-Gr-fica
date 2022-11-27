@@ -21,3 +21,10 @@ std::tuple<Eigen::Vector3d, Eigen::Vector3d> Spot::calculateL(
 double Spot::getDistance(Eigen::Vector3d P_I) {
     return (this->getPF() - P_I).norm();
 }
+
+void Spot::translate(double x, double y, double z, Eigen::Matrix4d wc) {
+    // this->P_S(0) = x;
+    // this->P_S(1) = y;
+    // this->P_S(2) = z;
+    // this->P_S = this->P_S * wc;
+}

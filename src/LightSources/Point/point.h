@@ -10,6 +10,7 @@ class Point : public LightSource {
     std::tuple<Eigen::Vector3d, Eigen::Vector3d> calculateL(Eigen::Vector3d,
                                                             Eigen::Vector3d);
     double getDistance(Eigen::Vector3d);
+    void translate(double x, double y, double z, Eigen::Matrix4d wc);
 
    private:
     Eigen::Vector3d P_F;

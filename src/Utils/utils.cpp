@@ -55,7 +55,7 @@ bool isLightBlocked(std::shared_ptr<Object> closestObject,
 
 std::tuple<double, double, double> calculateLighting(
     std::vector<std::shared_ptr<LightSource>> lightSources,
-    displayStructs::Camera camera, Eigen::Vector3d D, double t,
+    displayStructs::Camera camera, double t,
     std::shared_ptr<Object> closestObject,
     std::vector<std::shared_ptr<Object>> objects) {
     utilsStructs::materialK K = closestObject->getK();
@@ -73,7 +73,7 @@ std::tuple<double, double, double> calculateLighting(
         Eigen::Vector3d r(0, 0, 0);
         Eigen::Vector3d v(0, 0, 0);
 
-        P_I = camera.O + (D)*t;
+        P_I = camera.O + (camera.D) * t;
         // std::cout << "P_I" << P_I(0) << " " << P_I(1) << " " << P_I(2) << std::endl;
         n = closestObject->getNormal(P_I);
         std::tuple<Eigen::Vector3d, Eigen::Vector3d> L_IF = lS->calculateL(P_I, n);
@@ -82,7 +82,7 @@ std::tuple<double, double, double> calculateLighting(
         I_F = std::get<1>(L_IF);
 
         r = 2 * ((l.dot(n)) * n) - l;
-        v = (D / D.norm()) * (-1);
+        v = (camera.D / camera.D.norm()) * (-1);
 
         double F_D = std::max(n.dot(l), 0.0);
         double F_E = std::pow(std::max(r.dot(v), 0.0), closestObject->getM());
@@ -121,17 +121,17 @@ std::tuple<double, double, double> calculateLighting(
 }
 
 utilsStructs::Color traceRay(
-    displayStructs::Camera camera, Eigen::Vector3d D,
+    displayStructs::Camera camera,
     std::vector<std::shared_ptr<LightSource>> lightSources,
     std::vector<std::shared_ptr<Object>> objects, int x, int y) {
     auto [closestT, closestObject] =
-        closestIntersection(camera.O, D, 0, inf, objects);
+        closestIntersection(camera.O, camera.D, 0, inf, objects);
 
     if (closestObject == nullptr) {
         return utilsStructs::Color(BACKGROUND_COLOR);
     }
     if (closestT != inf) {
-        auto [R, G, B] = calculateLighting(lightSources, camera, D, closestT,
+        auto [R, G, B] = calculateLighting(lightSources, camera, closestT,
                                            closestObject, objects);
         return utilsStructs::Color(int(R * 255), int(G * 255), int(B * 255));
     }

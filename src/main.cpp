@@ -30,9 +30,9 @@
 int main(int argc, char **argv) {
     double radius = 1.0;
     double dWindow = 25;
-    double x = 0;
-    double y = 0;
-    double z = -(dWindow + radius);
+    // double x = 0;
+    // double y = 0;
+    // double z = -(dWindow + radius);
 
     bool isPerspective = true;
     double canvasWidth = 500;
@@ -49,6 +49,7 @@ int main(int argc, char **argv) {
     double I_A = 0.3;
 
     Eigen::Vector4d O(lx, ly, lz, 1.0);
+    Eigen::Vector4d D(0.0, 0.0, 0.0, 1.0);
     Eigen::Vector3d at(300.0, 97.5, 500.0);
     // Eigen::Vector3d at(lx, ly, 1.0);
     Eigen::Vector3d up(lx, ly + 100.0, lz);
@@ -56,7 +57,8 @@ int main(int argc, char **argv) {
     Eigen::Matrix4d cw = matrix::cwMatrix(O.head<3>(), at, up);
     // std::cout << up - O.head<3>() << "\n";
     O = wc * O;
-    Eigen::Vector3d center(x, y, z);
+    displayStructs::Camera camera(O.head<3>(), D.head<3>());
+    // Eigen::Vector3d center(x, y, z);
 
     Eigen::Vector3d I_F_1(0.7, 0.7, 0.7);
     Eigen::Vector4d P_F_1(300.0, 100.0, 2000.0, 1.0);
@@ -144,8 +146,6 @@ int main(int argc, char **argv) {
 
     displayStructs::Viewport viewport(viewPortWidth, viewPortHeight, nRow, nCol,
                                       dWindow);
-
-    displayStructs::Camera camera(O.head<3>());
 
     std::vector<std::shared_ptr<LightSource>> lightSources;
     std::vector<std::shared_ptr<Object>> objects;
@@ -424,7 +424,6 @@ int main(int argc, char **argv) {
                     pickedObj->returnToWorld(cw, false);
 
                     pickedObj->rotate(angle, axisEnum);
-                    pickedObj->backToCamera(wc);
 
                     std::tuple<double, double, double> coordinates = pickedObj->getCoordinates();
                     std::cout << get<0>(coordinates) << " " << get<1>(coordinates) << " " << get<2>(coordinates) << "\n";
@@ -486,7 +485,7 @@ int main(int argc, char **argv) {
                     std::cout << "3 - Specular" << std::endl;
                     std::cout << "4 - All" << std::endl;
                     std::cin >> matOption;
-                    std::cout << "Enter new properties (0 to 1): (p1, p2, p3) " << std::endl;
+                    std::cout << "Enter new properties (0 to 1): (p1, p2, p3): " << std::endl;
                     std::cin >> p1;
                     std::cin >> p2;
                     std::cin >> p3;
@@ -497,6 +496,71 @@ int main(int argc, char **argv) {
                 }
 
                 case 7:
+                    int option;
+                    std::cout << "Modify Camera Parameters" << std::endl;
+                    std::cout << "1 - Eye Position (O)" << std::endl;
+                    std::cout << "2 - Look At Point" << std::endl;
+                    std::cout << "3 - View Up Point (up)" << std::endl;
+                    std::cout << "4 - Resize Viewport" << std::endl;
+                    std::cout << "5 - Focal Length (D)" << std::endl;
+                    std::cin >> option;
+
+                    switch (option) {
+                        case 1: {
+                            double x, y, z;
+                            std::cout << "Insert new coordinates (x, y, z): " << std::endl;
+                            std::cin >> x;
+                            std::cin >> y;
+                            std::cin >> z;
+
+                            O(0) = x;
+                            O(1) = y;
+                            O(2) = z;
+
+                            wc = matrix::lookAt(O.head<3>(), at, up);
+                            cw = matrix::cwMatrix(O.head<3>(), at, up);
+                            O = wc * O;
+                            scene->setOrigin(x, y, z);
+
+                            // Provavelmente não está funcionando porque o wc não está sendo multiplicado corretamente
+                            for (std::shared_ptr<Object> obj : scene->objects) {
+                                std::tuple<double, double, double> coordinates = obj->getCoordinates();
+                                Eigen::Vector4d newCoordinates(get<0>(coordinates), get<1>(coordinates), get<2>(coordinates), 1.0);
+                                newCoordinates = cw * newCoordinates;
+                                obj->translate(newCoordinates(0), newCoordinates(1), newCoordinates(2), wc);
+                            }
+
+                            // for (std::shared_ptr<LightSource> lightSource : scene->lightSources) {
+                            //     lightSource->translate(x, y, z, wc);
+                            // }
+
+                            canvas.update();
+
+                                                        break;
+                        }
+                        case 2: {
+                            break;
+                        }
+                        case 3: {
+                            break;
+                        }
+                        case 4: {
+                            double w, h;
+                            std::cout << "Insert new dimensions (width, height): " << std::endl;
+                            std::cin >> w;
+                            std::cin >> h;
+                            scene->resizeViewport(w, h);
+                            canvas.update();
+                            break;
+                        }
+                        case 5: {
+                            break;
+                        }
+
+                        default:
+                            break;
+                    }
+
                     break;
                 case 8:
                     break;

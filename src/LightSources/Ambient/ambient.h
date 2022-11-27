@@ -9,6 +9,7 @@ class Ambient : public LightSource {
           I_A(Eigen::Vector3d(I_A, I_A, I_A)) {}
     Eigen::Vector3d getIA();
     double getDistance(Eigen::Vector3d P_I);
+    void translate(double x, double y, double z, Eigen::Matrix4d wc);
 
    private:
     Eigen::Vector3d I_A;

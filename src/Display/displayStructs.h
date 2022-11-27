@@ -17,7 +17,8 @@ struct Viewport {
 
 struct Camera {
     Eigen::Vector3d O;
-    Camera(Eigen::Vector3d O) : O(O) {}
+    Eigen::Vector3d D;
+    Camera(Eigen::Vector3d O, Eigen::Vector3d D) : O(O), D(D) {}
 };
 
 }  // namespace displayStructs
