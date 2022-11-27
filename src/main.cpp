@@ -427,6 +427,7 @@ int main(int argc, char **argv) {
                     pickedObj->backToCamera(wc);
 
                     std::tuple<double, double, double> coordinates = pickedObj->getCoordinates();
+                    std::cout << get<0>(coordinates) << " " << get<1>(coordinates) << " " << get<2>(coordinates) << "\n";
                     pickedObj->translate(get<0>(coordinates), get<1>(coordinates), get<2>(coordinates), wc);
                     canvas.update();
                     break;

@@ -118,15 +118,12 @@ std::tuple<double, double> Mesh::intersectRay(Eigen::Vector3d O,
 Eigen::Vector3d Mesh::getNormal(Eigen::Vector3d P_I) { return this->normal; }
 
 void Mesh::returnToWorld(Eigen::Matrix4d cw, bool isReflection) {
-    // this->x = -x;
-    // this->y = -y;
-    // this->z = -z;
     applyMatrixVertices(cw);
     applyMatrixNormals(cw);
     if (!isReflection) {
-        // Eigen::Matrix4d m = matrix::translate(-this->x, -this->y, -this->z);
-        // applyMatrixVertices(m);
-        std::cout << "ok\n";
+        Eigen::Matrix4d m = matrix::translate(-this->x, -this->y, -this->z);
+        applyMatrixVertices(m);
+        applyMatrixNormals(m);
     } else {
         this->coordinatesAux = Eigen::Vector4d(this->x, this->y, this->z, 1.0);
         this->coordinatesAux = cw * this->coordinatesAux;
@@ -193,7 +190,7 @@ void Mesh::reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<
     // Updating object center
     reflectedMesh.coordinatesAux = this->coordinatesAux;
     reflectedMesh.coordinatesAux = m * reflectedMesh.coordinatesAux;
-    // reflectedMesh.coordinatesAux = wc * reflectedMesh.coordinatesAux;
+    reflectedMesh.coordinatesAux = wc * reflectedMesh.coordinatesAux;
 
     // Operating vertices and normals
     reflectedMesh.applyMatrixVertices(m);
