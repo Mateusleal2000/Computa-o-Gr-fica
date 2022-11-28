@@ -43,8 +43,8 @@ int main(int argc, char **argv) {
     double nCol = 500;
 
     double lx = 300.0;
-    double ly = 400.0;
-    double lz = 1800.0;
+    double ly = 300.0;
+    double lz = 1300.0;
 
     double I_A = 0.3;
 
@@ -314,7 +314,7 @@ int main(int argc, char **argv) {
     // objects.push_back(std::make_shared<Mesh>(table_lid));
     // objects.push_back(woodBase);
     objects.push_back(wood);
-    // objects.push_back(tree);
+    objects.push_back(tree);
 
     lightSources.push_back(
         std::make_shared<Point>(Point(I_F_1, P_F_1.head<3>())));
@@ -536,7 +536,7 @@ int main(int argc, char **argv) {
 
                             canvas.update();
 
-                                                        break;
+                            break;
                         }
                         case 2: {
                             break;

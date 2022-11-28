@@ -128,12 +128,51 @@ void Cone::translate(double x, double y, double z, Eigen::Matrix4d wc) {
 }
 void Cone::rotate(double theta, matrix::AXIS axis) {
     Eigen::Matrix4d m = matrix::rotate(theta, axis);
+    Eigen::Vector4d centerAux = Eigen::Vector4d(this->center(0), this->center(1), this->center(2), 1);
+    Eigen::Vector4d coneDirAux = Eigen::Vector4d(this->coneDir(0), this->coneDir(1), this->coneDir(2), 0);
+    Eigen::Vector4d vertexAux = Eigen::Vector4d(this->vertex(0), this->vertex(1), this->vertex(2), 1);
+
+    centerAux = m * centerAux;
+    coneDirAux = m * coneDirAux;
+    vertexAux = m * vertexAux;
+
+    this->center = centerAux.head<3>();
+    this->coneDir = coneDirAux.head<3>();
+    this->vertex = vertexAux.head<3>();
+
+    // centerAux = wc * centerAux;
+    // coneDirAux = wc * coneDirAux;
+    // vertexAux = wc * vertexAux;
     return;
 }
 void Cone::reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<Object>> &objects, Eigen::Matrix4d wc) {
     Eigen::Matrix4d m = matrix::reflection(axis);
-    Cone reflectedCylinder(this->getK(), this->getM(), this->radius, this->center,
-                           this->height, this->coneDir);
+    std::shared_ptr<Cone> reflectedCone = std::make_shared<Cone>(
+        Cone(this->getK(), this->getM(), this->radius, this->center, this->height, this->coneDir));
+
+    Eigen::Vector4d centerAux = Eigen::Vector4d(reflectedCone->center(0), reflectedCone->center(1), reflectedCone->center(2), 1);
+    Eigen::Vector4d coneDirAux = Eigen::Vector4d(reflectedCone->coneDir(0), reflectedCone->coneDir(1), reflectedCone->coneDir(2), 0);
+    Eigen::Vector4d vertexAux = Eigen::Vector4d(reflectedCone->vertex(0), reflectedCone->vertex(1), reflectedCone->vertex(2), 1);
+
+    centerAux = m * centerAux;
+    coneDirAux = m * coneDirAux;
+    vertexAux = m * vertexAux;
+
+    centerAux = wc * centerAux;
+    coneDirAux = wc * coneDirAux;
+    vertexAux = wc * vertexAux;
+
+    reflectedCone->center = centerAux.head<3>();
+    reflectedCone->coneDir = coneDirAux.head<3>();
+    reflectedCone->vertex = vertexAux.head<3>();
+
+    reflectedCone->x = reflectedCone->center(0);
+    reflectedCone->y = reflectedCone->center(1);
+    reflectedCone->z = reflectedCone->center(2);
+
+    reflectedCone->generateLids();
+
+    objects.push_back(reflectedCone);
 }
 
 void Cone::generateLids() {
@@ -144,11 +183,30 @@ void Cone::generateLids() {
 }
 
 void Cone::returnToWorld(Eigen::Matrix4d cw, bool isReflection) {
-    auto bla = this->getRadius();
-    std::cout << bla << "\n";
+    Eigen::Vector4d centerAux = Eigen::Vector4d(this->center(0), this->center(1), this->center(2), 1);
+    Eigen::Vector4d coneDirAux = Eigen::Vector4d(this->coneDir(0), this->coneDir(1), this->coneDir(2), 0);
+    Eigen::Vector4d vertexAux = Eigen::Vector4d(this->vertex(0), this->vertex(1), this->vertex(2), 1);
+    vertexAux = cw * vertexAux;
+    centerAux = cw * centerAux;
+    coneDirAux = (cw * coneDirAux).normalized();
+    this->center = centerAux.head<3>();
+    this->coneDir = coneDirAux.head<3>();
+    this->vertex = vertexAux.head<3>();
     return;
 }
 
 void Cone::backToCamera(Eigen::Matrix4d wc) {
+    Eigen::Vector4d centerAux = Eigen::Vector4d(this->center(0), this->center(1), this->center(2), 1);
+    Eigen::Vector4d coneDirAux = Eigen::Vector4d(this->coneDir(0), this->coneDir(1), this->coneDir(2), 0);
+    Eigen::Vector4d vertexAux = Eigen::Vector4d(this->vertex(0), this->vertex(1), this->vertex(2), 1);
+    vertexAux = wc * vertexAux;
+    centerAux = wc * centerAux;
+    coneDirAux = wc * coneDirAux;
+    this->center = centerAux.head<3>();
+    this->coneDir = coneDirAux.head<3>();
+    this->vertex = vertexAux.head<3>();
+    this->x = this->center(0);
+    this->y = this->center(1);
+    this->z = this->center(2);
     return;
 }
