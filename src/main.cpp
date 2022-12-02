@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
 
     double lx = 300.0;
     double ly = 300.0;
-    double lz = 1300.0;
+    double lz = 1800.0;
 
     double I_A = 0.3;
 
@@ -289,23 +289,23 @@ int main(int argc, char **argv) {
     objects.push_back(std::make_shared<Mesh>(cat));*/
 
     // objects.push_back(std::make_shared<Mesh>(support_columnL));
-    objects.push_back(std::make_shared<Mesh>(support_columnR));
+    // objects.push_back(std::make_shared<Mesh>(support_columnR));
     // objects.push_back(std::make_shared<Mesh>(beamL));
     // objects.push_back(std::make_shared<Mesh>(beamR));
 
     // objects.push_back(std::make_shared<Mesh>(back_beamR));
     // objects.push_back(std::make_shared<Mesh>(back_beamL));
-    // objects.push_back(std::make_shared<Mesh>(back_support_columnL));
+    objects.push_back(std::make_shared<Mesh>(back_support_columnL));
     // objects.push_back(std::make_shared<Mesh>(back_support_columnR));
 
-    objects.push_back(std::make_shared<Mesh>(wallL));
+    // objects.push_back(std::make_shared<Mesh>(wallL));
     // objects.push_back(std::make_shared<Mesh>(wallR));
     // objects.push_back(std::make_shared<Mesh>(back_wall));
 
     // objects.push_back(std::make_shared<Mesh>(roofL));
     // objects.push_back(std::make_shared<Mesh>(roofR));
 
-    objects.push_back(std::make_shared<Sphere>(ball));
+    // objects.push_back(std::make_shared<Sphere>(ball));
 
     // objects.push_back(std::make_shared<Plane>(floor));
 

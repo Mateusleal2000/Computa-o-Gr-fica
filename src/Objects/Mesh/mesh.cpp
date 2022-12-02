@@ -125,8 +125,8 @@ void Mesh::returnToWorld(Eigen::Matrix4d cw, bool isReflection) {
         applyMatrixVertices(m);
         applyMatrixNormals(m);
     } else {
-        this->coordinatesAux = Eigen::Vector4d(this->x, this->y, this->z, 1.0);
-        this->coordinatesAux = cw * this->coordinatesAux;
+        // this->coordinatesAux = Eigen::Vector4d(this->x, this->y, this->z, 1.0);
+        // this->coordinatesAux = cw * this->coordinatesAux;
     }
     return;
 }
@@ -169,7 +169,7 @@ void Mesh::translate(double x, double y, double z, Eigen::Matrix4d wc) {
     this->x = x;
     this->y = y;
     this->z = z;
-    this->coordinatesAux = Eigen::Vector4d(this->x, this->y, this->z, 1.0);
+    // this->coordinatesAux = Eigen::Vector4d(this->x, this->y, this->z, 1.0);
     Eigen::Matrix4d m = matrix::translate(x, y, z);
     applyMatrixVertices(m);
     applyMatrixNormals(m);
@@ -188,17 +188,27 @@ void Mesh::reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<
     Mesh reflectedMesh(this->K, this->m, this->vertices, this->normals, this->edges, this->faces);
 
     // Updating object center
-    reflectedMesh.coordinatesAux = this->coordinatesAux;
-    reflectedMesh.coordinatesAux = m * reflectedMesh.coordinatesAux;
-    reflectedMesh.coordinatesAux = wc * reflectedMesh.coordinatesAux;
+    // reflectedMesh.coordinatesAux = this->coordinatesAux;
+    // reflectedMesh.coordinatesAux = m * reflectedMesh.coordinatesAux;
+    // reflectedMesh.coordinatesAux = wc * reflectedMesh.coordinatesAux;
 
     // Operating vertices and normals
     reflectedMesh.applyMatrixVertices(m);
     reflectedMesh.applyMatrixNormals(m);
 
-    reflectedMesh.x = reflectedMesh.coordinatesAux(0);
-    reflectedMesh.y = reflectedMesh.coordinatesAux(1);
-    reflectedMesh.z = reflectedMesh.coordinatesAux(2);
+    this->coordinatesAux(0) = this->x;
+    this->coordinatesAux(1) = this->y;
+    this->coordinatesAux(2) = this->z;
+    this->coordinatesAux = m * this->coordinatesAux;
+    std::cout << this->coordinatesAux(0) << " " << this->coordinatesAux(1) << " " << this->coordinatesAux(2) << "\n";
+
+    reflectedMesh.x = this->coordinatesAux(0);
+    reflectedMesh.y = this->coordinatesAux(1);
+    reflectedMesh.z = this->coordinatesAux(2);
+
+    // reflectedMesh.x = reflectedMesh.coordinatesAux(0);
+    // reflectedMesh.y = reflectedMesh.coordinatesAux(1);
+    // reflectedMesh.z = reflectedMesh.coordinatesAux(2);
 
     reflectedMesh.backToCamera(wc);
 

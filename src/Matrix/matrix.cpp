@@ -62,13 +62,25 @@ Eigen::Matrix4d reflection(REFLECTION_AXIS axis) {
     Eigen::Matrix4d m;
     switch (axis) {
         case matrix::REFLECTION_AXIS::XY:
-            m << 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1;
+            std::cout << "CASO 1\n";
+            m << 1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, -1, 0,
+                0, 0, 0, 1;
             break;
         case matrix::REFLECTION_AXIS::XZ:
-            m << 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1;
+            std::cout << "CASO 2\n";
+            m << 1, 0, 0, 0,
+                0, -1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1;
             break;
         case matrix::REFLECTION_AXIS::YZ:
-            m << -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1;
+            std::cout << "CASO 3\n";
+            m << -1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1;
             break;
         default:
             break;
