@@ -107,7 +107,7 @@ std::tuple<double, double, double> calculateLighting(
         I_A(1) += currentIA(1) * K.Ka(1);
         I_A(2) += currentIA(2) * K.Ka(2);
     }
-
+    // Ajeitar o I_E que deu aquele erro na iluminacacao
     double I_1 = (I_A(0) + I_D(0) + I_E(0));
     double I_2 = (I_A(1) + I_D(1) + I_E(1));
     double I_3 = (I_A(2) + I_D(2) + I_E(2));

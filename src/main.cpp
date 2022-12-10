@@ -42,15 +42,15 @@ int main(int argc, char **argv) {
     double nRow = 500;
     double nCol = 500;
 
-    double lx = 300.0;
-    double ly = 300.0;
-    double lz = 1800.0;
+    double lx = 450.0;
+    double ly = 210.0;
+    double lz = 600.0;
 
     double I_A = 0.3;
 
     Eigen::Vector4d O(lx, ly, lz, 1.0);
     Eigen::Vector4d D(0.0, 0.0, 0.0, 1.0);
-    Eigen::Vector3d at(300.0, 97.5, 500.0);
+    Eigen::Vector3d at(450.0, 97.5, 500.0);
     // Eigen::Vector3d at(lx, ly, 1.0);
     Eigen::Vector3d up(lx, ly + 100.0, lz);
     Eigen::Matrix4d wc = matrix::lookAt(O.head<3>(), at, up);
@@ -81,6 +81,10 @@ int main(int argc, char **argv) {
     Eigen::Vector3d Ka_1(0.854, 0.647, 0.125);
     Eigen::Vector3d Kd_1(0.854, 0.647, 0.125);
 
+    Eigen::Vector3d Ke_cherry(0.949, 0.027, 0.027);
+    Eigen::Vector3d Ka_cherry(0.949, 0.027, 0.027);
+    Eigen::Vector3d Kd_cherry(0.949, 0.027, 0.027);
+
     Eigen::Vector3d Ke_2(222.0 / 255.0, 184.0 / 255.0, 135.0 / 255.0);
     Eigen::Vector3d Ka_2(222.0 / 255.0, 184.0 / 255.0, 135.0 / 255.0);
     Eigen::Vector3d Kd_2(222.0 / 255.0, 184.0 / 255.0, 135.0 / 255.0);
@@ -94,6 +98,18 @@ int main(int argc, char **argv) {
     Eigen::Vector3d Ke_4(0.745, 0.470, 0.058);
     Eigen::Vector3d Ka_4(0.745, 0.470, 0.058);
     Eigen::Vector3d Kd_4(0.745, 0.470, 0.058);
+
+    Eigen::Vector3d Ke_plate(0.988, 0.949, 0.831);
+    Eigen::Vector3d Ka_plate(0.988, 0.949, 0.831);
+    Eigen::Vector3d Kd_plate(0.988, 0.949, 0.831);
+
+    Eigen::Vector3d Ke_cake(0.388, 0.125, 0.011);
+    Eigen::Vector3d Ka_cake(0.388, 0.125, 0.011);
+    Eigen::Vector3d Kd_cake(0.388, 0.125, 0.011);
+
+    Eigen::Vector3d Ke_candle(0.780, 0.729, 0.709);
+    Eigen::Vector3d Ka_candle(0.780, 0.729, 0.709);
+    Eigen::Vector3d Kd_candle(0.780, 0.729, 0.709);
 
     // cone
     Eigen::Vector3d Ke_5(0.031, 0.705, 0.329);
@@ -119,6 +135,19 @@ int main(int argc, char **argv) {
     Eigen::Vector3d support_Ka(0.88, 0.52, 0.26);
     Eigen::Vector3d support_Kd(0.88, 0.52, 0.26);
 
+    // chapeus de festa
+    Eigen::Vector3d Ke_hat1(0.800, 0.610, 1.0);
+    Eigen::Vector3d Ka_hat1(0.800, 0.610, 1.0);
+    Eigen::Vector3d Kd_hat1(0.800, 0.610, 1.0);
+
+    Eigen::Vector3d Ke_hat2(0.210, 0.030, 0.610);
+    Eigen::Vector3d Ka_hat2(0.210, 0.030, 0.610);
+    Eigen::Vector3d Kd_hat2(0.210, 0.030, 0.610);
+
+    Eigen::Vector3d Ke_hat3(0.870, 0.030, 0.010);
+    Eigen::Vector3d Ka_hat3(0.870, 0.030, 0.010);
+    Eigen::Vector3d Kd_hat3(0.870, 0.030, 0.010);
+
     Eigen::Vector3d dCil_1(-1.0 / std::sqrt(3), 1.0 / std::sqrt(3),
                            -1.0 / std::sqrt(3));
 
@@ -141,6 +170,18 @@ int main(int argc, char **argv) {
     utilsStructs::materialK K_6(Ke_6, Ka_6, Kd_6);
     utilsStructs::materialK K_7(Ke_7, Ka_7, Kd_7);
 
+    utilsStructs::materialK K_hat1(Ke_hat1, Ka_hat1, Kd_hat1);
+    utilsStructs::materialK K_hat2(Ke_hat2, Ka_hat2, Kd_hat2);
+    utilsStructs::materialK K_hat3(Ke_hat3, Ka_hat3, Kd_hat3);
+
+    utilsStructs::materialK K_plate(Ke_plate, Ka_plate, Kd_plate);
+
+    utilsStructs::materialK K_cake(Ke_cake, Ka_cake, Kd_cake);
+
+    utilsStructs::materialK K_candle(Ke_candle, Ka_candle, Kd_candle);
+
+    utilsStructs::materialK K_cherry(Ke_cherry, Ka_cherry, Kd_cherry);
+
     utilsStructs::materialK lid_K(lid_Ke, lid_Ka, lid_Kd);
     utilsStructs::materialK support_K(support_Ke, support_Ka, support_Kd);
 
@@ -160,38 +201,50 @@ int main(int argc, char **argv) {
     double m_3 = 1;
 
     std::string cubePath = "../resources/cube.obj";
-    // std::string catPath = "cat.obj";
 
-    // Gato
-    // Mesh cat(lid_K, m_1, catPath);
+    // Chapéus de festa
+    auto party_hat1 = std::make_shared<Cone>(
+        Cone(K_hat1, m_1, 1, center1, 1, dCil_3.normalized()));
+
+    auto party_hat2 = std::make_shared<Cone>(
+        Cone(K_hat2, m_1, 1, center1, 1, dCil_3.normalized()));
+
+    auto party_hat3 = std::make_shared<Cone>(
+        Cone(K_hat3, m_1, 1, center1, 1, dCil_3.normalized()));
 
     // Mesa
     Mesh table_lid(lid_K, m_1, cubePath);
     Mesh table_supportL(support_K, m_1, cubePath);
     Mesh table_supportR(support_K, m_1, cubePath);
+    Mesh table_supportL_back(support_K, m_1, cubePath);
+    Mesh table_supportR_back(support_K, m_1, cubePath);
 
-    // Galp�o frente
-    Mesh beamL(K_4, m_1, cubePath);
-    Mesh support_columnL(K_4, m_1, cubePath);
-    Mesh beamR(K_4, m_1, cubePath);
-    Mesh support_columnR(K_4, m_1, cubePath);
+    // Bolo
+    auto plate = std::make_shared<Cylinder>(
+        Cylinder(K_plate, m_1, 1, center1, 1, dCil_3.normalized()));
+    auto cake = std::make_shared<Cylinder>(
+        Cylinder(K_cake, m_1, 1, center1, 1, dCil_3.normalized()));
+    auto candle = std::make_shared<Cylinder>(
+        Cylinder(K_candle, m_1, 1, center1, 1, dCil_3.normalized()));
 
-    // Galp�o tr�s
-    Mesh back_beamL(K_4, m_1, cubePath);
-    Mesh back_support_columnL(K_4, m_1, cubePath);
-    Mesh back_beamR(K_4, m_1, cubePath);
-    Mesh back_support_columnR(K_4, m_1, cubePath);
+    Sphere cherry1(K_cherry, m_1, radius, center1);
+    Sphere cherry2(K_cherry, m_1, radius, center1);
+    Sphere cherry3(K_cherry, m_1, radius, center1);
+    Sphere cherry4(K_cherry, m_1, radius, center1);
+    Sphere cherry5(K_cherry, m_1, radius, center1);
+    Sphere cherry6(K_cherry, m_1, radius, center1);
+    Sphere cherry7(K_cherry, m_1, radius, center1);
+    Sphere cherry8(K_cherry, m_1, radius, center1);
 
-    // Galp�o paredes
+    // Galpao paredes
     Mesh wallL(K_2, m_1, cubePath);
     Mesh wallR(K_2, m_1, cubePath);
     Mesh back_wall(K_2, m_1, cubePath);
 
     // Telhado
-    Mesh roofR(K_6, m_1, cubePath);
-    Mesh roofL(K_6, m_1, cubePath);
+    Mesh ceiling(K_2, m_1, cubePath);
 
-    //�rvore
+    // arvore
     Sphere ball(K_1, m_1, radius, center1);
     auto woodBase = std::make_shared<Cylinder>(
         Cylinder(K_4, m_1, 1, center1, 1, dCil_3.normalized()));
@@ -200,27 +253,29 @@ int main(int argc, char **argv) {
     auto tree = std::make_shared<Cone>(
         Cone(K_5, m_1, 1, center1, 1, dCil_3.normalized()));
 
-    // Ch�o
+    // Chao
     Eigen::Vector4d floor_pos(0.0, 0.0, 0.0, 1);
     Eigen::Vector4d floor_dir(0.0, 1.0, 0.0, 0.0);
     Plane floor(K_3, m_2, (wc * floor_pos).head<3>(),
                 ((wc * floor_dir).head<3>()).normalized());
 
     // Posicionando mesa
-    table_supportL.scale(5.0, 95.0, 150.0);
-    table_supportL.translate(175.0, 42.5, 500.0, wc);
+    table_supportL.scale(15.0, 115.0, 15.0);
+    table_supportL.translate(225.0 + 7.5, 57.5, 650.0 - 7.5, wc);
 
-    table_supportR.scale(5.0, 95.0, 150.0);
-    table_supportR.translate(425.0, 42.5, 500.0, wc);
+    table_supportL_back.scale(15.0, 115.0, 15.0);
+    table_supportL_back.translate(225.0 + 7.5, 57.5, 350.0 + 7.5, wc);
 
-    table_lid.scale(250.0, 5.0, 150.0);
-    table_lid.translate(300.0, 95.0, 500.0, wc);
+    table_supportR.scale(15.0, 115.0, 15.0);
+    table_supportR.translate(675.0 - 7.5, 57.5, 650.0 - 7.5, wc);
 
-    // Posicionando �rvore
-    // ball.scale(4.5);
-    // ball.translate(300.0, 294.0, 500.0, wc);
-    ball.scale(20);
-    ball.translate(300.0, 500.0, 1000.0, wc);
+    table_supportR_back.scale(15.0, 115.0, 15.0);
+    table_supportR_back.translate(675.0 - 7.5, 57.5, 350.0 + 7.5, wc);
+
+    table_lid.scale(450.0, 5.0, 300.0);
+    table_lid.translate(450.0, 117.5, 500.0, wc);
+
+    // Posicionando arvore
 
     woodBase->scale(30.0, 9.0);
     woodBase->translate(300.0, 95.0, 500.0, wc);
@@ -231,76 +286,65 @@ int main(int argc, char **argv) {
     tree->scale(60.0, 150.0);
     tree->translate(300.0, 144.0, 500.0, wc);
 
-    // Posicionando galp�o
+    // Adicionando os party hats
+    party_hat1->scale(16.0, 24.0);
+    party_hat1->translate(300.0, 117.5 + 2.5, 400, wc);
 
-    // Vigas
-    beamL.scale(300.0, 50.0, 30.0);
-    beamL.shear(37, matrix::SHEAR_AXIS::XY);
-    beamL.translate(150, 570.0, 1000.0, wc);
+    party_hat2->scale(16.0, 24.0);
+    party_hat2->translate(325.0, 117.5 + 2.5, 600, wc);
 
-    beamR.scale(300.0, 50.0, 30.0);
-    beamR.shear(-37, matrix::SHEAR_AXIS::XY);
-    beamR.translate(450.0, 570.0, 1000.0, wc);
+    party_hat3->scale(16.0, 24.0);
+    party_hat3->translate(580.0, 117.5 + 2.5, 400, wc);
 
-    // Colunas de suporte
-    support_columnL.scale(50.0, 500.0, 30.0);
-    support_columnL.translate(0.0, 250.0, 1000.0, wc);
+    plate->scale(90.0, 5.0);
+    plate->translate(450.0, 117.5 + 2.5, 500, wc);
 
-    support_columnR.scale(50.0, 500.0, 30.0);
-    support_columnR.translate(600.0, 250.0, 1000.0, wc);
+    cake->scale(75.0, 40.0);
+    cake->translate(450.0, 117.5 + 2.5 + 5.0, 500, wc);
 
-    // Vigas de tr�s
-    back_beamL.scale(300.0, 50.0, 30.0);
-    back_beamL.shear(37.0, matrix::SHEAR_AXIS::XY);
-    back_beamL.translate(150, 570.0, 0.0, wc);
+    candle->scale(2.0, 14.0);
+    candle->translate(450.0, 117.5 + 2.5 + 5.0 + 40.0 + 1.0, 500, wc);
 
-    back_beamR.scale(300.0, 50.0, 30.0);
-    back_beamR.shear(-37.0, matrix::SHEAR_AXIS::XY);
-    back_beamR.translate(450.0, 570.0, 0.0, wc);
+    cherry1.scale(5);
+    cherry1.translate(450.0, 117.5 + 2.5 + 5.0 + 40.0 + 1.0, 560, wc);
 
-    // Colunas de tr�s
-    back_support_columnL.scale(50.0, 500.0, 30.0);
-    back_support_columnL.translate(0.0, 250.0, 0.0, wc);
+    cherry2.scale(5);
+    cherry2.translate(450.0, 117.5 + 2.5 + 5.0 + 40.0 + 1.0, 440, wc);
 
-    back_support_columnR.scale(50.0, 500.0, 30.0);
-    back_support_columnR.translate(600.0, 250.0, 0.0, wc);
+    cherry3.scale(5);
+    cherry3.translate(450.0 - 60, 117.5 + 2.5 + 5.0 + 40.0 + 1.0, 500, wc);
+
+    cherry4.scale(5);
+    cherry4.translate(450.0 + 60, 117.5 + 2.5 + 5.0 + 40.0 + 1.0, 500, wc);
+
+    cherry5.scale(5);
+    cherry5.translate(450.0 + 42.426, 117.5 + 2.5 + 5.0 + 40.0 + 1.0, 500 + 42.426, wc);
+
+    cherry6.scale(5);
+    cherry6.translate(450.0 - 42.426, 117.5 + 2.5 + 5.0 + 40.0 + 1.0, 500 + 42.426, wc);
+
+    cherry7.scale(5);
+    cherry7.translate(450.0 - 42.426, 117.5 + 2.5 + 5.0 + 40.0 + 1.0, 500 - 42.426, wc);
+
+    cherry8.scale(5);
+    cherry8.translate(450.0 + 42.426, 117.5 + 2.5 + 5.0 + 40.0 + 1.0, 500 - 42.426, wc);
 
     wallL.scale(10.0, 500.0, 1000.0);
     wallL.translate(0.0, 250.0, 500.0, wc);
     wallR.scale(10.0, 500.0, 1000.0);
-    wallR.translate(600.0, 250.0, 500.0, wc);
+    wallR.translate(1200.0, 250.0, 500.0, wc);
+    ceiling.scale(1200.0, 10.0, 1000.0);
+    ceiling.translate(600.0, 505.0, 500.0, wc);
 
-    back_wall.scale(600.0, 500.0, 10.0);
-    back_wall.translate(300.0, 250.0, 0.0, wc);
-
-    // Posicionando telhados
-    roofL.scale(394.73, 20.0, 1000.0);
-    roofL.rotate(37, matrix::AXIS::Z);
-    roofL.translate(150.0, 570.0, 500.0, wc);
-
-    roofR.scale(394.73, 20.0, 1000.0);
-    roofR.rotate(-37, matrix::AXIS::Z);
-    roofR.translate(450.0, 570.0, 500.0, wc);
+    back_wall.scale(1200.0, 500.0, 10.0);
+    back_wall.translate(600.0, 250.0, 0.0, wc);
 
     // Inserindo os objetos
 
-    /*cat.scale(100.0, 100.0, 100.0);
-    cat.translate(450.0, 570.0, 500.0, wc);
-    objects.push_back(std::make_shared<Mesh>(cat));*/
-
-    // objects.push_back(std::make_shared<Mesh>(support_columnL));
-    // objects.push_back(std::make_shared<Mesh>(support_columnR));
-    // objects.push_back(std::make_shared<Mesh>(beamL));
-    // objects.push_back(std::make_shared<Mesh>(beamR));
-
-    // objects.push_back(std::make_shared<Mesh>(back_beamR));
-    // objects.push_back(std::make_shared<Mesh>(back_beamL));
-    objects.push_back(std::make_shared<Mesh>(back_support_columnL));
-    // objects.push_back(std::make_shared<Mesh>(back_support_columnR));
-
-    // objects.push_back(std::make_shared<Mesh>(wallL));
-    // objects.push_back(std::make_shared<Mesh>(wallR));
-    // objects.push_back(std::make_shared<Mesh>(back_wall));
+    objects.push_back(std::make_shared<Mesh>(wallL));
+    objects.push_back(std::make_shared<Mesh>(wallR));
+    objects.push_back(std::make_shared<Mesh>(back_wall));
+    objects.push_back(std::make_shared<Mesh>(ceiling));
 
     // objects.push_back(std::make_shared<Mesh>(roofL));
     // objects.push_back(std::make_shared<Mesh>(roofR));
@@ -309,12 +353,31 @@ int main(int argc, char **argv) {
 
     // objects.push_back(std::make_shared<Plane>(floor));
 
-    // objects.push_back(std::make_shared<Mesh>(table_supportL));
-    // objects.push_back(std::make_shared<Mesh>(table_supportR));
-    // objects.push_back(std::make_shared<Mesh>(table_lid));
+    objects.push_back(std::make_shared<Mesh>(table_supportL));
+    objects.push_back(std::make_shared<Mesh>(table_supportL_back));
+    objects.push_back(std::make_shared<Mesh>(table_supportR));
+    objects.push_back(std::make_shared<Mesh>(table_supportR_back));
+    objects.push_back(std::make_shared<Mesh>(table_lid));
+
+    objects.push_back(party_hat1);
+    objects.push_back(party_hat2);
+    objects.push_back(party_hat3);
+
+    objects.push_back(plate);
+    objects.push_back(cake);
+    objects.push_back(candle);
+    objects.push_back(std::make_shared<Sphere>(cherry1));
+    objects.push_back(std::make_shared<Sphere>(cherry2));
+    objects.push_back(std::make_shared<Sphere>(cherry3));
+    objects.push_back(std::make_shared<Sphere>(cherry4));
+    objects.push_back(std::make_shared<Sphere>(cherry5));
+    objects.push_back(std::make_shared<Sphere>(cherry6));
+    objects.push_back(std::make_shared<Sphere>(cherry7));
+    objects.push_back(std::make_shared<Sphere>(cherry8));
+
     // objects.push_back(woodBase);
-    objects.push_back(wood);
-    objects.push_back(tree);
+    // objects.push_back(wood);
+    // objects.push_back(tree);
 
     lightSources.push_back(
         std::make_shared<Point>(Point(I_F_1, P_F_1.head<3>())));
@@ -526,6 +589,7 @@ int main(int argc, char **argv) {
                             for (std::shared_ptr<Object> obj : scene->objects) {
                                 std::tuple<double, double, double> coordinates = obj->getCoordinates();
                                 Eigen::Vector4d newCoordinates(get<0>(coordinates), get<1>(coordinates), get<2>(coordinates), 1.0);
+                                std::cout << newCoordinates(0) << " " << newCoordinates(1) << " " << newCoordinates(2) << "\n";
                                 newCoordinates = cw * newCoordinates;
                                 obj->translate(newCoordinates(0), newCoordinates(1), newCoordinates(2), wc);
                             }
