@@ -28,3 +28,7 @@ void Spot::translate(double x, double y, double z, Eigen::Matrix4d wc) {
     // this->P_S(2) = z;
     // this->P_S = this->P_S * wc;
 }
+
+void Spot::returnToWorld(Eigen::Matrix4d cw) {
+    return;
+}

@@ -166,9 +166,19 @@ void Cylinder::reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_
     reflectedCylinder->cylinderDir = cylDirAux.head<3>();
     reflectedCylinder->topCenter = topCenterAux.head<3>();
 
-    reflectedCylinder->x = reflectedCylinder->center(0);
-    reflectedCylinder->y = reflectedCylinder->center(1);
-    reflectedCylinder->z = reflectedCylinder->center(2);
+    this->coordinatesAux(0) = this->x;
+    this->coordinatesAux(1) = this->y;
+    this->coordinatesAux(2) = this->z;
+    this->coordinatesAux = m * this->coordinatesAux;
+    std::cout << this->coordinatesAux(0) << " " << this->coordinatesAux(1) << " " << this->coordinatesAux(2) << "\n";
+
+    reflectedCylinder->x = this->coordinatesAux(0);
+    reflectedCylinder->y = this->coordinatesAux(1);
+    reflectedCylinder->z = this->coordinatesAux(2);
+
+    // reflectedCylinder->x = reflectedCylinder->center(0);
+    // reflectedCylinder->y = reflectedCylinder->center(1);
+    // reflectedCylinder->z = reflectedCylinder->center(2);
 
     reflectedCylinder->generateLids();
 

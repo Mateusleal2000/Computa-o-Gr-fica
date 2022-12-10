@@ -54,6 +54,7 @@ class Cone : public Object {
     Eigen::Vector3d coneDir;
     Eigen::Vector3d vertex;
     std::unique_ptr<Plane> baseLid;
+    Eigen::Vector4d coordinatesAux;
 
     double onSurface(Eigen::Vector3d, Eigen::Vector3d, double, double);
 };

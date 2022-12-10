@@ -21,3 +21,9 @@ void Point::translate(double x, double y, double z, Eigen::Matrix4d wc) {
     auxPF = wc * auxPF;
     this->P_F = auxPF.head<3>();
 }
+
+void Point::returnToWorld(Eigen::Matrix4d cw) {
+    Eigen::Vector4d auxPF(this->P_F(0), this->P_F(1), this->P_F(2), 1.0);
+    auxPF = cw * auxPF;
+    this->P_F = auxPF.head<3>();
+}

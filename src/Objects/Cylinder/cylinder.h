@@ -50,6 +50,7 @@ class Cylinder : public Object {
     Eigen::Matrix<double, 3, 3> M;
     std::unique_ptr<Plane> topLid;
     std::unique_ptr<Plane> baseLid;
+    Eigen::Vector4d coordinatesAux;
 
     double onSurface(Eigen::Vector3d, Eigen::Vector3d, double, double);
 };

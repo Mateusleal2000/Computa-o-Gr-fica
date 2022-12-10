@@ -18,6 +18,7 @@ class Spot : public LightSource {
                                                             Eigen::Vector3d);
     double getDistance(Eigen::Vector3d P_I);
     void translate(double x, double y, double z, Eigen::Matrix4d wc);
+    void returnToWorld(Eigen::Matrix4d cw);
 
    private:
     Eigen::Vector4d D_S;

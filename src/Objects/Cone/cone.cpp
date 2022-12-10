@@ -166,9 +166,19 @@ void Cone::reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr<
     reflectedCone->coneDir = coneDirAux.head<3>();
     reflectedCone->vertex = vertexAux.head<3>();
 
-    reflectedCone->x = reflectedCone->center(0);
-    reflectedCone->y = reflectedCone->center(1);
-    reflectedCone->z = reflectedCone->center(2);
+    this->coordinatesAux(0) = this->x;
+    this->coordinatesAux(1) = this->y;
+    this->coordinatesAux(2) = this->z;
+    this->coordinatesAux = m * this->coordinatesAux;
+    std::cout << this->coordinatesAux(0) << " " << this->coordinatesAux(1) << " " << this->coordinatesAux(2) << "\n";
+
+    reflectedCone->x = this->coordinatesAux(0);
+    reflectedCone->y = this->coordinatesAux(1);
+    reflectedCone->z = this->coordinatesAux(2);
+
+    // reflectedCone->x = reflectedCone->center(0);
+    // reflectedCone->y = reflectedCone->center(1);
+    // reflectedCone->z = reflectedCone->center(2);
 
     reflectedCone->generateLids();
 

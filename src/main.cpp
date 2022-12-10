@@ -42,9 +42,9 @@ int main(int argc, char **argv) {
     double nRow = 500;
     double nCol = 500;
 
-    double lx = 450.0;
+    double lx = 600.0;
     double ly = 210.0;
-    double lz = 600.0;
+    double lz = 800.0;
 
     double I_A = 0.3;
 
@@ -341,10 +341,10 @@ int main(int argc, char **argv) {
 
     // Inserindo os objetos
 
-    objects.push_back(std::make_shared<Mesh>(wallL));
-    objects.push_back(std::make_shared<Mesh>(wallR));
-    objects.push_back(std::make_shared<Mesh>(back_wall));
-    objects.push_back(std::make_shared<Mesh>(ceiling));
+    // objects.push_back(std::make_shared<Mesh>(wallL));
+    // objects.push_back(std::make_shared<Mesh>(wallR));
+    // objects.push_back(std::make_shared<Mesh>(back_wall));
+    // objects.push_back(std::make_shared<Mesh>(ceiling));
 
     // objects.push_back(std::make_shared<Mesh>(roofL));
     // objects.push_back(std::make_shared<Mesh>(roofR));
@@ -353,27 +353,27 @@ int main(int argc, char **argv) {
 
     // objects.push_back(std::make_shared<Plane>(floor));
 
-    objects.push_back(std::make_shared<Mesh>(table_supportL));
-    objects.push_back(std::make_shared<Mesh>(table_supportL_back));
-    objects.push_back(std::make_shared<Mesh>(table_supportR));
-    objects.push_back(std::make_shared<Mesh>(table_supportR_back));
-    objects.push_back(std::make_shared<Mesh>(table_lid));
+    // objects.push_back(std::make_shared<Mesh>(table_supportL));
+    // objects.push_back(std::make_shared<Mesh>(table_supportL_back));
+    // objects.push_back(std::make_shared<Mesh>(table_supportR));
+    // objects.push_back(std::make_shared<Mesh>(table_supportR_back));
+    // objects.push_back(std::make_shared<Mesh>(table_lid));
 
     objects.push_back(party_hat1);
-    objects.push_back(party_hat2);
-    objects.push_back(party_hat3);
+    // objects.push_back(party_hat2);
+    // objects.push_back(party_hat3);
 
-    objects.push_back(plate);
+    // objects.push_back(plate);
     objects.push_back(cake);
-    objects.push_back(candle);
-    objects.push_back(std::make_shared<Sphere>(cherry1));
-    objects.push_back(std::make_shared<Sphere>(cherry2));
-    objects.push_back(std::make_shared<Sphere>(cherry3));
-    objects.push_back(std::make_shared<Sphere>(cherry4));
-    objects.push_back(std::make_shared<Sphere>(cherry5));
-    objects.push_back(std::make_shared<Sphere>(cherry6));
-    objects.push_back(std::make_shared<Sphere>(cherry7));
-    objects.push_back(std::make_shared<Sphere>(cherry8));
+    // objects.push_back(candle);
+    // objects.push_back(std::make_shared<Sphere>(cherry1));
+    // objects.push_back(std::make_shared<Sphere>(cherry2));
+    // objects.push_back(std::make_shared<Sphere>(cherry3));
+    // objects.push_back(std::make_shared<Sphere>(cherry4));
+    // objects.push_back(std::make_shared<Sphere>(cherry5));
+    // objects.push_back(std::make_shared<Sphere>(cherry6));
+    // objects.push_back(std::make_shared<Sphere>(cherry7));
+    // objects.push_back(std::make_shared<Sphere>(cherry8));
 
     // objects.push_back(woodBase);
     // objects.push_back(wood);
@@ -473,25 +473,26 @@ int main(int argc, char **argv) {
                 case 3: {
                     double angle;
                     int axis;
+                    if (pickedObj->getType() != utilsStructs::OBJ_TYPE::SPHERE) {
+                        std::cout << "Rotating Angle: ";
+                        std::cin >> angle;
+                        std::cout << "Select Axis: ";
+                        std::cout << "0 - X" << std::endl;
+                        std::cout << "1 - Y" << std::endl;
+                        std::cout << "2 - Z" << std::endl;
+                        std::cin >> axis;
 
-                    std::cout << "Rotating Angle: ";
-                    std::cin >> angle;
-                    std::cout << "Select Axis: ";
-                    std::cout << "0 - X" << std::endl;
-                    std::cout << "1 - Y" << std::endl;
-                    std::cout << "2 - Z" << std::endl;
-                    std::cin >> axis;
+                        matrix::AXIS axisEnum = static_cast<matrix::AXIS>(axis);
 
-                    matrix::AXIS axisEnum = static_cast<matrix::AXIS>(axis);
+                        pickedObj->returnToWorld(cw, false);
 
-                    pickedObj->returnToWorld(cw, false);
+                        pickedObj->rotate(angle, axisEnum);
 
-                    pickedObj->rotate(angle, axisEnum);
-
-                    std::tuple<double, double, double> coordinates = pickedObj->getCoordinates();
-                    std::cout << get<0>(coordinates) << " " << get<1>(coordinates) << " " << get<2>(coordinates) << "\n";
-                    pickedObj->translate(get<0>(coordinates), get<1>(coordinates), get<2>(coordinates), wc);
-                    canvas.update();
+                        std::tuple<double, double, double> coordinates = pickedObj->getCoordinates();
+                        std::cout << get<0>(coordinates) << " " << get<1>(coordinates) << " " << get<2>(coordinates) << "\n";
+                        pickedObj->translate(get<0>(coordinates), get<1>(coordinates), get<2>(coordinates), wc);
+                        canvas.update();
+                    }
                     break;
                 }
 
@@ -499,27 +500,28 @@ int main(int argc, char **argv) {
                     if (pickedObj->getType() == utilsStructs::OBJ_TYPE::MESH) {
                         double angle;
                         int axis;
+                        if (pickedObj->getType() == utilsStructs::OBJ_TYPE::MESH) {
+                            std::cout << "Shearing Angle: ";
+                            std::cin >> angle;
+                            std::cout << "Select Axis: ";
+                            std::cout << "0 - XY" << std::endl;
+                            std::cout << "1 - XZ" << std::endl;
+                            std::cout << "2 - YX" << std::endl;
+                            std::cout << "3 - YZ" << std::endl;
+                            std::cout << "4 - ZX" << std::endl;
+                            std::cout << "5 - ZY" << std::endl;
+                            std::cin >> axis;
 
-                        std::cout << "Shearing Angle: ";
-                        std::cin >> angle;
-                        std::cout << "Select Axis: ";
-                        std::cout << "0 - XY" << std::endl;
-                        std::cout << "1 - XZ" << std::endl;
-                        std::cout << "2 - YX" << std::endl;
-                        std::cout << "3 - YZ" << std::endl;
-                        std::cout << "4 - ZX" << std::endl;
-                        std::cout << "5 - ZY" << std::endl;
-                        std::cin >> axis;
+                            matrix::SHEAR_AXIS axisEnum = static_cast<matrix::SHEAR_AXIS>(axis);
 
-                        matrix::SHEAR_AXIS axisEnum = static_cast<matrix::SHEAR_AXIS>(axis);
+                            pickedObj->returnToWorld(cw, false);
 
-                        pickedObj->returnToWorld(cw, false);
+                            pickedObj->shear(angle, axisEnum);
 
-                        pickedObj->shear(angle, axisEnum);
-
-                        std::tuple<double, double, double> coordinates = pickedObj->getCoordinates();
-                        pickedObj->translate(get<0>(coordinates), get<1>(coordinates), get<2>(coordinates), wc);
-                        canvas.update();
+                            std::tuple<double, double, double> coordinates = pickedObj->getCoordinates();
+                            pickedObj->translate(get<0>(coordinates), get<1>(coordinates), get<2>(coordinates), wc);
+                            canvas.update();
+                        }
                         break;
                     }
                 case 5: {
@@ -580,32 +582,42 @@ int main(int argc, char **argv) {
                             O(1) = y;
                             O(2) = z;
 
+                            for (std::shared_ptr<Object> obj : scene->objects) {
+                                obj->returnToWorld(cw, false);
+                            }
+
+                            for (std::shared_ptr<LightSource> lightSource : scene->lightSources) {
+                                lightSource->returnToWorld(cw);
+                            }
+
+                            up = Eigen::Vector3d(x, y + 100, z);
                             wc = matrix::lookAt(O.head<3>(), at, up);
                             cw = matrix::cwMatrix(O.head<3>(), at, up);
                             O = wc * O;
-                            scene->setOrigin(x, y, z);
+                            scene->setOrigin(O(0), O(1), O(2));
 
                             // Provavelmente não está funcionando porque o wc não está sendo multiplicado corretamente
                             for (std::shared_ptr<Object> obj : scene->objects) {
-                                std::tuple<double, double, double> coordinates = obj->getCoordinates();
-                                Eigen::Vector4d newCoordinates(get<0>(coordinates), get<1>(coordinates), get<2>(coordinates), 1.0);
+                                Eigen::Vector4d newCoordinates(get<0>(obj->getCoordinates()), get<1>(obj->getCoordinates()), get<2>(obj->getCoordinates()), 1.0);
                                 std::cout << newCoordinates(0) << " " << newCoordinates(1) << " " << newCoordinates(2) << "\n";
-                                newCoordinates = cw * newCoordinates;
                                 obj->translate(newCoordinates(0), newCoordinates(1), newCoordinates(2), wc);
                             }
 
-                            // for (std::shared_ptr<LightSource> lightSource : scene->lightSources) {
-                            //     lightSource->translate(x, y, z, wc);
-                            // }
+                            for (std::shared_ptr<LightSource> lightSource : scene->lightSources) {
+                                Eigen::Vector3d pf = lightSource->getPF();
+                                lightSource->translate(pf(0), pf(1), pf(2), wc);
+                            }
 
                             canvas.update();
 
                             break;
                         }
                         case 2: {
+                            O = wc * O;
                             break;
                         }
                         case 3: {
+                            O = wc * O;
                             break;
                         }
                         case 4: {
