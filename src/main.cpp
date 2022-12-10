@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
     double nRow = 500;
     double nCol = 500;
 
-    double lx = 600.0;
+    double lx = 450.0;
     double ly = 210.0;
     double lz = 800.0;
 
@@ -52,6 +52,7 @@ int main(int argc, char **argv) {
     Eigen::Vector4d D(0.0, 0.0, 0.0, 1.0);
     Eigen::Vector3d at(450.0, 97.5, 500.0);
     // Eigen::Vector3d at(lx, ly, 1.0);
+    // Eigen::Vector3d up(lx, ly + 100.0, lz);
     Eigen::Vector3d up(lx, ly + 100.0, lz);
     Eigen::Matrix4d wc = matrix::lookAt(O.head<3>(), at, up);
     Eigen::Matrix4d cw = matrix::cwMatrix(O.head<3>(), at, up);
@@ -351,7 +352,7 @@ int main(int argc, char **argv) {
 
     // objects.push_back(std::make_shared<Sphere>(ball));
 
-    // objects.push_back(std::make_shared<Plane>(floor));
+    objects.push_back(std::make_shared<Plane>(floor));
 
     // objects.push_back(std::make_shared<Mesh>(table_supportL));
     // objects.push_back(std::make_shared<Mesh>(table_supportL_back));
@@ -570,54 +571,33 @@ int main(int argc, char **argv) {
                     std::cout << "5 - Focal Length (D)" << std::endl;
                     std::cin >> option;
 
+                    double x, y, z;
+                    std::cout << "Insert new coordinates (x, y, z): " << std::endl;
+                    std::cin >> x;
+                    std::cin >> y;
+                    std::cin >> z;
+
                     switch (option) {
                         case 1: {
-                            double x, y, z;
-                            std::cout << "Insert new coordinates (x, y, z): " << std::endl;
-                            std::cin >> x;
-                            std::cin >> y;
-                            std::cin >> z;
-
                             O(0) = x;
                             O(1) = y;
                             O(2) = z;
-
-                            for (std::shared_ptr<Object> obj : scene->objects) {
-                                obj->returnToWorld(cw, false);
-                            }
-
-                            for (std::shared_ptr<LightSource> lightSource : scene->lightSources) {
-                                lightSource->returnToWorld(cw);
-                            }
-
                             up = Eigen::Vector3d(x, y + 100, z);
-                            wc = matrix::lookAt(O.head<3>(), at, up);
-                            cw = matrix::cwMatrix(O.head<3>(), at, up);
-                            O = wc * O;
-                            scene->setOrigin(O(0), O(1), O(2));
-
-                            // Provavelmente não está funcionando porque o wc não está sendo multiplicado corretamente
-                            for (std::shared_ptr<Object> obj : scene->objects) {
-                                Eigen::Vector4d newCoordinates(get<0>(obj->getCoordinates()), get<1>(obj->getCoordinates()), get<2>(obj->getCoordinates()), 1.0);
-                                std::cout << newCoordinates(0) << " " << newCoordinates(1) << " " << newCoordinates(2) << "\n";
-                                obj->translate(newCoordinates(0), newCoordinates(1), newCoordinates(2), wc);
-                            }
-
-                            for (std::shared_ptr<LightSource> lightSource : scene->lightSources) {
-                                Eigen::Vector3d pf = lightSource->getPF();
-                                lightSource->translate(pf(0), pf(1), pf(2), wc);
-                            }
-
-                            canvas.update();
 
                             break;
                         }
                         case 2: {
-                            O = wc * O;
+                            O = cw * O;
+                            at(0) = x;
+                            at(1) = y;
+                            at(2) = z;
                             break;
                         }
                         case 3: {
-                            O = wc * O;
+                            O = cw * O;
+                            up(0) = x;
+                            up(1) = y;
+                            up(2) = z;
                             break;
                         }
                         case 4: {
@@ -636,6 +616,32 @@ int main(int argc, char **argv) {
                         default:
                             break;
                     }
+
+                    for (std::shared_ptr<Object> obj : scene->objects) {
+                        obj->returnToWorld(cw, false);
+                    }
+
+                    for (std::shared_ptr<LightSource> lightSource : scene->lightSources) {
+                        lightSource->returnToWorld(cw);
+                    }
+
+                    wc = matrix::lookAt(O.head<3>(), at, up);
+                    cw = matrix::cwMatrix(O.head<3>(), at, up);
+                    O = wc * O;
+                    scene->setOrigin(O(0), O(1), O(2));
+
+                    for (std::shared_ptr<Object> obj : scene->objects) {
+                        Eigen::Vector4d newCoordinates(get<0>(obj->getCoordinates()), get<1>(obj->getCoordinates()), get<2>(obj->getCoordinates()), 1.0);
+                        // std::cout << newCoordinates(0) << " " << newCoordinates(1) << " " << newCoordinates(2) << "\n";
+                        obj->translate(newCoordinates(0), newCoordinates(1), newCoordinates(2), wc);
+                    }
+
+                    for (std::shared_ptr<LightSource> lightSource : scene->lightSources) {
+                        Eigen::Vector3d pf = lightSource->getPF();
+                        lightSource->translate(pf(0), pf(1), pf(2), wc);
+                    }
+
+                    canvas.update();
 
                     break;
                 case 8:
