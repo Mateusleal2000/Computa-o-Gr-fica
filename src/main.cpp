@@ -393,7 +393,7 @@ int main(int argc, char **argv) {
 
     std::shared_ptr<Object> pickedObj = nullptr;
     std::shared_ptr<Scene> scene = std::make_shared<Scene>(Scene(viewport, camera, lightSources, objects, isPerspective));
-    Canvas canvas(canvasWidth, canvasHeight, -dWindow, scene);
+    Canvas canvas(canvasWidth, canvasHeight, scene);
 
     canvas.init();
     canvas.update();
@@ -410,6 +410,8 @@ int main(int argc, char **argv) {
             std::cout << "7 - Reposition Camera " << std::endl;
             std::cout << "8 - Manage Light Sources " << std::endl;
             std::cout << "9 - Switch Camera Projection" << std::endl;
+            std::cout << "10 - Change viewport" << std::endl;
+            std::cout << "11 - Change Focal Length (D)" << std::endl;
 
             std::cin >> selected;
             Eigen::Matrix4d m;
@@ -567,8 +569,7 @@ int main(int argc, char **argv) {
                     std::cout << "1 - Eye Position (O)" << std::endl;
                     std::cout << "2 - Look At Point" << std::endl;
                     std::cout << "3 - View Up Point (up)" << std::endl;
-                    std::cout << "4 - Resize Viewport" << std::endl;
-                    std::cout << "5 - Focal Length (D)" << std::endl;
+
                     std::cin >> option;
 
                     double x, y, z;
@@ -600,19 +601,6 @@ int main(int argc, char **argv) {
                             up(2) = z;
                             break;
                         }
-                        case 4: {
-                            double w, h;
-                            std::cout << "Insert new dimensions (width, height): " << std::endl;
-                            std::cin >> w;
-                            std::cin >> h;
-                            scene->resizeViewport(w, h);
-                            canvas.update();
-                            break;
-                        }
-                        case 5: {
-                            break;
-                        }
-
                         default:
                             break;
                     }
@@ -651,6 +639,24 @@ int main(int argc, char **argv) {
                     std::string projection = scene->getProjection() ? "Perspective" : "Ortogonal";
                     canvas.update();
                     std::cout << "Projection changed to: " << projection << std::endl;
+                    break;
+                }
+                case 10: {
+                    double w, h;
+                    std::cout << "Insert new dimensions (width, height): " << std::endl;
+                    std::cin >> w;
+                    std::cin >> h;
+                    scene->resizeViewport(w, h);
+                    canvas.update();
+                    break;
+                }
+
+                case 11: {
+                    double d;
+                    std::cout << "Enter a new Focal Length value: " << std::endl;
+                    std::cin >> d;
+                    scene->setFocalLength(d);
+                    canvas.update();
                     break;
                 }
 

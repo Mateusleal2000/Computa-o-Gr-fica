@@ -33,7 +33,7 @@ class Scene {
     bool getProjection();
     void switchProjection();
     void setOrigin(double x, double y, double z);
-    void setFocalLength(double x, double y, double z);
+    void setFocalLength(double d);
     void resizeViewport(double width, double height);
 
    private:

@@ -8,10 +8,9 @@
 
 class Canvas {
    public:
-    Canvas(int canvasWidth, int canvasHeight, double z, std::shared_ptr<Scene> scene) : scene(scene) {
+    Canvas(int canvasWidth, int canvasHeight, std::shared_ptr<Scene> scene) : scene(scene) {
         this->canvasWidth = canvasWidth;
         this->canvasHeight = canvasHeight;
-        this->z = z;
     }
     ~Canvas() {
         if (this->screenSurf != nullptr)
@@ -32,7 +31,6 @@ class Canvas {
    private:
     int canvasWidth;
     int canvasHeight;
-    double z;
     std::shared_ptr<Scene> scene;
     SDL_Surface* surf = nullptr;
     SDL_Surface* screenSurf = nullptr;

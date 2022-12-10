@@ -46,7 +46,7 @@ void Canvas::eventLoop(std::shared_ptr<Object> &pickedObj) {
                      (event.motion.x * deltaX);
                 yj = (vw.height / 2.0) - (deltaY / 2.0) -
                      (event.motion.y * deltaY);
-                Eigen::Vector4d pickedD(xj, yj, z, 0);
+                Eigen::Vector4d pickedD(xj, yj, -vw.dWindow, 0);
                 if (scene->getProjection()) {
                     Eigen::Vector4d auxO(0, 0, 0, 1);
                     Eigen::Vector3d cam = scene->getCamera();

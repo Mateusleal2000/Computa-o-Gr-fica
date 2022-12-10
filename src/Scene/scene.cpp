@@ -89,10 +89,8 @@ void Scene::setOrigin(double x, double y, double z) {
     this->camera.O(2) = z;
 }
 
-void Scene::setFocalLength(double x, double y, double z) {
-    this->camera.D(0) = x;
-    this->camera.D(1) = y;
-    this->camera.D(2) = z;
+void Scene::setFocalLength(double d) {
+    this->viewport.dWindow = d;
 }
 
 void Scene::resizeViewport(double width, double height) {
