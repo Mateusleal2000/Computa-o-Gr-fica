@@ -6,12 +6,14 @@
 
 class LightSource {
    public:
-    enum lightTypes { POINT,
-                      SPOTLIGHT,
-                      DIRECTIONAL };
+    enum class lightTypes { POINT,
+                            SPOTLIGHT,
+                            DIRECTIONAL,
+                            AMBIENT };
 
-    LightSource(Eigen::Vector3d I_F) : I_F(I_F) {}
+    LightSource(Eigen::Vector3d I_F, lightTypes ltype) : I_F(I_F), lightType(ltype) {}
     Eigen::Vector3d getIF();
+    void setIF(double i1, double i2, double i3);
     virtual Eigen::Vector3d getPF() { return Eigen::Vector3d(0.0, 0.0, 0.0); };
     virtual std::tuple<Eigen::Vector3d, Eigen::Vector3d> calculateL(
         Eigen::Vector3d, Eigen::Vector3d) {
@@ -22,6 +24,7 @@ class LightSource {
     virtual double getDistance(Eigen::Vector3d) = 0;
     virtual void translate(double x, double y, double z, Eigen::Matrix4d wc) = 0;
     virtual void returnToWorld(Eigen::Matrix4d cw) = 0;
+    lightTypes lightType;
 
    private:
     Eigen::Vector3d I_F;

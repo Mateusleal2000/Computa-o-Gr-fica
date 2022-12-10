@@ -4,15 +4,13 @@
 #include "../LightSource/lightSource.h"
 class Ambient : public LightSource {
    public:
-    Ambient(double I_A)
-        : LightSource(Eigen::Vector3d(0.0, 0.0, 0.0)),
-          I_A(Eigen::Vector3d(I_A, I_A, I_A)) {}
-    Eigen::Vector3d getIA();
+    Ambient(Eigen::Vector3d I_F)
+        : LightSource(I_F, lightTypes::AMBIENT) {}
     double getDistance(Eigen::Vector3d P_I);
     void translate(double x, double y, double z, Eigen::Matrix4d wc);
     void returnToWorld(Eigen::Matrix4d cw);
-
-   private:
-    Eigen::Vector3d I_A;
 };
 #endif
+
+//  Point(Eigen::Vector3d I_F, Eigen::Vector3d P_F)
+//         : LightSource(I_F, lightTypes::POINT), P_F(P_F) {}

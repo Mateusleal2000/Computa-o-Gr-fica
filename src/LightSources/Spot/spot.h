@@ -7,7 +7,7 @@ class Spot : public LightSource {
    public:
     Spot(Eigen::Vector3d I_F, Eigen::Vector4d P_I, Eigen::Vector4d P_S,
          double angle)
-        : LightSource(I_F), P_S(P_S), theta(angle) {
+        : LightSource(I_F, lightTypes::SPOTLIGHT), P_S(P_S), theta(angle) {
         this->D_S = (P_I - P_S).normalized();
         this->theta = angle * M_PI / 180;
     };

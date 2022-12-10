@@ -382,7 +382,7 @@ int main(int argc, char **argv) {
 
     lightSources.push_back(
         std::make_shared<Point>(Point(I_F_1, P_F_1.head<3>())));
-    lightSources.push_back(std::make_shared<Ambient>(Ambient(I_A)));
+    lightSources.push_back(std::make_shared<Ambient>(Ambient(Eigen::Vector3d(0.3, 0.3, 0.3))));
     /*lightSources.push_back(
         std::make_shared<Directional>(Directional(I_F_2, D_F_2)));*/
     // lightSources.push_back(std::make_shared<Point>(Point(I_F_1, P_F_2)));
@@ -633,6 +633,37 @@ int main(int argc, char **argv) {
 
                     break;
                 case 8:
+                    option = 0;
+                    for (std::shared_ptr<LightSource> lightSource : scene->lightSources) {
+                        if (lightSource->lightType == LightSource::lightTypes::POINT) {
+                            std::cout << "Light source " << option << ": "
+                                      << "POINT" << std::endl;
+                        }
+                        if (lightSource->lightType == LightSource::lightTypes::AMBIENT) {
+                            std::cout << "Light source " << option << ": "
+                                      << "AMBIENT" << std::endl;
+                        }
+                        if (lightSource->lightType == LightSource::lightTypes::SPOTLIGHT) {
+                            std::cout << "Light source " << option << ": "
+                                      << "SPOTLIGHT" << std::endl;
+                        }
+                        if (lightSource->lightType == LightSource::lightTypes::DIRECTIONAL) {
+                            std::cout << "Light source " << option << ": "
+                                      << "DIRECTIONAL" << std::endl;
+                        }
+                        option++;
+                    }
+                    int l;
+                    double intensity1, intensity2, intensity3;
+                    std::cout << "Choose a light source: " << std::endl;
+                    std::cin >> l;
+
+                    std::cout << "Set Intensity (intensity1 intensity2 intensity3): " << std::endl;
+                    std::cin >> intensity1;
+                    std::cin >> intensity2;
+                    std::cin >> intensity3;
+                    scene->lightSources[l]->setIF(intensity1, intensity2, intensity3);
+                    canvas.update();
                     break;
                 case 9: {
                     scene->switchProjection();

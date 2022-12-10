@@ -65,8 +65,15 @@ std::tuple<double, double, double> calculateLighting(
     Eigen::Vector3d I_E(0, 0, 0);
 
     for (std::shared_ptr<LightSource> lS : lightSources) {
-        Eigen::Vector3d I_F = lS->getIF();
-        Eigen::Vector3d currentIA = lS->getIA();
+        Eigen::Vector3d currentIA(0.0, 0.0, 0.0);
+        Eigen::Vector3d I_F(0.0, 0.0, 0.0);
+        if (lS->lightType == LightSource::lightTypes::AMBIENT) {
+            currentIA = lS->getIF();
+        } else {
+            I_F = lS->getIF();
+        }
+        // Eigen::Vector3d I_F = lS->getIF();
+        // Eigen::Vector3d currentIA = lS->getIF();
         Eigen::Vector3d P_I(0, 0, 0);
         Eigen::Vector3d n(0, 0, 0);
         Eigen::Vector3d l(0, 0, 0);
