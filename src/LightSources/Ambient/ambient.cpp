@@ -8,3 +8,11 @@ void Ambient::translate(double x, double y, double z, Eigen::Matrix4d wc) {
 void Ambient::returnToWorld(Eigen::Matrix4d cw) {
     return;
 }
+
+void Ambient::setTheta(double new_theta) {
+    return;
+}
+
+void Ambient::changeDirection(double x, double y, double z, Eigen::Matrix4d wc) {
+    return;
+}

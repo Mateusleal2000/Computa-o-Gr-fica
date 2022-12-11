@@ -24,6 +24,8 @@ class LightSource {
     virtual double getDistance(Eigen::Vector3d) = 0;
     virtual void translate(double x, double y, double z, Eigen::Matrix4d wc) = 0;
     virtual void returnToWorld(Eigen::Matrix4d cw) = 0;
+    virtual void setTheta(double new_theta) = 0;
+    virtual void changeDirection(double x, double y, double z, Eigen::Matrix4d wc) = 0;
     lightTypes lightType;
 
    private:

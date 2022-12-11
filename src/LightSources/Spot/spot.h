@@ -5,24 +5,28 @@
 #include "../LightSource/lightSource.h"
 class Spot : public LightSource {
    public:
-    Spot(Eigen::Vector3d I_F, Eigen::Vector4d P_I, Eigen::Vector4d P_S,
+    Spot(Eigen::Vector3d I_F, Eigen::Vector4d P_I, Eigen::Vector4d P_F,
          double angle)
-        : LightSource(I_F, lightTypes::SPOTLIGHT), P_S(P_S), theta(angle) {
-        this->D_S = (P_I - P_S).normalized();
+        : LightSource(I_F, lightTypes::SPOTLIGHT), P_F(P_F), theta(angle) {
+        this->D_S = (P_I - P_F).normalized();
+        this->pointTo = P_I;
         this->theta = angle * M_PI / 180;
     };
     Eigen::Vector4d getDS();
-    Eigen::Vector4d getPS();
+    Eigen::Vector3d getPF();
     double getTheta();
+    void setTheta(double new_theta);
     std::tuple<Eigen::Vector3d, Eigen::Vector3d> calculateL(Eigen::Vector3d,
                                                             Eigen::Vector3d);
     double getDistance(Eigen::Vector3d P_I);
     void translate(double x, double y, double z, Eigen::Matrix4d wc);
+    void changeDirection(double x, double y, double z, Eigen::Matrix4d wc);
     void returnToWorld(Eigen::Matrix4d cw);
 
    private:
-    Eigen::Vector4d D_S;
-    Eigen::Vector4d P_S;
+    Eigen::Vector4d D_S;      // direcao da luz
+    Eigen::Vector4d P_F;      // posicao da luz
+    Eigen::Vector4d pointTo;  // posicao que a luz aponta
     double theta;
 };
 #endif

@@ -70,11 +70,13 @@ int main(int argc, char **argv) {
 
     Eigen::Vector3d I_F_2(0.7, 0.7, 0.7);
     Eigen::Vector4d D_F_2(-1, 0, 0, 0);
+    D_F_2 = wc * D_F_2;
 
     Eigen::Vector3d I_F_3(0.7, 0.7, 0.7);
-    Eigen::Vector4d P_I_3(0, 0, -25, 0);
-    Eigen::Vector4d P_S_3(0, -1, -1, 1);
-    Eigen::Vector4d P_S_4(0, 1, -1, 1);
+    Eigen::Vector4d P_I_3(450, 125, 500, 1);  // Para onde a luz vai apontar
+    P_I_3 = wc * P_I_3;
+    Eigen::Vector4d P_S_3(450, ly + 100, 500, 1);  // Posicao da luz spot no mundo
+    P_S_3 = wc * P_S_3;
     // double theta = 30;
 
     // sphere
@@ -380,16 +382,10 @@ int main(int argc, char **argv) {
     // objects.push_back(wood);
     // objects.push_back(tree);
 
-    lightSources.push_back(
-        std::make_shared<Point>(Point(I_F_1, P_F_1.head<3>())));
+    lightSources.push_back(std::make_shared<Point>(Point(I_F_1, P_F_1.head<3>())));
     lightSources.push_back(std::make_shared<Ambient>(Ambient(Eigen::Vector3d(0.3, 0.3, 0.3))));
-    /*lightSources.push_back(
-        std::make_shared<Directional>(Directional(I_F_2, D_F_2)));*/
-    // lightSources.push_back(std::make_shared<Point>(Point(I_F_1, P_F_2)));
-    /*lightSources.push_back(
-        std::make_shared<Spot>(Spot(I_F_3, P_I_3, P_S_3, 12.0)));*/
-    /*lightSources.push_back(
-        std::make_shared<Spot>(Spot(I_F_3, P_I_3, P_S_4, 12.0)));*/
+    lightSources.push_back(std::make_shared<Directional>(Directional(I_F_2, D_F_2)));
+    lightSources.push_back(std::make_shared<Spot>(Spot(I_F_3, P_I_3, P_S_3, 12.0)));
 
     std::shared_ptr<Object> pickedObj = nullptr;
     std::shared_ptr<Scene> scene = std::make_shared<Scene>(Scene(viewport, camera, lightSources, objects, isPerspective));
@@ -620,7 +616,6 @@ int main(int argc, char **argv) {
 
                     for (std::shared_ptr<Object> obj : scene->objects) {
                         Eigen::Vector4d newCoordinates(get<0>(obj->getCoordinates()), get<1>(obj->getCoordinates()), get<2>(obj->getCoordinates()), 1.0);
-                        // std::cout << newCoordinates(0) << " " << newCoordinates(1) << " " << newCoordinates(2) << "\n";
                         obj->translate(newCoordinates(0), newCoordinates(1), newCoordinates(2), wc);
                     }
 
@@ -653,16 +648,79 @@ int main(int argc, char **argv) {
                         }
                         option++;
                     }
-                    int l;
+                    int l, operation;
                     double intensity1, intensity2, intensity3;
                     std::cout << "Choose a light source: " << std::endl;
                     std::cin >> l;
+                    std::cout << "1 - Change light intensity " << std::endl;
+                    std::cout << "2 - Light specific operations " << std::endl;
+                    std::cin >> operation;
 
-                    std::cout << "Set Intensity (intensity1 intensity2 intensity3): " << std::endl;
-                    std::cin >> intensity1;
-                    std::cin >> intensity2;
-                    std::cin >> intensity3;
-                    scene->lightSources[l]->setIF(intensity1, intensity2, intensity3);
+                    if (operation == 1) {
+                        std::cout << "Set Intensity (intensity1 intensity2 intensity3): " << std::endl;
+                        std::cin >> intensity1;
+                        std::cin >> intensity2;
+                        std::cin >> intensity3;
+                        scene->lightSources[l]->setIF(intensity1, intensity2, intensity3);
+                    }
+                    if (operation == 2 && scene->lightSources[l]->lightType != LightSource::lightTypes::AMBIENT) {
+                        if (scene->lightSources[l]->lightType == LightSource::lightTypes::POINT) {
+                            double x, y, z;
+                            scene->lightSources[l]->returnToWorld(cw);
+                            std::cout << "Set new position (x y z): " << std::endl;
+                            std::cin >> x;
+                            std::cin >> y;
+                            std::cin >> z;
+                            scene->lightSources[l]->translate(x, y, z, wc);
+                        }
+                        if (scene->lightSources[l]->lightType == LightSource::lightTypes::DIRECTIONAL) {
+                            // Mudar a direcao
+                            double x, y, z;
+                            scene->lightSources[l]->returnToWorld(cw);
+                            std::cout << "Set new direction (x y z): " << std::endl;
+                            std::cin >> x;
+                            std::cin >> y;
+                            std::cin >> z;
+                            scene->lightSources[l]->changeDirection(x, y, z, wc);
+                        }
+                        if (scene->lightSources[l]->lightType == LightSource::lightTypes::SPOTLIGHT) {
+                            double spot_op;
+                            std::cout << "Choose an operation: " << std::endl;
+                            std::cout << "1 - Modify opening angle" << std::endl;
+                            std::cout << "2 - Change light source position" << std::endl;
+                            std::cout << "3 - Change spot location(Change location to where light is pointing)" << std::endl;
+                            std::cin >> spot_op;
+                            if (spot_op == 1) {
+                                double new_angle;
+                                std::cout << "Enter new angle value:" << std::endl;
+                                std::cin >> new_angle;
+                                scene->lightSources[l]->setTheta(new_angle);
+                            }
+                            if (spot_op == 2) {
+                                double x, y, z;
+                                scene->lightSources[l]->returnToWorld(cw);
+                                std::cout << "Set new position (x y z): " << std::endl;
+                                std::cin >> x;
+                                std::cin >> y;
+                                std::cin >> z;
+                                scene->lightSources[l]->translate(x, y, z, wc);
+                            }
+                            if (spot_op == 3) {
+                                double x, y, z;
+                                scene->lightSources[l]->returnToWorld(cw);
+                                std::cout << "Set new position to point (x y z): " << std::endl;
+                                std::cin >> x;
+                                std::cin >> y;
+                                std::cin >> z;
+                                scene->lightSources[l]->changeDirection(x, y, z, wc);
+                                Eigen::Vector3d pos = scene->lightSources[l]->getPF();
+                                scene->lightSources[l]->translate(pos(0), pos(1), pos(2), wc);
+                            }
+                        }
+                    } else {
+                        std::cout << "There are no specific operations for this light type\n";
+                    }
+
                     canvas.update();
                     break;
                 case 9: {

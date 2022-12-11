@@ -27,3 +27,11 @@ void Point::returnToWorld(Eigen::Matrix4d cw) {
     auxPF = cw * auxPF;
     this->P_F = auxPF.head<3>();
 }
+
+void Point::setTheta(double new_angle) {
+    return;
+}
+
+void Point::changeDirection(double x, double y, double z, Eigen::Matrix4d wc) {
+    return;
+}

@@ -12,6 +12,8 @@ class Point : public LightSource {
     double getDistance(Eigen::Vector3d);
     void translate(double x, double y, double z, Eigen::Matrix4d wc);
     void returnToWorld(Eigen::Matrix4d cw);
+    void setTheta(double new_angle);
+    void changeDirection(double x, double y, double z, Eigen::Matrix4d wc);
 
    private:
     Eigen::Vector3d P_F;
