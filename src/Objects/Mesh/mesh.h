@@ -39,6 +39,7 @@ class Mesh : public Object {
     Eigen::Vector3d normal;
     Eigen::Vector4d coordinatesAux;
     std::string objName;
+    // std::shared_ptr<Sphere> cluster;
 };
 
 #endif

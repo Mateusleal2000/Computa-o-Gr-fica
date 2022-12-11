@@ -42,15 +42,16 @@ int main(int argc, char **argv) {
     double nRow = 500;
     double nCol = 500;
 
-    double lx = 450.0;
-    double ly = 210.0;
-    double lz = 800.0;
+    double lx = 700.0;
+    double ly = 240.0;
+    double lz = 300.0;
 
     double I_A = 0.3;
 
     Eigen::Vector4d O(lx, ly, lz, 1.0);
     Eigen::Vector4d D(0.0, 0.0, 0.0, 1.0);
-    Eigen::Vector3d at(450.0, 97.5, 500.0);
+    // Eigen::Vector3d at(450.0, 97.5, 500.0);
+    Eigen::Vector3d at(1000.0, 360, 300.0);
     // Eigen::Vector3d at(lx, ly, 1.0);
     // Eigen::Vector3d up(lx, ly + 100.0, lz);
     Eigen::Vector3d up(lx, ly + 100.0, lz);
@@ -133,6 +134,11 @@ int main(int argc, char **argv) {
     Eigen::Vector3d lid_Ka(0.12, 0.51, 0.69);
     Eigen::Vector3d lid_Kd(0.12, 0.51, 0.69);
 
+    // star K
+    Eigen::Vector3d Ke_star(1.000, 0.850, 0.000);
+    Eigen::Vector3d Ka_star(1.000, 0.850, 0.000);
+    Eigen::Vector3d Kd_star(1.000, 0.850, 0.000);
+
     // table support K
     Eigen::Vector3d support_Ke(0.88, 0.52, 0.26);
     Eigen::Vector3d support_Ka(0.88, 0.52, 0.26);
@@ -179,6 +185,8 @@ int main(int argc, char **argv) {
 
     utilsStructs::materialK K_plate(Ke_plate, Ka_plate, Kd_plate);
 
+    utilsStructs::materialK K_star(Ke_star, Ka_star, Kd_star);
+
     utilsStructs::materialK K_cake(Ke_cake, Ka_cake, Kd_cake);
 
     utilsStructs::materialK K_candle(Ke_candle, Ka_candle, Kd_candle);
@@ -204,6 +212,7 @@ int main(int argc, char **argv) {
     double m_3 = 1;
 
     std::string cubePath = "../resources/cube.obj";
+    std::string starPath = "../resources/star.obj";
 
     // Chapéus de festa
     auto party_hat1 = std::make_shared<Cone>(
@@ -248,6 +257,7 @@ int main(int argc, char **argv) {
     Mesh ceiling(K_2, m_1, cubePath);
 
     // arvore
+    Mesh xmas_star(K_star, m_1, starPath);
     Sphere ball(K_1, m_1, radius, center1);
     auto woodBase = std::make_shared<Cylinder>(
         Cylinder(K_4, m_1, 1, center1, 1, dCil_3.normalized()));
@@ -280,14 +290,17 @@ int main(int argc, char **argv) {
 
     // Posicionando arvore
 
-    woodBase->scale(30.0, 9.0);
-    woodBase->translate(300.0, 95.0, 500.0, wc);
+    woodBase->scale(100.0, 9.0);
+    woodBase->translate(900.0, 4.5, 300.0, wc);
 
-    wood->scale(30.0, 40.0);
-    wood->translate(300.0, 104.0, 500.0, wc);
+    wood->scale(16.0, 130.0);
+    wood->translate(900.0, 9.0, 300.0, wc);
 
-    tree->scale(60.0, 150.0);
-    tree->translate(300.0, 144.0, 500.0, wc);
+    tree->scale(120.0, 230.0);
+    tree->translate(900.0, 130.0, 300.0, wc);
+
+    xmas_star.scale(8, 8, 8);
+    xmas_star.translate(900.0, 360, 300.0, wc);
 
     // Adicionando os party hats
     party_hat1->scale(16.0, 24.0);
@@ -344,48 +357,44 @@ int main(int argc, char **argv) {
 
     // Inserindo os objetos
 
-    // objects.push_back(std::make_shared<Mesh>(wallL));
-    // objects.push_back(std::make_shared<Mesh>(wallR));
-    // objects.push_back(std::make_shared<Mesh>(back_wall));
-    // objects.push_back(std::make_shared<Mesh>(ceiling));
-
-    // objects.push_back(std::make_shared<Mesh>(roofL));
-    // objects.push_back(std::make_shared<Mesh>(roofR));
-
-    // objects.push_back(std::make_shared<Sphere>(ball));
+    objects.push_back(std::make_shared<Mesh>(wallL));
+    objects.push_back(std::make_shared<Mesh>(wallR));
+    objects.push_back(std::make_shared<Mesh>(back_wall));
+    objects.push_back(std::make_shared<Mesh>(ceiling));
 
     objects.push_back(std::make_shared<Plane>(floor));
 
-    // objects.push_back(std::make_shared<Mesh>(table_supportL));
-    // objects.push_back(std::make_shared<Mesh>(table_supportL_back));
-    // objects.push_back(std::make_shared<Mesh>(table_supportR));
-    // objects.push_back(std::make_shared<Mesh>(table_supportR_back));
-    // objects.push_back(std::make_shared<Mesh>(table_lid));
+    objects.push_back(std::make_shared<Mesh>(table_supportL));
+    objects.push_back(std::make_shared<Mesh>(table_supportL_back));
+    objects.push_back(std::make_shared<Mesh>(table_supportR));
+    objects.push_back(std::make_shared<Mesh>(table_supportR_back));
+    objects.push_back(std::make_shared<Mesh>(table_lid));
 
     objects.push_back(party_hat1);
-    // objects.push_back(party_hat2);
-    // objects.push_back(party_hat3);
+    objects.push_back(party_hat2);
+    objects.push_back(party_hat3);
 
-    // objects.push_back(plate);
+    objects.push_back(plate);
     objects.push_back(cake);
-    // objects.push_back(candle);
-    // objects.push_back(std::make_shared<Sphere>(cherry1));
-    // objects.push_back(std::make_shared<Sphere>(cherry2));
-    // objects.push_back(std::make_shared<Sphere>(cherry3));
-    // objects.push_back(std::make_shared<Sphere>(cherry4));
-    // objects.push_back(std::make_shared<Sphere>(cherry5));
-    // objects.push_back(std::make_shared<Sphere>(cherry6));
-    // objects.push_back(std::make_shared<Sphere>(cherry7));
-    // objects.push_back(std::make_shared<Sphere>(cherry8));
+    objects.push_back(candle);
+    objects.push_back(std::make_shared<Sphere>(cherry1));
+    objects.push_back(std::make_shared<Sphere>(cherry2));
+    objects.push_back(std::make_shared<Sphere>(cherry3));
+    objects.push_back(std::make_shared<Sphere>(cherry4));
+    objects.push_back(std::make_shared<Sphere>(cherry5));
+    objects.push_back(std::make_shared<Sphere>(cherry6));
+    objects.push_back(std::make_shared<Sphere>(cherry7));
+    objects.push_back(std::make_shared<Sphere>(cherry8));
 
-    // objects.push_back(woodBase);
-    // objects.push_back(wood);
-    // objects.push_back(tree);
+    objects.push_back(woodBase);
+    objects.push_back(wood);
+    objects.push_back(tree);
+    objects.push_back(std::make_shared<Mesh>(xmas_star));
 
     lightSources.push_back(std::make_shared<Point>(Point(I_F_1, P_F_1.head<3>())));
     lightSources.push_back(std::make_shared<Ambient>(Ambient(Eigen::Vector3d(0.3, 0.3, 0.3))));
-    lightSources.push_back(std::make_shared<Directional>(Directional(I_F_2, D_F_2)));
-    lightSources.push_back(std::make_shared<Spot>(Spot(I_F_3, P_I_3, P_S_3, 12.0)));
+    // lightSources.push_back(std::make_shared<Directional>(Directional(I_F_2, D_F_2)));
+    // lightSources.push_back(std::make_shared<Spot>(Spot(I_F_3, P_I_3, P_S_3, 12.0)));
 
     std::shared_ptr<Object> pickedObj = nullptr;
     std::shared_ptr<Scene> scene = std::make_shared<Scene>(Scene(viewport, camera, lightSources, objects, isPerspective));
