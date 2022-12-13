@@ -9,14 +9,15 @@
 #include <vector>
 
 #include "../Object/object.h"
+#include "../Sphere/sphere.h"
 
 class Mesh : public Object {
    public:
-    Mesh(utilsStructs::materialK k, double shininess, std::string path);
+    Mesh(utilsStructs::materialK k, double shininess, std::string path, std::shared_ptr<Sphere> cluster = nullptr);
     Mesh(utilsStructs::materialK k, double shininess,
          std::vector<Eigen::Vector4d> vertices,
          std::vector<Eigen::Vector4d> normals, std::vector<Eigen::Vector3d> edges,
-         std::vector<Eigen::Vector4d> faces);
+         std::vector<Eigen::Vector4d> faces, std::shared_ptr<Sphere> cluster = nullptr);
     std::tuple<double, double> intersectRay(Eigen::Vector3d, Eigen::Vector3d);
     Eigen::Vector3d getNormal(Eigen::Vector3d P_I);
     void returnToWorld(Eigen::Matrix4d cw, bool isReflection);
@@ -39,7 +40,7 @@ class Mesh : public Object {
     Eigen::Vector3d normal;
     Eigen::Vector4d coordinatesAux;
     std::string objName;
-    // std::shared_ptr<Sphere> cluster;
+    std::shared_ptr<Sphere> cluster;
 };
 
 #endif

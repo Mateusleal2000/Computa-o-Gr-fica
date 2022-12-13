@@ -42,16 +42,16 @@ int main(int argc, char **argv) {
     double nRow = 500;
     double nCol = 500;
 
-    double lx = 700.0;
-    double ly = 240.0;
-    double lz = 300.0;
+    double lx = 500.0;
+    double ly = 210.0;
+    double lz = 1000.0;
 
     double I_A = 0.3;
 
     Eigen::Vector4d O(lx, ly, lz, 1.0);
     Eigen::Vector4d D(0.0, 0.0, 0.0, 1.0);
     // Eigen::Vector3d at(450.0, 97.5, 500.0);
-    Eigen::Vector3d at(1000.0, 360, 300.0);
+    Eigen::Vector3d at(500.0, 97.5, 500.0);
     // Eigen::Vector3d at(lx, ly, 1.0);
     // Eigen::Vector3d up(lx, ly + 100.0, lz);
     Eigen::Vector3d up(lx, ly + 100.0, lz);
@@ -257,7 +257,8 @@ int main(int argc, char **argv) {
     Mesh ceiling(K_2, m_1, cubePath);
 
     // arvore
-    Mesh xmas_star(K_star, m_1, starPath);
+    auto cluster = std::make_shared<Sphere>(Sphere(K_1, m_1, radius, center1));
+    Mesh xmas_star(K_star, m_1, starPath, cluster);
     Sphere ball(K_1, m_1, radius, center1);
     auto woodBase = std::make_shared<Cylinder>(
         Cylinder(K_4, m_1, 1, center1, 1, dCil_3.normalized()));
@@ -299,8 +300,11 @@ int main(int argc, char **argv) {
     tree->scale(120.0, 230.0);
     tree->translate(900.0, 130.0, 300.0, wc);
 
-    xmas_star.scale(8, 8, 8);
+    xmas_star.scale(50, 50, 50);
     xmas_star.translate(900.0, 360, 300.0, wc);
+
+    cluster->scale(50, 50, 50);
+    cluster->translate(900.0, 360, 300.0, wc);
 
     // Adicionando os party hats
     party_hat1->scale(16.0, 24.0);
@@ -621,11 +625,11 @@ int main(int argc, char **argv) {
                     wc = matrix::lookAt(O.head<3>(), at, up);
                     cw = matrix::cwMatrix(O.head<3>(), at, up);
                     O = wc * O;
+                    std::cout << O(0) << " " << O(1) << " " << O(2) << "\n";
                     scene->setOrigin(O(0), O(1), O(2));
 
                     for (std::shared_ptr<Object> obj : scene->objects) {
-                        Eigen::Vector4d newCoordinates(get<0>(obj->getCoordinates()), get<1>(obj->getCoordinates()), get<2>(obj->getCoordinates()), 1.0);
-                        obj->translate(newCoordinates(0), newCoordinates(1), newCoordinates(2), wc);
+                        obj->translate(get<0>(obj->getCoordinates()), get<1>(obj->getCoordinates()), get<2>(obj->getCoordinates()), wc);
                     }
 
                     for (std::shared_ptr<LightSource> lightSource : scene->lightSources) {

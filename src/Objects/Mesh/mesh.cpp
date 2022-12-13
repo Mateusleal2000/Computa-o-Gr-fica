@@ -17,15 +17,16 @@ Mesh::Mesh(utilsStructs::materialK k, double shininess,
            std::vector<Eigen::Vector4d> vertices,
            std::vector<Eigen::Vector4d> normals,
            std::vector<Eigen::Vector3d> edges,
-           std::vector<Eigen::Vector4d> faces)
+           std::vector<Eigen::Vector4d> faces, std::shared_ptr<Sphere> cluster)
     : Object(k, shininess, utilsStructs::OBJ_TYPE::MESH),
       vertices(vertices),
       normals(normals),
       edges(edges),
-      faces(faces) {}
+      faces(faces),
+      cluster(cluster) {}
 
-Mesh::Mesh(utilsStructs::materialK k, double shininess, std::string path)
-    : Object(k, shininess, utilsStructs::OBJ_TYPE::MESH) {
+Mesh::Mesh(utilsStructs::materialK k, double shininess, std::string path, std::shared_ptr<Sphere> cluster)
+    : Object(k, shininess, utilsStructs::OBJ_TYPE::MESH), cluster(cluster) {
     std::ifstream objFile;
     objFile.open(path);
     std::string line;
@@ -84,6 +85,13 @@ std::tuple<double, double> Mesh::intersectRay(Eigen::Vector3d O,
     Eigen::Vector3d P_I(0.0, 0.0, 0.0);
     double t = inf;
 
+    if (this->cluster != nullptr) {
+        auto [tCluster1, tCluster2] = this->cluster->intersectRay(O, D);
+        if (tCluster1 == inf && tCluster2 == inf) {
+            return std::make_tuple(t, t);
+        }
+    }
+
     for (auto &face : this->faces) {
         double vertex_id1 = (this->edges[int(face[0])])[1] - 1;
         double vertex_id2 = (this->edges[int(face[1])])[1] - 1;
@@ -122,6 +130,9 @@ void Mesh::returnToWorld(Eigen::Matrix4d cw, bool isReflection) {
     applyMatrixNormals(cw);
     if (!isReflection) {
         Eigen::Matrix4d m = matrix::translate(-this->x, -this->y, -this->z);
+        if (this->cluster != nullptr) {
+            this->cluster->returnToWorld(cw, false);
+        }
         applyMatrixVertices(m);
         applyMatrixNormals(m);
     } else {
@@ -155,8 +166,13 @@ void Mesh::applyMatrixNormals(Eigen::Matrix4d m) {
 
 void Mesh::scale(double x, double y, double z) {
     Eigen::Matrix4d m = matrix::scale(x, y, z);
+    if (this->cluster != nullptr) {
+        double maxDimension = std::max(std::max(x, y), z);
+        cluster->scale(maxDimension);
+    }
     applyMatrixVertices(m);
     applyMatrixNormals((m.transpose()).inverse());
+
     return;
 }
 void Mesh::shear(double delta, matrix::SHEAR_AXIS axis) {
@@ -171,6 +187,9 @@ void Mesh::translate(double x, double y, double z, Eigen::Matrix4d wc) {
     this->z = z;
     // this->coordinatesAux = Eigen::Vector4d(this->x, this->y, this->z, 1.0);
     Eigen::Matrix4d m = matrix::translate(x, y, z);
+    if (this->cluster != nullptr) {
+        this->cluster->translate(x, y, z, wc);
+    }
     applyMatrixVertices(m);
     applyMatrixNormals(m);
     applyMatrixVertices(wc);
