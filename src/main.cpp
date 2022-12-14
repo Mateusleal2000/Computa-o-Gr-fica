@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
     // 117.5 + 2.5 + 5.0, 500
     double lx = 450.0;
     double ly = 210.0;
-    double lz = 1200.0;
+    double lz = 800.0;
 
     double I_A = 0.3;
 
@@ -69,13 +69,10 @@ int main(int argc, char **argv) {
 
     Eigen::Vector3d I_F_2(1.0, 1.0, 1.0);
     Eigen::Vector4d D_F_2(-1.0, 0.0, 0.0, 0.0);
-    D_F_2 = wc * D_F_2;
-    D_F_2 = D_F_2.normalized();
-    // std::cout << D_F_2 << "\n";
 
     Eigen::Vector3d I_F_3(0.7, 0.7, 0.7);
     Eigen::Vector4d P_I_3(450.0, 125.0, 500.0, 1.0);  // Para onde a luz vai apontar
-    P_I_3 = wc * P_I_3;
+    // P_I_3 = wc * P_I_3;
     Eigen::Vector4d P_S_3(450.0, 310.0, 420.0, 1.0);  // Posicao da luz spot no mundo
     P_S_3 = wc * P_S_3;
     // double theta = 30;
@@ -453,10 +450,16 @@ int main(int argc, char **argv) {
     Point ponctualLight1(I_F_1);
     ponctualLight1.translate(300.0, 100.0, 2000.0, wc);
 
+    Directional directionalLight1(I_F_2);
+    directionalLight1.translate(-1.0, 0.0, 0.0, wc);
+
+    Spot spotLight1(I_F_3, P_I_3, 30.0);
+    spotLight1.translate(450.0, 310.0, 500.0, wc);
+
     lightSources.push_back(std::make_shared<Point>(ponctualLight1));
     lightSources.push_back(std::make_shared<Ambient>(Ambient(Eigen::Vector3d(0.3, 0.3, 0.3))));
-    // lightSources.push_back(std::make_shared<Directional>(Directional(I_F_2, D_F_2)));
-    // lightSources.push_back(std::make_shared<Spot>(Spot(I_F_3, P_I_3, P_S_3, 30.0)));
+    lightSources.push_back(std::make_shared<Directional>(directionalLight1));
+    lightSources.push_back(std::make_shared<Spot>(spotLight1));
 
     std::shared_ptr<Object> pickedObj = nullptr;
     std::shared_ptr<Scene> scene = std::make_shared<Scene>(Scene(viewport, camera, lightSources, objects, isPerspective));
@@ -630,15 +633,7 @@ int main(int argc, char **argv) {
                     break;
                 }
 
-                case 7:
-                    int option;
-                    std::cout << "Modify Camera Parameters" << std::endl;
-                    std::cout << "1 - Eye Position (O)" << std::endl;
-                    std::cout << "2 - Look At Point" << std::endl;
-                    std::cout << "3 - View Up Point (up)" << std::endl;
-
-                    std::cin >> option;
-
+                case 7: {
                     double x_O, y_O, z_O;
                     double x_at, y_at, z_at;
                     double x_up, y_up, z_up;
@@ -657,32 +652,6 @@ int main(int argc, char **argv) {
                     std::cin >> y_up;
                     std::cin >> z_up;
 
-                    // switch (option) {
-                    //     case 1: {
-                    //         O(0) = x;
-                    //         O(1) = y;
-                    //         O(2) = z;
-                    //         up = Eigen::Vector3d(x, y + 100, z);
-
-                    //         break;
-                    //     }
-                    //     case 2: {
-                    //         O = cw * O;
-                    //         at(0) = x;
-                    //         at(1) = y;
-                    //         at(2) = z;
-                    //         break;
-                    //     }
-                    //     case 3: {
-                    //         O = cw * O;
-                    //         up(0) = x;
-                    //         up(1) = y;
-                    //         up(2) = z;
-                    //         break;
-                    //     }
-                    //     default:
-                    //         break;
-                    // }
                     O(0) = x_O;
                     O(1) = y_O;
                     O(2) = z_O;
@@ -717,12 +686,12 @@ int main(int argc, char **argv) {
                         Eigen::Vector3d pf = lightSource->getPF();
                         lightSource->translate(pf(0), pf(1), pf(2), wc);
                     }
-
                     canvas.update();
-
                     break;
-                case 8:
-                    option = 0;
+                }
+
+                case 8: {
+                    int option = 0;
                     for (std::shared_ptr<LightSource> lightSource : scene->lightSources) {
                         if (lightSource->lightType == LightSource::lightTypes::POINT) {
                             std::cout << "Light source " << option << ": "
@@ -817,6 +786,7 @@ int main(int argc, char **argv) {
 
                     canvas.update();
                     break;
+                }
                 case 9: {
                     scene->switchProjection();
                     std::string projection = scene->getProjection() ? "Perspective" : "Ortogonal";

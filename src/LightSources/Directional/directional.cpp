@@ -17,7 +17,8 @@ Eigen::Vector3d getPF() {
 
 double Directional::getDistance(Eigen::Vector3d) { return INFINITY; }
 void Directional::translate(double x, double y, double z, Eigen::Matrix4d wc) {
-    this->D_F = (wc * this->D_F).normalized();
+    Eigen::Vector4d auxDF(x, y, z, 0);
+    this->D_F = (wc * auxDF).normalized();
     return;
 }
 void Directional::returnToWorld(Eigen::Matrix4d cw) {
