@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
     // 117.5 + 2.5 + 5.0, 500
     double lx = 450.0;
     double ly = 210.0;
-    double lz = 800.0;
+    double lz = 1200.0;
 
     double I_A = 0.3;
 
@@ -64,19 +64,19 @@ int main(int argc, char **argv) {
 
     Eigen::Vector3d I_F_1(0.3, 0.3, 0.3);
     Eigen::Vector4d P_F_1(300.0, 100.0, 2000.0, 1.0);
-    // Eigen::Vector4d P_F_1(300.0, 294.0, 480.0, 1.0);
-    Eigen::Vector3d P_F_2(100, 200, -20);
 
     P_F_1 = wc * P_F_1;
 
     Eigen::Vector3d I_F_2(1.0, 1.0, 1.0);
-    Eigen::Vector4d D_F_2(-1, 0, 0, 0);
+    Eigen::Vector4d D_F_2(-1.0, 0.0, 0.0, 0.0);
     D_F_2 = wc * D_F_2;
+    D_F_2 = D_F_2.normalized();
+    // std::cout << D_F_2 << "\n";
 
     Eigen::Vector3d I_F_3(0.7, 0.7, 0.7);
-    Eigen::Vector4d P_I_3(450, 125, 500, 1);  // Para onde a luz vai apontar
+    Eigen::Vector4d P_I_3(450.0, 125.0, 500.0, 1.0);  // Para onde a luz vai apontar
     P_I_3 = wc * P_I_3;
-    Eigen::Vector4d P_S_3(450, 310, 420, 1);  // Posicao da luz spot no mundo
+    Eigen::Vector4d P_S_3(450.0, 310.0, 420.0, 1.0);  // Posicao da luz spot no mundo
     P_S_3 = wc * P_S_3;
     // double theta = 30;
 
@@ -450,10 +450,13 @@ int main(int argc, char **argv) {
     objects.push_back(tree);
     objects.push_back(std::make_shared<Mesh>(xmas_star));
 
-    // lightSources.push_back(std::make_shared <Point>(Point(I_F_1, P_F_1.head <3>())));
+    Point ponctualLight1(I_F_1);
+    ponctualLight1.translate(300.0, 100.0, 2000.0, wc);
+
+    lightSources.push_back(std::make_shared<Point>(ponctualLight1));
     lightSources.push_back(std::make_shared<Ambient>(Ambient(Eigen::Vector3d(0.3, 0.3, 0.3))));
-    lightSources.push_back(std::make_shared<Directional>(Directional(I_F_2, D_F_2)));
-    lightSources.push_back(std::make_shared<Spot>(Spot(I_F_3, P_I_3, P_S_3, 30.0)));
+    // lightSources.push_back(std::make_shared<Directional>(Directional(I_F_2, D_F_2)));
+    // lightSources.push_back(std::make_shared<Spot>(Spot(I_F_3, P_I_3, P_S_3, 30.0)));
 
     std::shared_ptr<Object> pickedObj = nullptr;
     std::shared_ptr<Scene> scene = std::make_shared<Scene>(Scene(viewport, camera, lightSources, objects, isPerspective));
@@ -636,38 +639,61 @@ int main(int argc, char **argv) {
 
                     std::cin >> option;
 
-                    double x, y, z;
-                    std::cout << "Insert new coordinates (x, y, z): " << std::endl;
-                    std::cin >> x;
-                    std::cin >> y;
-                    std::cin >> z;
+                    double x_O, y_O, z_O;
+                    double x_at, y_at, z_at;
+                    double x_up, y_up, z_up;
+                    std::cout << "Insert new CAMERA coordinates (x, y, z): ";
+                    std::cin >> x_O;
+                    std::cin >> y_O;
+                    std::cin >> z_O;
 
-                    switch (option) {
-                        case 1: {
-                            O(0) = x;
-                            O(1) = y;
-                            O(2) = z;
-                            up = Eigen::Vector3d(x, y + 100, z);
+                    std::cout << "Insert new AT coordinates (x, y, z): ";
+                    std::cin >> x_at;
+                    std::cin >> y_at;
+                    std::cin >> z_at;
 
-                            break;
-                        }
-                        case 2: {
-                            O = cw * O;
-                            at(0) = x;
-                            at(1) = y;
-                            at(2) = z;
-                            break;
-                        }
-                        case 3: {
-                            O = cw * O;
-                            up(0) = x;
-                            up(1) = y;
-                            up(2) = z;
-                            break;
-                        }
-                        default:
-                            break;
-                    }
+                    std::cout << "Insert new UP coordinates (x, y, z): ";
+                    std::cin >> x_up;
+                    std::cin >> y_up;
+                    std::cin >> z_up;
+
+                    // switch (option) {
+                    //     case 1: {
+                    //         O(0) = x;
+                    //         O(1) = y;
+                    //         O(2) = z;
+                    //         up = Eigen::Vector3d(x, y + 100, z);
+
+                    //         break;
+                    //     }
+                    //     case 2: {
+                    //         O = cw * O;
+                    //         at(0) = x;
+                    //         at(1) = y;
+                    //         at(2) = z;
+                    //         break;
+                    //     }
+                    //     case 3: {
+                    //         O = cw * O;
+                    //         up(0) = x;
+                    //         up(1) = y;
+                    //         up(2) = z;
+                    //         break;
+                    //     }
+                    //     default:
+                    //         break;
+                    // }
+                    O(0) = x_O;
+                    O(1) = y_O;
+                    O(2) = z_O;
+
+                    at(0) = x_at;
+                    at(1) = y_at;
+                    at(2) = z_at;
+
+                    up(0) = x_up;
+                    up(1) = y_up;
+                    up(2) = z_up;
 
                     for (std::shared_ptr<Object> obj : scene->objects) {
                         obj->returnToWorld(cw, false);

@@ -24,10 +24,10 @@ double Spot::getDistance(Eigen::Vector3d P_I) {
 
 void Spot::translate(double x, double y, double z, Eigen::Matrix4d wc) {
     Eigen::Vector4d auxPF(x, y, z, 1.0);
-    auxPF = wc * auxPF;
+    this->P_F = wc * auxPF;
     Eigen::Vector4d auxPointTo(this->pointTo(0), this->pointTo(1), this->pointTo(2), 1.0);
     this->pointTo = wc * auxPointTo;
-    this->P_F = auxPF;
+    // this->P_F = auxPF;
     this->D_S = (this->pointTo - this->P_F).normalized();
     return;
 }
@@ -47,7 +47,7 @@ void Spot::returnToWorld(Eigen::Matrix4d cw) {
 
     Eigen::Vector4d auxDS(this->D_S(0), this->D_S(1), this->D_S(2), 1.0);
     auxDS = cw * auxDS;
-    this->D_S = auxDS;
+    this->D_S = auxDS.normalized();
 
     Eigen::Vector4d auxPointTo(this->pointTo(0), this->pointTo(1), this->pointTo(2), 1.0);
     auxPointTo = cw * auxPointTo;
