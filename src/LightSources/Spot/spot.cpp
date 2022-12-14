@@ -1,7 +1,9 @@
 #include "spot.h"
 
 Eigen::Vector4d Spot::getDS() { return this->D_S; }
+
 Eigen::Vector3d Spot::getPF() { return this->P_F.head<3>(); }
+
 double Spot::getTheta() { return this->theta; }
 
 std::tuple<Eigen::Vector3d, Eigen::Vector3d> Spot::calculateL(

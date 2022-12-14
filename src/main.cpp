@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
     // 117.5 + 2.5 + 5.0, 500
     double lx = 450.0;
     double ly = 210.0;
-    double lz = 800.0;
+    double lz = 1200.0;
 
     double I_A = 0.3;
 
@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
     // Eigen::Vector3d center(x, y, z);
 
     Eigen::Vector3d I_F_1(0.3, 0.3, 0.3);
-    Eigen::Vector4d P_F_1(300.0, 100.0, 2000.0, 1.0);
+    Eigen::Vector4d P_F_1(300.0, 100.0, 900.0, 1.0);
 
     P_F_1 = wc * P_F_1;
 

@@ -11,6 +11,7 @@ class Directional : public LightSource {
         this->D_F = Eigen::Vector4d(0.0, 0.0, 0.0, 0.0);
     }
     Eigen::Vector4d getDF();
+    Eigen::Vector3d getPF();
     std::tuple<Eigen::Vector3d, Eigen::Vector3d> calculateL(Eigen::Vector3d,
                                                             Eigen::Vector3d);
     double getDistance(Eigen::Vector3d);

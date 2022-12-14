@@ -26,8 +26,7 @@ std::tuple<double, std::shared_ptr<Object>> closestIntersection(
     return std::make_tuple(closestT, closestObject);
 }
 
-bool isLightBlocked(std::shared_ptr<Object> closestObject,
-                    std::vector<std::shared_ptr<Object>> objects,
+bool isLightBlocked(std::vector<std::shared_ptr<Object>> objects,
                     Eigen::Vector3d P_I, std::shared_ptr<LightSource> lS,
                     Eigen::Vector3d l) {
     for (std::shared_ptr<Object> object : objects) {
@@ -42,13 +41,7 @@ bool isLightBlocked(std::shared_ptr<Object> closestObject,
                 t = -inf;
             }
         }
-        // Eigen::Vector3d v(0.0, 0.0, 0.0);
-        // Adicionar a Origem
-        // v = -P_I;
-        /*v = lS->getDistance(P_I)*/
-        // v = lS->getPF() - P_I;
         normalizedV = lS->getDistance(P_I);
-        // normalizedV = -(P_I.norm());
 
         if (t > 0.0001 && t < normalizedV) {
             return true;
@@ -73,50 +66,48 @@ std::tuple<double, double, double> calculateLighting(
         Eigen::Vector3d I_F(0.0, 0.0, 0.0);
         if (lS->lightType == LightSource::lightTypes::AMBIENT) {
             currentIA = lS->getIF();
+            I_A(0) += currentIA(0) * K.Ka(0);
+            I_A(1) += currentIA(1) * K.Ka(1);
+            I_A(2) += currentIA(2) * K.Ka(2);
         } else {
             I_F = lS->getIF();
+            Eigen::Vector3d P_I(0, 0, 0);
+            Eigen::Vector3d n(0, 0, 0);
+            Eigen::Vector3d l(0, 0, 0);
+            Eigen::Vector3d r(0, 0, 0);
+            Eigen::Vector3d v(0, 0, 0);
+
+            P_I = camera.O + (camera.D) * t;
+            n = closestObject->getNormal(P_I);
+            std::tuple<Eigen::Vector3d, Eigen::Vector3d> L_IF = lS->calculateL(P_I, n);
+
+            l = std::get<0>(L_IF);
+            I_F = std::get<1>(L_IF);
+
+            r = 2 * ((l.dot(n)) * n) - l;
+            v = (camera.D / camera.D.norm()) * (-1);
+
+            double F_D = std::max(n.dot(l), 0.0);
+            double F_E = std::pow(std::max(r.dot(v), 0.0), closestObject->getM());
+
+            bool isBlocked =
+                isLightBlocked(objects, P_I, lS, l);
+            if (isBlocked) {
+                I_F(0) = 0;
+                I_F(1) = 0;
+                I_F(2) = 0;
+            }
+
+            I_D(0) += I_F(0) * K.Kd(0) * F_D;
+            I_D(1) += I_F(1) * K.Kd(1) * F_D;
+            I_D(2) += I_F(2) * K.Kd(2) * F_D;
+
+            I_E(0) += I_F(0) * K.Ke(0) * F_E;
+            I_E(1) += I_F(1) * K.Ke(1) * F_E;
+            I_E(2) += I_F(2) * K.Ke(2) * F_E;
         }
         // Eigen::Vector3d I_F = lS->getIF();
         // Eigen::Vector3d currentIA = lS->getIF();
-        Eigen::Vector3d P_I(0, 0, 0);
-        Eigen::Vector3d n(0, 0, 0);
-        Eigen::Vector3d l(0, 0, 0);
-        Eigen::Vector3d r(0, 0, 0);
-        Eigen::Vector3d v(0, 0, 0);
-
-        P_I = camera.O + (camera.D) * t;
-        // std::cout << "P_I" << P_I(0) << " " << P_I(1) << " " << P_I(2) << std::endl;
-        n = closestObject->getNormal(P_I);
-        std::tuple<Eigen::Vector3d, Eigen::Vector3d> L_IF = lS->calculateL(P_I, n);
-
-        l = std::get<0>(L_IF);
-        I_F = std::get<1>(L_IF);
-
-        r = 2 * ((l.dot(n)) * n) - l;
-        v = (camera.D / camera.D.norm()) * (-1);
-
-        double F_D = std::max(n.dot(l), 0.0);
-        double F_E = std::pow(std::max(r.dot(v), 0.0), closestObject->getM());
-
-        bool isBlocked =
-            isLightBlocked(closestObject, objects, P_I, lS, l);
-        if (isBlocked) {
-            I_F(0) = 0;
-            I_F(1) = 0;
-            I_F(2) = 0;
-        }
-
-        I_D(0) += I_F(0) * K.Kd(0) * F_D;
-        I_D(1) += I_F(1) * K.Kd(1) * F_D;
-        I_D(2) += I_F(2) * K.Kd(2) * F_D;
-
-        I_E(0) += I_F(0) * K.Ke(0) * F_E;
-        I_E(1) += I_F(1) * K.Ke(1) * F_E;
-        I_E(2) += I_F(2) * K.Ke(2) * F_E;
-
-        I_A(0) += currentIA(0) * K.Ka(0);
-        I_A(1) += currentIA(1) * K.Ka(1);
-        I_A(2) += currentIA(2) * K.Ka(2);
     }
 
     double I_1 = (I_A(0) + I_D(0) + I_E(0));

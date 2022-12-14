@@ -7,6 +7,7 @@ class Ambient : public LightSource {
     Ambient(Eigen::Vector3d I_F)
         : LightSource(I_F, lightTypes::AMBIENT) {}
     double getDistance(Eigen::Vector3d P_I);
+    Eigen::Vector3d getPF();
     void translate(double x, double y, double z, Eigen::Matrix4d wc);
     void returnToWorld(Eigen::Matrix4d cw);
     void setTheta(double new_theta);
