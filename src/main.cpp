@@ -41,10 +41,10 @@ int main(int argc, char **argv) {
     double viewPortHeight = isPerspective ? 60 : 1500;
     double nRow = 500;
     double nCol = 500;
-
-    double lx = 500.0;
+    // 117.5 + 2.5 + 5.0, 500
+    double lx = 450.0;
     double ly = 210.0;
-    double lz = 1000.0;
+    double lz = 800;
 
     double I_A = 0.3;
 
@@ -62,21 +62,21 @@ int main(int argc, char **argv) {
     displayStructs::Camera camera(O.head<3>(), D.head<3>());
     // Eigen::Vector3d center(x, y, z);
 
-    Eigen::Vector3d I_F_1(0.7, 0.7, 0.7);
+    Eigen::Vector3d I_F_1(0.3, 0.3, 0.3);
     Eigen::Vector4d P_F_1(300.0, 100.0, 2000.0, 1.0);
     // Eigen::Vector4d P_F_1(300.0, 294.0, 480.0, 1.0);
     Eigen::Vector3d P_F_2(100, 200, -20);
 
     P_F_1 = wc * P_F_1;
 
-    Eigen::Vector3d I_F_2(0.7, 0.7, 0.7);
+    Eigen::Vector3d I_F_2(1.0, 1.0, 1.0);
     Eigen::Vector4d D_F_2(-1, 0, 0, 0);
     D_F_2 = wc * D_F_2;
 
     Eigen::Vector3d I_F_3(0.7, 0.7, 0.7);
     Eigen::Vector4d P_I_3(450, 125, 500, 1);  // Para onde a luz vai apontar
     P_I_3 = wc * P_I_3;
-    Eigen::Vector4d P_S_3(450, ly + 100, 500, 1);  // Posicao da luz spot no mundo
+    Eigen::Vector4d P_S_3(450, ly + 100, 420, 1);  // Posicao da luz spot no mundo
     P_S_3 = wc * P_S_3;
     // double theta = 30;
 
@@ -213,6 +213,7 @@ int main(int argc, char **argv) {
 
     std::string cubePath = "../resources/cube.obj";
     std::string starPath = "../resources/star.obj";
+    std::string chairPath = "../resources/wooden_chair1.obj";
 
     // Chapéus de festa
     auto party_hat1 = std::make_shared<Cone>(
@@ -230,6 +231,14 @@ int main(int argc, char **argv) {
     Mesh table_supportR(support_K, m_1, cubePath);
     Mesh table_supportL_back(support_K, m_1, cubePath);
     Mesh table_supportR_back(support_K, m_1, cubePath);
+    auto clusterChair = std::make_shared<Sphere>(Sphere(K_1, m_1, radius, center1));
+
+    Mesh chair_supportL(support_K, m_1, cubePath);
+    Mesh chair_supportL_back(support_K, m_1, cubePath);
+    Mesh chair_supportR(support_K, m_1, cubePath);
+    Mesh chair_supportR_back(support_K, m_1, cubePath);
+    Mesh chair_seat(support_K, m_1, cubePath);
+    Mesh chair_back(support_K, m_1, cubePath);
 
     // Bolo
     auto plate = std::make_shared<Cylinder>(
@@ -252,6 +261,11 @@ int main(int argc, char **argv) {
     Mesh wallL(K_2, m_1, cubePath);
     Mesh wallR(K_2, m_1, cubePath);
     Mesh back_wall(K_2, m_1, cubePath);
+
+    Mesh wallR_1(K_2, m_1, cubePath);
+    Mesh wallR_2(K_2, m_1, cubePath);
+    Mesh wallR_3(K_2, m_1, cubePath);
+    Mesh wallR_4(K_2, m_1, cubePath);
 
     // Telhado
     Mesh ceiling(K_2, m_1, cubePath);
@@ -288,6 +302,24 @@ int main(int argc, char **argv) {
 
     table_lid.scale(450.0, 5.0, 300.0);
     table_lid.translate(450.0, 117.5, 500.0, wc);
+
+    chair_supportL.scale(15.0, 80.0, 15.0);
+    chair_supportL.translate(182.5, 40.0, 552.5, wc);
+
+    chair_supportL_back.scale(15.0, 80.0, 15.0);
+    chair_supportL_back.translate(102.5, 40.0, 552.5, wc);  //
+
+    chair_supportR.scale(15.0, 80.0, 15.0);
+    chair_supportR.translate(182.5, 40.0, 447.5, wc);  // 132.5, 40.0, 552.5
+
+    chair_supportR_back.scale(15.0, 80.0, 15.0);
+    chair_supportR_back.translate(102.5, 40.0, 447.5, wc);
+
+    chair_seat.scale(95, 8, 120);
+    chair_seat.translate(142.5, 84, 500, wc);
+
+    chair_back.scale(8, 140, 120);
+    chair_back.translate(102.5, 124, 500, wc);
 
     // Posicionando arvore
 
@@ -353,6 +385,19 @@ int main(int argc, char **argv) {
     wallL.translate(0.0, 250.0, 500.0, wc);
     wallR.scale(10.0, 500.0, 1000.0);
     wallR.translate(1200.0, 250.0, 500.0, wc);
+
+    wallR_1.scale(10.0, 500.0, 350.0);
+    wallR_1.translate(1200.0, 250.0, 175.0, wc);
+
+    wallR_2.scale(10.0, 120.0, 300.0);
+    wallR_2.translate(1200.0, 60.0, 500.0, wc);
+
+    wallR_3.scale(10.0, 120.0, 300.0);
+    wallR_3.translate(1200.0, 440.0, 500.0, wc);
+
+    wallR_4.scale(10.0, 500.0, 350.0);
+    wallR_4.translate(1200.0, 250.0, 825.0, wc);
+
     ceiling.scale(1200.0, 10.0, 1000.0);
     ceiling.translate(600.0, 505.0, 500.0, wc);
 
@@ -362,7 +407,13 @@ int main(int argc, char **argv) {
     // Inserindo os objetos
 
     objects.push_back(std::make_shared<Mesh>(wallL));
-    objects.push_back(std::make_shared<Mesh>(wallR));
+    // objects.push_back(std::make_shared<Mesh>(wallR));
+
+    objects.push_back(std::make_shared<Mesh>(wallR_1));
+    objects.push_back(std::make_shared<Mesh>(wallR_2));
+    objects.push_back(std::make_shared<Mesh>(wallR_3));
+    objects.push_back(std::make_shared<Mesh>(wallR_4));
+
     objects.push_back(std::make_shared<Mesh>(back_wall));
     objects.push_back(std::make_shared<Mesh>(ceiling));
 
@@ -373,6 +424,12 @@ int main(int argc, char **argv) {
     objects.push_back(std::make_shared<Mesh>(table_supportR));
     objects.push_back(std::make_shared<Mesh>(table_supportR_back));
     objects.push_back(std::make_shared<Mesh>(table_lid));
+    objects.push_back(std::make_shared<Mesh>(chair_supportL));
+    objects.push_back(std::make_shared<Mesh>(chair_supportL_back));
+    objects.push_back(std::make_shared<Mesh>(chair_supportR));
+    objects.push_back(std::make_shared<Mesh>(chair_supportR_back));
+    objects.push_back(std::make_shared<Mesh>(chair_seat));
+    objects.push_back(std::make_shared<Mesh>(chair_back));
 
     objects.push_back(party_hat1);
     objects.push_back(party_hat2);
@@ -398,7 +455,7 @@ int main(int argc, char **argv) {
     lightSources.push_back(std::make_shared<Point>(Point(I_F_1, P_F_1.head<3>())));
     lightSources.push_back(std::make_shared<Ambient>(Ambient(Eigen::Vector3d(0.3, 0.3, 0.3))));
     // lightSources.push_back(std::make_shared<Directional>(Directional(I_F_2, D_F_2)));
-    // lightSources.push_back(std::make_shared<Spot>(Spot(I_F_3, P_I_3, P_S_3, 12.0)));
+    lightSources.push_back(std::make_shared<Spot>(Spot(I_F_3, P_I_3, P_S_3, 30.0)));
 
     std::shared_ptr<Object> pickedObj = nullptr;
     std::shared_ptr<Scene> scene = std::make_shared<Scene>(Scene(viewport, camera, lightSources, objects, isPerspective));

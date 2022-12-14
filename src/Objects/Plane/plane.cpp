@@ -41,4 +41,10 @@ void Plane::reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_ptr
     return;
 }
 
-void Plane::backToCamera(Eigen::Matrix4d wc) { return; }
+void Plane::backToCamera(Eigen::Matrix4d wc) {
+    // Eigen::Vector4d auxPPI(this->pPI(0), this->pPI(1), this->pPI(2), 1.0);
+    // Eigen::Vector4d auxNBAR(this->nBar(0), this->nBar(1), this->nBar(2), 0.0);
+    // this->pPI = (wc * auxPPI).head<3>();
+    // this->nBar = ((wc * auxNBAR).normalized()).head<3>();
+    return;
+}
