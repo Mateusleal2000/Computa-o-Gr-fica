@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
     // 117.5 + 2.5 + 5.0, 500
     double lx = 450.0;
     double ly = 210.0;
-    double lz = 800;
+    double lz = 800.0;
 
     double I_A = 0.3;
 
@@ -76,7 +76,7 @@ int main(int argc, char **argv) {
     Eigen::Vector3d I_F_3(0.7, 0.7, 0.7);
     Eigen::Vector4d P_I_3(450, 125, 500, 1);  // Para onde a luz vai apontar
     P_I_3 = wc * P_I_3;
-    Eigen::Vector4d P_S_3(450, ly + 100, 420, 1);  // Posicao da luz spot no mundo
+    Eigen::Vector4d P_S_3(450, 310, 420, 1);  // Posicao da luz spot no mundo
     P_S_3 = wc * P_S_3;
     // double theta = 30;
 
@@ -213,7 +213,6 @@ int main(int argc, char **argv) {
 
     std::string cubePath = "../resources/cube.obj";
     std::string starPath = "../resources/star.obj";
-    std::string chairPath = "../resources/wooden_chair1.obj";
 
     // Chapéus de festa
     auto party_hat1 = std::make_shared<Cone>(
@@ -231,7 +230,6 @@ int main(int argc, char **argv) {
     Mesh table_supportR(support_K, m_1, cubePath);
     Mesh table_supportL_back(support_K, m_1, cubePath);
     Mesh table_supportR_back(support_K, m_1, cubePath);
-    auto clusterChair = std::make_shared<Sphere>(Sphere(K_1, m_1, radius, center1));
 
     Mesh chair_supportL(support_K, m_1, cubePath);
     Mesh chair_supportL_back(support_K, m_1, cubePath);
@@ -452,9 +450,9 @@ int main(int argc, char **argv) {
     objects.push_back(tree);
     objects.push_back(std::make_shared<Mesh>(xmas_star));
 
-    lightSources.push_back(std::make_shared<Point>(Point(I_F_1, P_F_1.head<3>())));
+    // lightSources.push_back(std::make_shared <Point>(Point(I_F_1, P_F_1.head <3>())));
     lightSources.push_back(std::make_shared<Ambient>(Ambient(Eigen::Vector3d(0.3, 0.3, 0.3))));
-    // lightSources.push_back(std::make_shared<Directional>(Directional(I_F_2, D_F_2)));
+    lightSources.push_back(std::make_shared<Directional>(Directional(I_F_2, D_F_2)));
     lightSources.push_back(std::make_shared<Spot>(Spot(I_F_3, P_I_3, P_S_3, 30.0)));
 
     std::shared_ptr<Object> pickedObj = nullptr;

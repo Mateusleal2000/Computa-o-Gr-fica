@@ -35,10 +35,14 @@ bool isLightBlocked(std::shared_ptr<Object> closestObject,
         double t = -inf;
         double normalizedV = 0.0;
         t = std::min(t1, t2);
+
         if (t < 0.0) {
             t = (t == t2) ? t = t1 : t = t2;
+            if (t < 0.0) {
+                t = -inf;
+            }
         }
-        Eigen::Vector3d v(0.0, 0.0, 0.0);
+        // Eigen::Vector3d v(0.0, 0.0, 0.0);
         // Adicionar a Origem
         // v = -P_I;
         /*v = lS->getDistance(P_I)*/
@@ -114,12 +118,12 @@ std::tuple<double, double, double> calculateLighting(
         I_A(1) += currentIA(1) * K.Ka(1);
         I_A(2) += currentIA(2) * K.Ka(2);
     }
-    // Ajeitar o I_E que deu aquele erro na iluminacacao
+
     double I_1 = (I_A(0) + I_D(0) + I_E(0));
     double I_2 = (I_A(1) + I_D(1) + I_E(1));
     double I_3 = (I_A(2) + I_D(2) + I_E(2));
 
-    double maxI = std::max({I_1, I_2, I_3});
+    double maxI = std::max(std::max(I_1, I_2), I_3);
 
     if (maxI > 1) {
         return std::make_tuple(I_1 / maxI, I_2 / maxI, I_3 / maxI);
