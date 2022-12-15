@@ -64,7 +64,7 @@ int main(int argc, char **argv) {
 
     Eigen::Vector3d I_F_1(0.3, 0.3, 0.3);
 
-    Eigen::Vector3d I_F_2(1, 1, 1);
+    Eigen::Vector3d I_F_2(0.1, 0.1, 0.1);
     Eigen::Vector4d D_F_2(1.0, 0.0, 0.0, 0.0);
 
     Eigen::Vector3d I_F_3(0.9, 0.9, 0.9);
