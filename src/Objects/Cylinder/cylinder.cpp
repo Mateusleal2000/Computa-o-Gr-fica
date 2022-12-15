@@ -110,7 +110,7 @@ void Cylinder::scale(double radiusScale, double heightScale, double opt) {
 }
 
 void Cylinder::shear(double delta, matrix::SHEAR_AXIS axis) {
-    std::cout << "Eu sou inutil\n";
+    //std::cout << "Eu sou inutil\n";
     return;
 }
 void Cylinder::translate(double x, double y, double z, Eigen::Matrix4d wc) {
@@ -170,7 +170,7 @@ void Cylinder::reflection(matrix::REFLECTION_AXIS axis, std::vector<std::shared_
     this->coordinatesAux(1) = this->y;
     this->coordinatesAux(2) = this->z;
     this->coordinatesAux = m * this->coordinatesAux;
-    std::cout << this->coordinatesAux(0) << " " << this->coordinatesAux(1) << " " << this->coordinatesAux(2) << "\n";
+    //std::cout << this->coordinatesAux(0) << " " << this->coordinatesAux(1) << " " << this->coordinatesAux(2) << "\n";
 
     reflectedCylinder->x = this->coordinatesAux(0);
     reflectedCylinder->y = this->coordinatesAux(1);

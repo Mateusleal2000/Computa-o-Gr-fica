@@ -44,14 +44,14 @@ int main(int argc, char **argv) {
     // 117.5 + 2.5 + 5.0, 500
     double lx = 450.0;
     double ly = 210.0;
-    double lz = 800.0;
+    double lz = 1200.0;
 
     double I_A = 0.3;
 
     Eigen::Vector4d O(lx, ly, lz, 1.0);
     Eigen::Vector4d D(0.0, 0.0, 0.0, 1.0);
     // Eigen::Vector3d at(450.0, 97.5, 500.0);
-    Eigen::Vector3d at(500.0, 97.5, 500.0);
+    Eigen::Vector3d at(450.0, 97.5, 550.0);
     // Eigen::Vector3d at(lx, ly, 1.0);
     // Eigen::Vector3d up(lx, ly + 100.0, lz);
     Eigen::Vector3d up(lx, ly + 100.0, lz);
@@ -64,10 +64,10 @@ int main(int argc, char **argv) {
 
     Eigen::Vector3d I_F_1(0.3, 0.3, 0.3);
 
-    Eigen::Vector3d I_F_2(1.0, 1.0, 1.0);
+    Eigen::Vector3d I_F_2(1, 1, 1);
     Eigen::Vector4d D_F_2(1.0, 0.0, 0.0, 0.0);
 
-    Eigen::Vector3d I_F_3(0.7, 0.7, 0.7);
+    Eigen::Vector3d I_F_3(0.9, 0.9, 0.9);
     Eigen::Vector4d P_I_3(900.0, 360.0, 300.0, 1.0);  // Para onde a luz vai apontar
     // P_I_3 = wc * P_I_3;
     Eigen::Vector4d P_S_3(450.0, 310.0, 420.0, 1.0);  // Posicao da luz spot no mundo
@@ -93,9 +93,9 @@ int main(int argc, char **argv) {
     Eigen::Vector3d Kd_3(0.0, 0.933, 0.0);
 
     // cylinder
-    Eigen::Vector3d Ke_4(0.745, 0.470, 0.058);
-    Eigen::Vector3d Ka_4(0.745, 0.470, 0.058);
-    Eigen::Vector3d Kd_4(0.745, 0.470, 0.058);
+    Eigen::Vector3d Ke_4(0.490, 0.172, 0.023);
+    Eigen::Vector3d Ka_4(0.490, 0.172, 0.023);
+    Eigen::Vector3d Kd_4(0.490, 0.172, 0.023);
 
     Eigen::Vector3d Ke_plate(0.988, 0.949, 0.831);
     Eigen::Vector3d Ka_plate(0.988, 0.949, 0.831);
@@ -151,6 +151,16 @@ int main(int argc, char **argv) {
     Eigen::Vector3d Ka_hat3(0.870, 0.030, 0.010);
     Eigen::Vector3d Kd_hat3(0.870, 0.030, 0.010);
 
+    // Cadeira
+    Eigen::Vector3d chair_seat_Ke(0.9, 0.9, 0.9);
+    Eigen::Vector3d chair_seat_Ka(0.9, 0.9, 0.9);
+    Eigen::Vector3d chair_seat_Kd(0.9, 0.9, 0.9);
+
+    // Tapete da árvore
+    Eigen::Vector3d carpet_Ke(0.980, 0.125, 0.125);
+    Eigen::Vector3d carpet_Ka(0.980, 0.125, 0.125);
+    Eigen::Vector3d carpet_Kd(0.980, 0.125, 0.125);
+
     Eigen::Vector3d dCil_1(-1.0 / std::sqrt(3), 1.0 / std::sqrt(3),
                            -1.0 / std::sqrt(3));
 
@@ -189,6 +199,10 @@ int main(int argc, char **argv) {
 
     utilsStructs::materialK lid_K(lid_Ke, lid_Ka, lid_Kd);
     utilsStructs::materialK support_K(support_Ke, support_Ka, support_Kd);
+
+    utilsStructs::materialK chair_seat_K(chair_seat_Ke, chair_seat_Ka, chair_seat_Kd);
+
+    utilsStructs::materialK carpet_K(carpet_Ke, carpet_Ka, carpet_Kd);
 
     displayStructs::Viewport viewport(viewPortWidth, viewPortHeight, nRow, nCol,
                                       dWindow);
@@ -229,7 +243,7 @@ int main(int argc, char **argv) {
     Mesh chair_supportL_back(support_K, m_1, cubePath);
     Mesh chair_supportR(support_K, m_1, cubePath);
     Mesh chair_supportR_back(support_K, m_1, cubePath);
-    Mesh chair_seat(support_K, m_1, cubePath);
+    Mesh chair_seat(chair_seat_K, m_1, cubePath);
     Mesh chair_back(support_K, m_1, cubePath);
 
     // Bolo
@@ -272,6 +286,8 @@ int main(int argc, char **argv) {
         Cylinder(K_4, m_1, 1, center1, 1, dCil_3.normalized()));
     auto tree = std::make_shared<Cone>(
         Cone(K_5, m_1, 1, center1, 1, dCil_3.normalized()));
+    auto treeCarpet = std::make_shared<Cylinder>(
+        Cylinder(carpet_K, m_1, 1, center1, 1, dCil_3.normalized()));
 
     // Chao
     Eigen::Vector4d floor_pos(0.0, 0.0, 0.0, 1);
@@ -316,7 +332,7 @@ int main(int argc, char **argv) {
     // Posicionando arvore
 
     woodBase->scale(100.0, 9.0);
-    woodBase->translate(900.0, 4.5, 300.0, wc);
+    woodBase->translate(900.0, 13.5, 300.0, wc);
 
     wood->scale(16.0, 130.0);
     wood->translate(900.0, 9.0, 300.0, wc);
@@ -329,6 +345,9 @@ int main(int argc, char **argv) {
 
     cluster->scale(50, 50, 50);
     cluster->translate(900.0, 360, 300.0, wc);
+
+    treeCarpet->scale(150.0, 9.0);
+    treeCarpet->translate(900.0, 4.5, 300.0, wc);
 
     // Adicionando os party hats
     party_hat1->scale(16.0, 24.0);
@@ -443,19 +462,20 @@ int main(int argc, char **argv) {
     objects.push_back(wood);
     objects.push_back(tree);
     objects.push_back(std::make_shared<Mesh>(xmas_star));
+    objects.push_back(treeCarpet);
 
     Point ponctualLight1(I_F_1);
     ponctualLight1.translate(300.0, 100.0, 2000.0, wc);
 
     Directional directionalLight1(I_F_2);
-    directionalLight1.translate(-1.0, 0.0, 0.0, wc);
+    directionalLight1.translate(-1.0, 0.0, 0, wc);
 
     Spot spotLight1(I_F_3, P_I_3, 15.0);
     spotLight1.translate(470.0, 350.0, 630.0, wc);
 
     lightSources.push_back(std::make_shared<Point>(ponctualLight1));
     lightSources.push_back(std::make_shared<Ambient>(Ambient(Eigen::Vector3d(0.3, 0.3, 0.3))));
-    // lightSources.push_back(std::make_shared<Directional>(directionalLight1));
+    lightSources.push_back(std::make_shared<Directional>(directionalLight1));
     lightSources.push_back(std::make_shared<Spot>(spotLight1));
 
     std::shared_ptr<Object> pickedObj = nullptr;
@@ -567,33 +587,32 @@ int main(int argc, char **argv) {
                 }
 
                 case 4:
+                    double angle;
+                    int axis;
                     if (pickedObj->getType() == utilsStructs::OBJ_TYPE::MESH) {
-                        double angle;
-                        int axis;
-                        if (pickedObj->getType() == utilsStructs::OBJ_TYPE::MESH) {
-                            std::cout << "Shearing Angle: ";
-                            std::cin >> angle;
-                            std::cout << "Select Axis: ";
-                            std::cout << "0 - XY" << std::endl;
-                            std::cout << "1 - XZ" << std::endl;
-                            std::cout << "2 - YX" << std::endl;
-                            std::cout << "3 - YZ" << std::endl;
-                            std::cout << "4 - ZX" << std::endl;
-                            std::cout << "5 - ZY" << std::endl;
-                            std::cin >> axis;
+                        std::cout << "Shearing Angle: ";
+                        std::cin >> angle;
+                        std::cout << "Select Axis: ";
+                        std::cout << "0 - XY" << std::endl;
+                        std::cout << "1 - XZ" << std::endl;
+                        std::cout << "2 - YX" << std::endl;
+                        std::cout << "3 - YZ" << std::endl;
+                        std::cout << "4 - ZX" << std::endl;
+                        std::cout << "5 - ZY" << std::endl;
+                        std::cin >> axis;
 
-                            matrix::SHEAR_AXIS axisEnum = static_cast<matrix::SHEAR_AXIS>(axis);
+                        matrix::SHEAR_AXIS axisEnum = static_cast<matrix::SHEAR_AXIS>(axis);
 
-                            pickedObj->returnToWorld(cw, false);
+                        pickedObj->returnToWorld(cw, false);
 
-                            pickedObj->shear(angle, axisEnum);
+                        pickedObj->shear(angle, axisEnum);
 
-                            std::tuple<double, double, double> coordinates = pickedObj->getCoordinates();
-                            pickedObj->translate(get<0>(coordinates), get<1>(coordinates), get<2>(coordinates), wc);
-                            canvas.update();
-                        }
-                        break;
+                        std::tuple<double, double, double> coordinates = pickedObj->getCoordinates();
+                        pickedObj->translate(get<0>(coordinates), get<1>(coordinates), get<2>(coordinates), wc);
+                        canvas.update();
                     }
+                    break;
+
                 case 5: {
                     int axis;
                     std::cout << "Select Axis: " << std::endl;

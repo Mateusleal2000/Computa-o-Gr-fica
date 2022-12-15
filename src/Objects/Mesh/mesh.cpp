@@ -100,7 +100,7 @@ std::tuple<double, double> Mesh::intersectRay(Eigen::Vector3d O,
         Eigen::Vector3d n = (this->normals[int(face[3]) - 1]).head<3>();
         double t_aux =
             -(O - this->vertices[int(vertex_id1)].head<3>()).dot(n) / D.dot(n);
-        if (t_aux > 0.00 && t_aux < t) {
+        if (t_aux > 0.0001 && t_aux < t) {
             P_I = O + t_aux * D;
 
             Eigen::Vector3d P1 = this->vertices[int(vertex_id1)].head<3>();
@@ -120,6 +120,7 @@ std::tuple<double, double> Mesh::intersectRay(Eigen::Vector3d O,
             }
         }
     }
+
     return std::make_tuple(t, t);
 }
 

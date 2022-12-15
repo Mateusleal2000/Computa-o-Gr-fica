@@ -54,12 +54,12 @@ void Sphere::translate(double x, double y, double z, Eigen::Matrix4d wc) {
 }
 
 void Sphere::shear(double delta, matrix::SHEAR_AXIS axis) {
-    std::cout << "Eu sou inutil\n";
+    //std::cout << "Eu sou inutil\n";
     return;
 }
 
 void Sphere::rotate(double theta, matrix::AXIS axis) {
-    std::cout << "Eu sou inutil\n";
+    //std::cout << "Eu sou inutil\n";
     return;
 }
 
