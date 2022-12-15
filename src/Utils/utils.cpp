@@ -87,7 +87,7 @@ std::tuple<double, double, double> calculateLighting(
             r = 2 * ((l.dot(n)) * n) - l;
             v = (camera.D / camera.D.norm()) * (-1);
 
-            double F_D = std::max(n.dot(l), 0.0);
+            double F_D = std::max(l.dot(n), 0.0);
             double F_E = std::pow(std::max(r.dot(v), 0.0), closestObject->getM());
 
             bool isBlocked =
@@ -97,7 +97,6 @@ std::tuple<double, double, double> calculateLighting(
                 I_F(1) = 0;
                 I_F(2) = 0;
             }
-
             I_D(0) += I_F(0) * K.Kd(0) * F_D;
             I_D(1) += I_F(1) * K.Kd(1) * F_D;
             I_D(2) += I_F(2) * K.Kd(2) * F_D;
@@ -106,8 +105,6 @@ std::tuple<double, double, double> calculateLighting(
             I_E(1) += I_F(1) * K.Ke(1) * F_E;
             I_E(2) += I_F(2) * K.Ke(2) * F_E;
         }
-        // Eigen::Vector3d I_F = lS->getIF();
-        // Eigen::Vector3d currentIA = lS->getIF();
     }
 
     double I_1 = (I_A(0) + I_D(0) + I_E(0));

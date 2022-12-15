@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
     // 117.5 + 2.5 + 5.0, 500
     double lx = 450.0;
     double ly = 210.0;
-    double lz = 1200.0;
+    double lz = 800.0;
 
     double I_A = 0.3;
 
@@ -63,15 +63,12 @@ int main(int argc, char **argv) {
     // Eigen::Vector3d center(x, y, z);
 
     Eigen::Vector3d I_F_1(0.3, 0.3, 0.3);
-    Eigen::Vector4d P_F_1(300.0, 100.0, 900.0, 1.0);
-
-    P_F_1 = wc * P_F_1;
 
     Eigen::Vector3d I_F_2(1.0, 1.0, 1.0);
-    Eigen::Vector4d D_F_2(-1.0, 0.0, 0.0, 0.0);
+    Eigen::Vector4d D_F_2(1.0, 0.0, 0.0, 0.0);
 
     Eigen::Vector3d I_F_3(0.7, 0.7, 0.7);
-    Eigen::Vector4d P_I_3(450.0, 125.0, 500.0, 1.0);  // Para onde a luz vai apontar
+    Eigen::Vector4d P_I_3(900.0, 360.0, 300.0, 1.0);  // Para onde a luz vai apontar
     // P_I_3 = wc * P_I_3;
     Eigen::Vector4d P_S_3(450.0, 310.0, 420.0, 1.0);  // Posicao da luz spot no mundo
     P_S_3 = wc * P_S_3;
@@ -376,24 +373,24 @@ int main(int argc, char **argv) {
     cherry8.scale(5);
     cherry8.translate(450.0 + 42.426, 117.5 + 2.5 + 5.0 + 40.0 + 1.0, 500 - 42.426, wc);
 
-    wallL.scale(10.0, 500.0, 1000.0);
+    wallL.scale(40.0, 500.0, 1000.0);
     wallL.translate(0.0, 250.0, 500.0, wc);
     wallR.scale(10.0, 500.0, 1000.0);
     wallR.translate(1200.0, 250.0, 500.0, wc);
 
-    wallR_1.scale(10.0, 500.0, 350.0);
+    wallR_1.scale(40.0, 500.0, 350.0);
     wallR_1.translate(1200.0, 250.0, 175.0, wc);
 
-    wallR_2.scale(10.0, 120.0, 300.0);
+    wallR_2.scale(40.0, 120.0, 300.0);
     wallR_2.translate(1200.0, 60.0, 500.0, wc);
 
-    wallR_3.scale(10.0, 120.0, 300.0);
+    wallR_3.scale(40.0, 120.0, 300.0);
     wallR_3.translate(1200.0, 440.0, 500.0, wc);
 
-    wallR_4.scale(10.0, 500.0, 350.0);
+    wallR_4.scale(40.0, 500.0, 350.0);
     wallR_4.translate(1200.0, 250.0, 825.0, wc);
 
-    ceiling.scale(1200.0, 10.0, 1000.0);
+    ceiling.scale(1200.0, 40.0, 1000.0);
     ceiling.translate(600.0, 505.0, 500.0, wc);
 
     back_wall.scale(1200.0, 500.0, 10.0);
@@ -453,12 +450,12 @@ int main(int argc, char **argv) {
     Directional directionalLight1(I_F_2);
     directionalLight1.translate(-1.0, 0.0, 0.0, wc);
 
-    Spot spotLight1(I_F_3, P_I_3, 30.0);
-    spotLight1.translate(450.0, 310.0, 500.0, wc);
+    Spot spotLight1(I_F_3, P_I_3, 15.0);
+    spotLight1.translate(470.0, 350.0, 630.0, wc);
 
     lightSources.push_back(std::make_shared<Point>(ponctualLight1));
     lightSources.push_back(std::make_shared<Ambient>(Ambient(Eigen::Vector3d(0.3, 0.3, 0.3))));
-    lightSources.push_back(std::make_shared<Directional>(directionalLight1));
+    // lightSources.push_back(std::make_shared<Directional>(directionalLight1));
     lightSources.push_back(std::make_shared<Spot>(spotLight1));
 
     std::shared_ptr<Object> pickedObj = nullptr;

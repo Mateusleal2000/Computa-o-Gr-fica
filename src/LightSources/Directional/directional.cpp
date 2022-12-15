@@ -5,8 +5,8 @@ std::tuple<Eigen::Vector3d, Eigen::Vector3d> Directional::calculateL(
     Eigen::Vector3d P_I, Eigen::Vector3d n) {
     Eigen::Vector3d l(0, 0, 0);
     Eigen::Vector3d I_F = this->getIF();
-    l = this->getDF().head<3>().normalized() * -1;
-    if (this->getDF().head<3>().dot(n) >= 0.0) {
+    l = (-1 * this->getDF().head<3>()).normalized();
+    if (this->getDF().head<3>().dot(n) >= 0.0001) {
         I_F = I_F * 0.0;
     }
     return std::make_tuple(l, I_F);
